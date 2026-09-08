@@ -360,10 +360,31 @@ def _looks_like_math_line(text):
 
 def _inline_math_markdown(text):
     """
-    Lightweight inline formatting for derivative notation and a few common
-    symbols inside otherwise ordinary English sentences.
+    Format maths embedded inside ordinary English, including generated
+    show-that equalities whose right-hand side is stored as Python/SymPy text.
     """
     rendered = str(text)
+
+    show_that_match = re.match(
+        r"^(?P<prefix>.*?\bShow that)\s+"
+        r"(?P<lhs>d²y/dx²|d2y/dx2|dy/dx)\s*=\s*"
+        r"(?P<rhs>.+?)(?P<punct>[.,;:]?)$",
+        rendered,
+        flags=re.IGNORECASE,
+    )
+
+    if show_that_match:
+        prefix = show_that_match.group("prefix")
+        lhs = show_that_match.group("lhs")
+        rhs = show_that_match.group("rhs").strip()
+        punct = show_that_match.group("punct")
+
+        try:
+            latex = _equation_to_latex(f"{lhs} = {rhs}")
+            return f"{prefix} ${latex}${punct}"
+        except Exception:
+            pass
+
     rendered = rendered.replace(
         "d²y/dx²",
         r"$\frac{d^{2}y}{dx^{2}}$",
