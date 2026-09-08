@@ -528,7 +528,7 @@ def render_answer_value(value):
 # ============================================================
 
 def build_session_payload():
-    """Build the complete session record used for download and persistence."""
+    """Build the completed-session record used for download and persistence."""
     return {
         "session_id": st.session_state.get("session_id"),
         "learner_username": st.session_state.get("learner_username"),
@@ -540,18 +540,180 @@ def build_session_payload():
     }
 
 
+def _part_key(part):
+    return "__whole_question__" if part is None else str(part)
+
+
+def _part_from_key(key):
+    return None if key == "__whole_question__" else key
+
+
+def _encode_part_map(mapping):
+    return {
+        _part_key(key): value
+        for key, value in (mapping or {}).items()
+    }
+
+
+def _decode_part_map(mapping):
+    return {
+        _part_from_key(key): value
+        for key, value in (mapping or {}).items()
+    }
+
+
+def _seconds_since(timestamp):
+    if not timestamp:
+        return 0.0
+    try:
+        then = datetime.fromisoformat(timestamp)
+        return max(0.0, (datetime.now() - then).total_seconds())
+    except Exception:
+        return 0.0
+
+
+def build_active_session_payload():
+    """Snapshot enough state to resume the exact unfinished question."""
+    attempt = st.session_state.get("attempt")
+    attempt_snapshot = None
+    if attempt:
+        attempt_snapshot = {
+            "attempt_id": attempt.get("attempt_id"),
+            "question_id": attempt.get("question_id"),
+            "question_number": attempt.get("question_number"),
+            "session_total": attempt.get("session_total"),
+            "started_at": attempt.get("started_at"),
+            "events": attempt.get("events", []),
+            "event_index": attempt.get("event_index", 0),
+        }
+
+    history = []
+    for entry in st.session_state.get("question_history", []):
+        question = entry.get("question", {})
+        history.append({
+            "question_id": str(question.get("question_id", "unknown")),
+            "phase_label": entry.get("phase_label"),
+            "display_number": entry.get("display_number"),
+            "display_total": entry.get("display_total"),
+        })
+
+    current_question = st.session_state.get("current_question")
+    current_question_id = None
+    if current_question:
+        current_question_id = str(
+            current_question.get("question_id", "unknown")
+        )
+
+    return {
+        "session_id": st.session_state.get("session_id"),
+        "learner_username": st.session_state.get("learner_username"),
+        "session_started_at": st.session_state.get("session_started_at"),
+        "session_finished_at": None,
+        "session_outcome": None,
+        "events": st.session_state.get("events", []),
+        "attempt_summaries": st.session_state.get("attempt_summaries", []),
+        "active_state": {
+            "current_question_id": current_question_id,
+            "phase_label": st.session_state.get("phase_label"),
+            "display_number": st.session_state.get("display_number"),
+            "display_total": st.session_state.get("display_total"),
+            "reveal_state": _encode_part_map(
+                st.session_state.get("reveal_state", {})
+            ),
+            "check_counts": _encode_part_map(
+                st.session_state.get("check_counts", {})
+            ),
+            "last_check_correct": _encode_part_map(
+                st.session_state.get("last_check_correct", {})
+            ),
+            "solution_seen": _encode_part_map(
+                st.session_state.get("solution_seen", {})
+            ),
+            "check_pending_part": _part_key(
+                st.session_state.get("check_pending_part")
+                if st.session_state.get("check_pending_part") != "__none__"
+                else "__none__"
+            ),
+            "attempt": attempt_snapshot,
+            "diagnostic_question_ids": [
+                str(question.get("question_id", "unknown"))
+                for question in st.session_state.get(
+                    "diagnostic_questions", []
+                )
+            ],
+            "full_diagnostic_question_ids": list(
+                st.session_state.get("full_diagnostic_question_ids", set())
+            ),
+            "diagnostic_total_count": st.session_state.get(
+                "diagnostic_total_count", 0
+            ),
+            "diagnostic_completed_before_session": st.session_state.get(
+                "diagnostic_completed_before_session", 0
+            ),
+            "diagnostic_index": st.session_state.get("diagnostic_index", 0),
+            "diagnostic_question_number": st.session_state.get(
+                "diagnostic_question_number", 0
+            ),
+            "adaptive_question_number": st.session_state.get(
+                "adaptive_question_number", 0
+            ),
+            "adaptive_phase_announced": st.session_state.get(
+                "adaptive_phase_announced", False
+            ),
+            "show_adaptive_message": st.session_state.get(
+                "show_adaptive_message", False
+            ),
+            "attempted_or_queued_ids": list(
+                st.session_state.get("attempted_or_queued_ids", set())
+            ),
+            "question_history": history,
+            "history_index": st.session_state.get("history_index"),
+        },
+    }
+
+
+def _supabase_request(path, method="GET", data=None, prefer=None):
+    try:
+        supabase_url = str(st.secrets["SUPABASE_URL"]).rstrip("/")
+        secret_key = str(st.secrets["SUPABASE_SECRET_KEY"])
+    except Exception as exc:
+        raise RuntimeError(
+            f"Supabase credentials are unavailable: {exc}"
+        ) from exc
+
+    headers = {
+        "apikey": secret_key,
+        "Authorization": f"Bearer {secret_key}",
+        "Accept": "application/json",
+    }
+    encoded = None
+    if data is not None:
+        headers["Content-Type"] = "application/json"
+        encoded = json.dumps(data, ensure_ascii=False).encode("utf-8")
+    if prefer:
+        headers["Prefer"] = prefer
+
+    request = urllib.request.Request(
+        f"{supabase_url}/rest/v1/{path}",
+        data=encoded,
+        method=method,
+        headers=headers,
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=10) as response:
+            return response.read().decode("utf-8")
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(
+            f"Supabase returned HTTP {exc.code}: {body}"
+        ) from exc
+    except Exception as exc:
+        raise RuntimeError(str(exc)) from exc
+
+
 def save_session_to_supabase():
     """Persist one completed DOJO session to Supabase."""
-    try:
-        supabase_url = st.secrets["SUPABASE_URL"].rstrip("/")
-        secret_key = st.secrets["SUPABASE_SECRET_KEY"]
-    except Exception as exc:
-        st.session_state.database_save_status = "failed"
-        st.session_state.database_save_error = (
-            f"Supabase secrets are unavailable: {exc}"
-        )
-        return False
-
     payload = build_session_payload()
     row = {
         "session_id": payload["session_id"],
@@ -561,31 +723,13 @@ def save_session_to_supabase():
         "session_data": payload,
     }
 
-    request = urllib.request.Request(
-        f"{supabase_url}/rest/v1/dojo_sessions",
-        data=json.dumps(row, ensure_ascii=False).encode("utf-8"),
-        method="POST",
-        headers={
-            "apikey": secret_key,
-            "Authorization": f"Bearer {secret_key}",
-            "Content-Type": "application/json",
-            "Prefer": "resolution=merge-duplicates,return=minimal",
-        },
-    )
-
     try:
-        with urllib.request.urlopen(request, timeout=10) as response:
-            response.read()
-    except urllib.error.HTTPError as exc:
-        try:
-            detail = exc.read().decode("utf-8", errors="replace")
-        except Exception:
-            detail = str(exc)
-        st.session_state.database_save_status = "failed"
-        st.session_state.database_save_error = (
-            f"Supabase returned HTTP {exc.code}: {detail}"
+        _supabase_request(
+            "dojo_sessions",
+            method="POST",
+            data=row,
+            prefer="resolution=merge-duplicates,return=minimal",
         )
-        return False
     except Exception as exc:
         st.session_state.database_save_status = "failed"
         st.session_state.database_save_error = str(exc)
@@ -596,6 +740,40 @@ def save_session_to_supabase():
     return True
 
 
+def save_active_session_to_supabase():
+    """Upsert the unfinished session so a browser refresh can resume it."""
+    if (
+        not st.session_state.get("started")
+        or st.session_state.get("finished")
+        or not st.session_state.get("session_id")
+        or not st.session_state.get("learner_username")
+    ):
+        return False
+
+    payload = build_active_session_payload()
+    row = {
+        "session_id": payload["session_id"],
+        "learner_username": payload["learner_username"],
+        "started_at": payload["session_started_at"],
+        "finished_at": None,
+        "session_data": payload,
+    }
+
+    try:
+        _supabase_request(
+            "dojo_sessions",
+            method="POST",
+            data=row,
+            prefer="resolution=merge-duplicates,return=minimal",
+        )
+        st.session_state.active_save_error = None
+        return True
+    except Exception as exc:
+        # Do not interrupt the student's work because a background snapshot
+        # failed. The completed-session save still reports failures explicitly.
+        st.session_state.active_save_error = str(exc)
+        return False
+
 
 def normalise_username(raw_username):
     username = str(raw_username or "").strip().lower()
@@ -605,45 +783,14 @@ def normalise_username(raw_username):
 
 
 def load_learner_session_data(username):
-    """Return saved session payloads for one learner, oldest first."""
-    try:
-        supabase_url = str(st.secrets["SUPABASE_URL"]).rstrip("/")
-        secret_key = str(st.secrets["SUPABASE_SECRET_KEY"])
-    except Exception as exc:
-        raise RuntimeError(
-            f"Supabase credentials are unavailable: {exc}"
-        ) from exc
-
+    """Return completed saved sessions for one learner, oldest first."""
     query = urllib.parse.urlencode({
         "select": "session_data",
         "learner_username": f"eq.{username}",
+        "finished_at": "not.is.null",
         "order": "started_at.asc",
     })
-    url = f"{supabase_url}/rest/v1/dojo_sessions?{query}"
-
-    request = urllib.request.Request(
-        url,
-        method="GET",
-        headers={
-            "apikey": secret_key,
-            "Authorization": f"Bearer {secret_key}",
-            "Accept": "application/json",
-        },
-    )
-
-    try:
-        with urllib.request.urlopen(request, timeout=10) as response:
-            body = response.read().decode("utf-8")
-    except urllib.error.HTTPError as exc:
-        body = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(
-            f"Supabase returned HTTP {exc.code}: {body}"
-        ) from exc
-    except Exception as exc:
-        raise RuntimeError(
-            f"Could not retrieve learner history: {exc}"
-        ) from exc
-
+    body = _supabase_request(f"dojo_sessions?{query}")
     rows = json.loads(body or "[]")
     return [
         row.get("session_data", {})
@@ -651,6 +798,23 @@ def load_learner_session_data(username):
         if isinstance(row, dict)
         and isinstance(row.get("session_data"), dict)
     ]
+
+
+def load_latest_active_session(username):
+    """Return the learner's newest unfinished session, if one exists."""
+    query = urllib.parse.urlencode({
+        "select": "session_data",
+        "learner_username": f"eq.{username}",
+        "finished_at": "is.null",
+        "order": "started_at.desc",
+        "limit": "1",
+    })
+    body = _supabase_request(f"dojo_sessions?{query}")
+    rows = json.loads(body or "[]")
+    if not rows:
+        return None
+    payload = rows[0].get("session_data")
+    return payload if isinstance(payload, dict) else None
 
 
 def flatten_attempt_summaries(saved_sessions):
@@ -665,41 +829,202 @@ def flatten_attempt_summaries(saved_sessions):
     return summaries
 
 
+def restore_active_session(payload, historical_attempt_summaries):
+    """Restore the exact unfinished session/question after a refresh."""
+    questions = load_question_bank()
+    by_id = {
+        str(question.get("question_id", "unknown")): question
+        for question in questions
+    }
+    active = payload.get("active_state", {})
+    current_question_id = active.get("current_question_id")
+    current_question = by_id.get(str(current_question_id))
+
+    if current_question is None:
+        raise RuntimeError(
+            "The saved unfinished question is no longer in the question bank."
+        )
+
+    diagnostic_questions = [
+        by_id[question_id]
+        for question_id in active.get("diagnostic_question_ids", [])
+        if question_id in by_id
+    ]
+
+    history = []
+    for saved_entry in active.get("question_history", []):
+        question = by_id.get(str(saved_entry.get("question_id")))
+        if question:
+            history.append({
+                "question": question,
+                "phase_label": saved_entry.get("phase_label"),
+                "display_number": saved_entry.get("display_number"),
+                "display_total": saved_entry.get("display_total"),
+            })
+
+    attempt_snapshot = active.get("attempt")
+    restored_attempt = None
+    if attempt_snapshot:
+        started_at = attempt_snapshot.get("started_at")
+        elapsed = _seconds_since(started_at)
+        now_perf = perf_counter()
+
+        events = list(attempt_snapshot.get("events", []))
+        previous_elapsed = 0.0
+        if events:
+            previous_elapsed = float(
+                events[-1].get("seconds_since_question_started", 0.0) or 0.0
+            )
+
+        restored_attempt = {
+            "attempt_id": attempt_snapshot.get("attempt_id"),
+            "question_id": attempt_snapshot.get("question_id"),
+            "question_number": attempt_snapshot.get("question_number"),
+            "session_total": attempt_snapshot.get("session_total"),
+            "started_at": started_at,
+            "started_perf": now_perf - elapsed,
+            "last_event_perf": now_perf - max(
+                0.0, elapsed - previous_elapsed
+            ),
+            "events": events,
+            "event_index": attempt_snapshot.get(
+                "event_index", len(events)
+            ),
+        }
+
+    session_started_at = payload.get("session_started_at")
+    session_elapsed = _seconds_since(session_started_at)
+
+    st.session_state.clear()
+    st.session_state.started = True
+    st.session_state.finished = False
+    st.session_state.learner_username = payload.get("learner_username")
+    st.session_state.returning_learner = True
+    st.session_state.historical_attempt_summaries = list(
+        historical_attempt_summaries or []
+    )
+    st.session_state.session_id = payload.get("session_id")
+    st.session_state.session_started_at = session_started_at
+    st.session_state.session_started_perf = (
+        perf_counter() - session_elapsed
+    )
+    st.session_state.questions = questions
+    st.session_state.diagnostic_questions = diagnostic_questions
+    st.session_state.full_diagnostic_question_ids = set(
+        active.get("full_diagnostic_question_ids", [])
+    )
+    st.session_state.diagnostic_total_count = active.get(
+        "diagnostic_total_count", 0
+    )
+    st.session_state.diagnostic_completed_before_session = active.get(
+        "diagnostic_completed_before_session", 0
+    )
+    st.session_state.diagnostic_index = active.get("diagnostic_index", 0)
+    st.session_state.diagnostic_question_number = active.get(
+        "diagnostic_question_number", 0
+    )
+    st.session_state.adaptive_question_number = active.get(
+        "adaptive_question_number", 0
+    )
+    st.session_state.adaptive_phase_announced = active.get(
+        "adaptive_phase_announced", False
+    )
+    st.session_state.show_adaptive_message = False
+    st.session_state.attempted_or_queued_ids = set(
+        active.get("attempted_or_queued_ids", [])
+    )
+    st.session_state.events = list(payload.get("events", []))
+    st.session_state.attempt_summaries = list(
+        payload.get("attempt_summaries", [])
+    )
+    st.session_state.question_history = history
+    st.session_state.history_index = active.get("history_index")
+    st.session_state.database_save_status = "not_saved"
+    st.session_state.database_save_error = None
+    st.session_state.active_save_error = None
+    st.session_state.session_finished_at = None
+    st.session_state.session_outcome = None
+
+    st.session_state.current_question = current_question
+    st.session_state.phase_label = active.get("phase_label")
+    st.session_state.display_number = active.get("display_number")
+    st.session_state.display_total = active.get("display_total")
+    st.session_state.reveal_state = _decode_part_map(
+        active.get("reveal_state", {})
+    )
+    st.session_state.check_counts = _decode_part_map(
+        active.get("check_counts", {})
+    )
+    st.session_state.last_check_correct = _decode_part_map(
+        active.get("last_check_correct", {})
+    )
+    st.session_state.solution_seen = _decode_part_map(
+        active.get("solution_seen", {})
+    )
+
+    pending = active.get("check_pending_part", "__none__")
+    if pending == "__whole_question__":
+        pending = None
+    elif pending == "__none__":
+        pending = "__none__"
+    st.session_state.check_pending_part = pending
+    st.session_state.attempt = restored_attempt
+
+
 def begin_for_username(raw_username, mode):
     username = normalise_username(raw_username)
     if username is None:
-        st.error(
-            "Use 3–24 characters: lowercase letters, numbers, "
-            "hyphens or underscores."
-        )
-        return
+        if mode != "auto":
+            st.error(
+                "Use 3–24 characters: lowercase letters, numbers, "
+                "hyphens or underscores."
+            )
+        return False
 
     try:
         saved_sessions = load_learner_session_data(username)
+        active_session = load_latest_active_session(username)
     except Exception as exc:
-        st.error(f"Could not check that username: {exc}")
-        return
+        if mode != "auto":
+            st.error(f"Could not check that username: {exc}")
+        return False
 
-    if mode == "create" and saved_sessions:
+    exists = bool(saved_sessions or active_session)
+
+    if mode == "create" and exists:
         st.error(
             "That username already exists. Use Log in instead, "
             "or choose another username."
         )
-        return
+        return False
 
-    if mode == "login" and not saved_sessions:
+    if mode == "login" and not exists:
         st.error(
-            "No saved sessions were found for that username. "
+            "No saved practice was found for that username. "
             "Check the spelling, or create it as a new username."
         )
-        return
+        return False
+
+    if mode in {"create", "login"}:
+        st.query_params["user"] = username
 
     prior_attempts = flatten_attempt_summaries(saved_sessions)
-    start_session(
-        learner_username=username,
-        historical_attempt_summaries=prior_attempts,
-        returning_learner=bool(saved_sessions),
-    )
+
+    if active_session:
+        try:
+            restore_active_session(active_session, prior_attempts)
+        except Exception as exc:
+            if mode != "auto":
+                st.error(f"Could not resume the unfinished session: {exc}")
+            return False
+    else:
+        start_session(
+            learner_username=username,
+            historical_attempt_summaries=prior_attempts,
+            returning_learner=bool(saved_sessions),
+        )
+
+    return True
 
 
 # ============================================================
@@ -926,6 +1251,7 @@ def initialise_question(question, number, total, phase_label):
         available_parts=parts,
         total_marks=question.get("solution", {}).get("total_marks"),
     )
+    save_active_session_to_supabase()
 
 
 def select_and_initialise_next_question():
@@ -1093,6 +1419,7 @@ def start_session(
     st.session_state.history_index = None
     st.session_state.database_save_status = "not_saved"
     st.session_state.database_save_error = None
+    st.session_state.active_save_error = None
     st.session_state.session_finished_at = None
     st.session_state.session_outcome = None
     st.session_state.current_question = None
@@ -1367,6 +1694,7 @@ def render_markscheme(question):
                     description=step.get("description", ""),
                     marks_available=step.get("marks_available"),
                 )
+                save_active_session_to_supabase()
                 st.rerun()
 
     if st.button(
@@ -1395,6 +1723,7 @@ def render_markscheme(question):
             checks_before_solution=st.session_state.check_counts[part],
             context="markscheme_full",
         )
+        save_active_session_to_supabase()
         st.rerun()
 
 
@@ -1418,6 +1747,8 @@ def begin_check(question, part):
         ),
     )
 
+    st.session_state.check_pending_part = part
+
     if show_that:
         record_attempt_event(
             "show_that_outcome_prompted",
@@ -1431,7 +1762,7 @@ def begin_check(question, part):
             check_number=previous_checks + 1,
         )
 
-    st.session_state.check_pending_part = part
+    save_active_session_to_supabase()
 
 
 def judge_check(question, part, correct):
@@ -1454,6 +1785,7 @@ def judge_check(question, part, correct):
         ),
     )
     st.session_state.check_pending_part = "__none__"
+    save_active_session_to_supabase()
 
 
 def render_check(question):
@@ -1558,6 +1890,7 @@ def render_solution_area(question):
             revealed_steps_before_solution=before,
             checks_before_solution=st.session_state.check_counts[part],
         )
+        save_active_session_to_supabase()
         st.rerun()
 
     if st.session_state.solution_seen[part]:
@@ -1754,6 +2087,7 @@ def render_finished():
             st.error(f"Could not reload your saved practice: {exc}")
 
     if st.button("Log out"):
+        st.query_params.clear()
         st.session_state.clear()
         st.rerun()
 
@@ -1770,6 +2104,12 @@ st.set_page_config(
 
 st.title("DOJO")
 st.caption("A-level Maths Practice — Implicit Differentiation")
+
+if not st.session_state.get("started"):
+    remembered_username = st.query_params.get("user")
+    if remembered_username:
+        if begin_for_username(remembered_username, "auto"):
+            st.rerun()
 
 if not st.session_state.get("started"):
     st.write(
@@ -1811,8 +2151,9 @@ if not st.session_state.get("started"):
             st.rerun()
 
     st.caption(
-        "Beta note: usernames are only used to reconnect your saved DOJO "
-        "practice. There is no password system yet."
+        "Beta note: this browser remembers the username in the page URL "
+        "so a refresh can reconnect to the same unfinished practice. "
+        "There is no password system yet."
     )
 else:
     render_session_download()
