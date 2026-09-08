@@ -843,6 +843,8 @@ def start_session():
     st.session_state.attempted_or_queued_ids = set()
     st.session_state.events = []
     st.session_state.attempt_summaries = []
+    st.session_state.question_history = []
+    st.session_state.history_index = None
     st.session_state.current_question = None
     st.session_state.attempt = None
 
@@ -861,9 +863,74 @@ def start_session():
 
 
 def move_to_next_question(outcome):
+    question = st.session_state.current_question
+    history_entry = {
+        "question": question,
+        "phase_label": st.session_state.phase_label,
+        "display_number": st.session_state.display_number,
+        "display_total": st.session_state.display_total,
+    }
+
     finish_attempt(outcome)
+    st.session_state.question_history.append(history_entry)
+    st.session_state.history_index = None
     select_and_initialise_next_question()
     st.rerun()
+
+
+def render_read_only_question(entry):
+    question = entry["question"]
+    phase = entry["phase_label"]
+    number = entry["display_number"]
+    total = entry["display_total"]
+    total_marks = question.get("solution", {}).get("total_marks")
+
+    st.caption("PREVIOUS QUESTION — READ ONLY")
+    if total is None:
+        st.caption(f"{phase.upper()} QUESTION {number}")
+    else:
+        st.caption(f"{phase.upper()} QUESTION {number} OF {total}")
+    if total_marks is not None:
+        st.caption(f"{total_marks} marks")
+
+    render_math_text(
+        question.get("question", {}).get("text", "Question text missing.")
+    )
+    st.info(
+        "Looking back does not change your recorded attempt or DOJO's "
+        "question selection."
+    )
+
+    markscheme_tab, solution_tab = st.tabs(["Mark scheme", "Full solution"])
+    with markscheme_tab:
+        for part in (get_question_parts(question) or [None]):
+            if part is not None:
+                st.markdown(f"### Part {str(part).upper()}")
+            steps = get_solution_steps(question, part)
+            if not steps:
+                st.info("No mark scheme steps are stored for this part.")
+            for step in steps:
+                render_step(step)
+
+    with solution_tab:
+        render_full_solution(question)
+
+    st.divider()
+    index = st.session_state.history_index
+    earlier_col, current_col = st.columns(2)
+
+    if index > 0:
+        if earlier_col.button("← Earlier question", use_container_width=True):
+            st.session_state.history_index -= 1
+            st.rerun()
+
+    if current_col.button(
+        "Return to current question →",
+        type="primary",
+        use_container_width=True,
+    ):
+        st.session_state.history_index = None
+        st.rerun()
 
 
 def end_session(outcome="user_quit"):
@@ -1299,6 +1366,13 @@ def render_question():
             "or inspect the mark scheme."
         )
 
+    if st.session_state.get("question_history"):
+        if st.button("← Previous question", use_container_width=True):
+            st.session_state.history_index = (
+                len(st.session_state.question_history) - 1
+            )
+            st.rerun()
+
     next_col, skip_col = st.columns(2)
 
     if is_multipart(question):
@@ -1409,5 +1483,11 @@ else:
 
     if st.session_state.get("finished"):
         render_finished()
+    elif st.session_state.get("history_index") is not None:
+        render_read_only_question(
+            st.session_state.question_history[
+                st.session_state.history_index
+            ]
+        )
     elif st.session_state.get("current_question") is not None:
         render_question()
