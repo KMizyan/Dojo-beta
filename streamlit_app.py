@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import datetime
 from pathlib import Path
@@ -530,6 +531,7 @@ def build_session_payload():
     """Build the complete session record used for download and persistence."""
     return {
         "session_id": st.session_state.get("session_id"),
+        "learner_username": st.session_state.get("learner_username"),
         "session_started_at": st.session_state.get("session_started_at"),
         "session_finished_at": st.session_state.get("session_finished_at"),
         "session_outcome": st.session_state.get("session_outcome"),
@@ -553,6 +555,7 @@ def save_session_to_supabase():
     payload = build_session_payload()
     row = {
         "session_id": payload["session_id"],
+        "learner_username": payload["learner_username"],
         "started_at": payload["session_started_at"],
         "finished_at": payload["session_finished_at"],
         "session_data": payload,
@@ -591,6 +594,112 @@ def save_session_to_supabase():
     st.session_state.database_save_status = "saved"
     st.session_state.database_save_error = None
     return True
+
+
+
+def normalise_username(raw_username):
+    username = str(raw_username or "").strip().lower()
+    if not re.fullmatch(r"[a-z0-9_-]{3,24}", username):
+        return None
+    return username
+
+
+def load_learner_session_data(username):
+    """Return saved session payloads for one learner, oldest first."""
+    try:
+        supabase_url = str(st.secrets["SUPABASE_URL"]).rstrip("/")
+        secret_key = str(st.secrets["SUPABASE_SECRET_KEY"])
+    except Exception as exc:
+        raise RuntimeError(
+            f"Supabase credentials are unavailable: {exc}"
+        ) from exc
+
+    query = urllib.parse.urlencode({
+        "select": "session_data",
+        "learner_username": f"eq.{username}",
+        "order": "started_at.asc",
+    })
+    url = f"{supabase_url}/rest/v1/dojo_sessions?{query}"
+
+    request = urllib.request.Request(
+        url,
+        method="GET",
+        headers={
+            "apikey": secret_key,
+            "Authorization": f"Bearer {secret_key}",
+            "Accept": "application/json",
+        },
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=10) as response:
+            body = response.read().decode("utf-8")
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(
+            f"Supabase returned HTTP {exc.code}: {body}"
+        ) from exc
+    except Exception as exc:
+        raise RuntimeError(
+            f"Could not retrieve learner history: {exc}"
+        ) from exc
+
+    rows = json.loads(body or "[]")
+    return [
+        row.get("session_data", {})
+        for row in rows
+        if isinstance(row, dict)
+        and isinstance(row.get("session_data"), dict)
+    ]
+
+
+def flatten_attempt_summaries(saved_sessions):
+    summaries = []
+    for session in saved_sessions:
+        session_summaries = session.get("attempt_summaries", [])
+        if isinstance(session_summaries, list):
+            summaries.extend(
+                item for item in session_summaries
+                if isinstance(item, dict)
+            )
+    return summaries
+
+
+def begin_for_username(raw_username, mode):
+    username = normalise_username(raw_username)
+    if username is None:
+        st.error(
+            "Use 3–24 characters: lowercase letters, numbers, "
+            "hyphens or underscores."
+        )
+        return
+
+    try:
+        saved_sessions = load_learner_session_data(username)
+    except Exception as exc:
+        st.error(f"Could not check that username: {exc}")
+        return
+
+    if mode == "create" and saved_sessions:
+        st.error(
+            "That username already exists. Use Log in instead, "
+            "or choose another username."
+        )
+        return
+
+    if mode == "login" and not saved_sessions:
+        st.error(
+            "No saved sessions were found for that username. "
+            "Check the spelling, or create it as a new username."
+        )
+        return
+
+    prior_attempts = flatten_attempt_summaries(saved_sessions)
+    start_session(
+        learner_username=username,
+        historical_attempt_summaries=prior_attempts,
+        returning_learner=bool(saved_sessions),
+    )
 
 
 # ============================================================
@@ -856,7 +965,10 @@ def select_and_initialise_next_question():
             ),
         )
 
-    attempts = attempt_summaries()
+    attempts = (
+        st.session_state.get("historical_attempt_summaries", [])
+        + attempt_summaries()
+    )
     question = select_next_question(
         questions=questions,
         attempt_summaries=attempts,
@@ -895,14 +1007,32 @@ def select_and_initialise_next_question():
     )
 
 
-def start_session():
+def start_session(
+    learner_username,
+    historical_attempt_summaries=None,
+    returning_learner=False,
+):
     questions = load_question_bank()
-    diagnostic = build_diagnostic_set(questions)
+    historical_attempt_summaries = list(
+        historical_attempt_summaries or []
+    )
+    diagnostic = [] if returning_learner else build_diagnostic_set(questions)
     session_id = make_id("session")
+
+    historical_question_ids = {
+        str(summary.get("question_id"))
+        for summary in historical_attempt_summaries
+        if summary.get("question_id") is not None
+    }
 
     st.session_state.clear()
     st.session_state.started = True
     st.session_state.finished = False
+    st.session_state.learner_username = learner_username
+    st.session_state.returning_learner = returning_learner
+    st.session_state.historical_attempt_summaries = (
+        historical_attempt_summaries
+    )
     st.session_state.session_id = session_id
     st.session_state.session_started_at = now_iso()
     st.session_state.session_started_perf = perf_counter()
@@ -912,8 +1042,8 @@ def start_session():
     st.session_state.diagnostic_question_number = 0
     st.session_state.adaptive_question_number = 0
     st.session_state.adaptive_phase_announced = False
-    st.session_state.show_adaptive_message = False
-    st.session_state.attempted_or_queued_ids = set()
+    st.session_state.show_adaptive_message = returning_learner
+    st.session_state.attempted_or_queued_ids = set(historical_question_ids)
     st.session_state.events = []
     st.session_state.attempt_summaries = []
     st.session_state.question_history = []
@@ -931,10 +1061,16 @@ def start_session():
     ]
     record_session_event(
         "session_started",
+        learner_username=learner_username,
         bank_question_count=len(questions),
         diagnostic_question_count=len(diagnostic),
-        selection_method="diagnostic_then_adaptive_v1",
+        selection_method=(
+            "adaptive_from_learner_history_v1"
+            if returning_learner
+            else "diagnostic_then_adaptive_v1"
+        ),
         diagnostic_question_order=diagnostic_ids,
+        historical_attempt_summary_count=len(historical_attempt_summaries),
     )
     select_and_initialise_next_question()
 
@@ -1389,10 +1525,15 @@ def render_question():
     total_marks = question.get("solution", {}).get("total_marks")
 
     if st.session_state.get("show_adaptive_message"):
-        st.success(
-            "Diagnostic complete. DOJO is now choosing questions from "
-            "what has happened in this session."
-        )
+        if st.session_state.get("returning_learner"):
+            st.success(
+                "Welcome back. DOJO is continuing from your previous practice."
+            )
+        else:
+            st.success(
+                "Diagnostic complete. DOJO is now choosing questions from "
+                "what has happened in this session."
+            )
         st.session_state.show_adaptive_message = False
 
     if total is None:
@@ -1526,8 +1667,22 @@ def render_finished():
         "keep this beta session data."
     )
 
-    if st.button("Start a new session", type="primary"):
-        start_session()
+    if st.button("Start another session", type="primary"):
+        username = st.session_state.get("learner_username")
+        try:
+            saved_sessions = load_learner_session_data(username)
+            prior_attempts = flatten_attempt_summaries(saved_sessions)
+            start_session(
+                learner_username=username,
+                historical_attempt_summaries=prior_attempts,
+                returning_learner=bool(saved_sessions),
+            )
+            st.rerun()
+        except Exception as exc:
+            st.error(f"Could not reload your saved practice: {exc}")
+
+    if st.button("Log out"):
+        st.session_state.clear()
         st.rerun()
 
 
@@ -1550,9 +1705,8 @@ if not st.session_state.get("started"):
         "**Check** to compare your result."
     )
     st.write(
-        "You can inspect the mark scheme selectively at any time. "
-        "The session begins with a short diagnostic, then DOJO chooses "
-        "subsequent questions from what has happened in the session."
+        "New learners begin with a short diagnostic. When you return with "
+        "the same username, DOJO continues from your previous practice."
     )
 
     try:
@@ -1562,9 +1716,32 @@ if not st.session_state.get("started"):
         st.error(f"Could not load question_bank.json: {exc}")
         st.stop()
 
-    if st.button("Begin practice", type="primary"):
-        start_session()
-        st.rerun()
+    username_input = st.text_input(
+        "Username",
+        placeholder="e.g. alex03",
+        help="3–24 lowercase letters, numbers, hyphens or underscores.",
+    )
+
+    create_col, login_col = st.columns(2)
+
+    if create_col.button(
+        "Create username",
+        type="primary",
+        use_container_width=True,
+    ):
+        begin_for_username(username_input, "create")
+        if st.session_state.get("started"):
+            st.rerun()
+
+    if login_col.button("Log in", use_container_width=True):
+        begin_for_username(username_input, "login")
+        if st.session_state.get("started"):
+            st.rerun()
+
+    st.caption(
+        "Beta note: usernames are only used to reconnect your saved DOJO "
+        "practice. There is no password system yet."
+    )
 else:
     render_session_download()
 
