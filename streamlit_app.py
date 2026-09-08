@@ -937,20 +937,29 @@ def select_and_initialise_next_question():
         st.session_state.diagnostic_index += 1
         st.session_state.diagnostic_question_number += 1
 
+        overall_position = (
+            st.session_state.get("diagnostic_completed_before_session", 0)
+            + st.session_state.diagnostic_question_number
+        )
+        overall_total = st.session_state.get(
+            "diagnostic_total_count",
+            len(diagnostic),
+        )
+
         question_id = str(question.get("question_id", "unknown"))
         st.session_state.attempted_or_queued_ids.add(question_id)
 
         record_selection_event(
             question,
             "diagnostic",
-            diagnostic_position=st.session_state.diagnostic_index,
-            diagnostic_total=len(diagnostic),
+            diagnostic_position=overall_position,
+            diagnostic_total=overall_total,
         )
 
         initialise_question(
             question,
-            st.session_state.diagnostic_question_number,
-            len(diagnostic),
+            overall_position,
+            overall_total,
             "Diagnostic",
         )
         return
@@ -960,8 +969,9 @@ def select_and_initialise_next_question():
         st.session_state.show_adaptive_message = True
         record_session_event(
             "adaptive_phase_started",
-            diagnostic_questions_completed=(
-                st.session_state.diagnostic_question_number
+            diagnostic_questions_completed=st.session_state.get(
+                "diagnostic_total_count",
+                st.session_state.diagnostic_question_number,
             ),
         )
 
@@ -1016,7 +1026,27 @@ def start_session(
     historical_attempt_summaries = list(
         historical_attempt_summaries or []
     )
-    diagnostic = [] if returning_learner else build_diagnostic_set(questions)
+
+    full_diagnostic = build_diagnostic_set(questions)
+    full_diagnostic_ids = {
+        str(question.get("question_id", "unknown"))
+        for question in full_diagnostic
+    }
+
+    completed_historical_diagnostic_ids = {
+        str(summary.get("question_id"))
+        for summary in historical_attempt_summaries
+        if summary.get("outcome") == "completed"
+        and str(summary.get("question_id")) in full_diagnostic_ids
+    }
+
+    diagnostic = [
+        question
+        for question in full_diagnostic
+        if str(question.get("question_id", "unknown"))
+        not in completed_historical_diagnostic_ids
+    ]
+
     session_id = make_id("session")
 
     historical_question_ids = {
@@ -1024,6 +1054,10 @@ def start_session(
         for summary in historical_attempt_summaries
         if summary.get("question_id") is not None
     }
+
+    diagnostic_complete_before_session = (
+        len(completed_historical_diagnostic_ids) == len(full_diagnostic)
+    )
 
     st.session_state.clear()
     st.session_state.started = True
@@ -1038,11 +1072,20 @@ def start_session(
     st.session_state.session_started_perf = perf_counter()
     st.session_state.questions = questions
     st.session_state.diagnostic_questions = diagnostic
+    st.session_state.full_diagnostic_question_ids = full_diagnostic_ids
+    st.session_state.diagnostic_total_count = len(full_diagnostic)
+    st.session_state.diagnostic_completed_before_session = len(
+        completed_historical_diagnostic_ids
+    )
     st.session_state.diagnostic_index = 0
     st.session_state.diagnostic_question_number = 0
     st.session_state.adaptive_question_number = 0
-    st.session_state.adaptive_phase_announced = False
-    st.session_state.show_adaptive_message = returning_learner
+    st.session_state.adaptive_phase_announced = (
+        diagnostic_complete_before_session
+    )
+    st.session_state.show_adaptive_message = (
+        returning_learner and diagnostic_complete_before_session
+    )
     st.session_state.attempted_or_queued_ids = set(historical_question_ids)
     st.session_state.events = []
     st.session_state.attempt_summaries = []
@@ -1063,9 +1106,15 @@ def start_session(
         "session_started",
         learner_username=learner_username,
         bank_question_count=len(questions),
-        diagnostic_question_count=len(diagnostic),
+        diagnostic_question_count=len(full_diagnostic),
+        diagnostic_questions_already_completed=len(
+            completed_historical_diagnostic_ids
+        ),
+        diagnostic_questions_remaining=len(diagnostic),
         selection_method=(
             "adaptive_from_learner_history_v1"
+            if diagnostic_complete_before_session
+            else "resume_diagnostic_then_adaptive_v1"
             if returning_learner
             else "diagnostic_then_adaptive_v1"
         ),
@@ -1159,15 +1208,28 @@ def end_session(outcome="user_quit"):
             perf_counter() - st.session_state.session_started_perf, 3
         )
 
+    diagnostic_ids = st.session_state.get(
+        "full_diagnostic_question_ids",
+        set(),
+    )
+    completed_this_session = {
+        str(summary.get("question_id"))
+        for summary in attempt_summaries()
+        if summary.get("outcome") == "completed"
+        and str(summary.get("question_id")) in diagnostic_ids
+    }
+    diagnostic_questions_completed = min(
+        st.session_state.get("diagnostic_total_count", 0),
+        st.session_state.get("diagnostic_completed_before_session", 0)
+        + len(completed_this_session),
+    )
+
     record_session_event(
         "session_ended",
         duration_seconds=duration,
         outcome=outcome,
         questions_attempted=len(attempt_summaries()),
-        diagnostic_questions_completed=min(
-            len(attempt_summaries()),
-            len(st.session_state.get("diagnostic_questions", [])),
-        ),
+        diagnostic_questions_completed=diagnostic_questions_completed,
     )
 
     st.session_state.session_outcome = outcome
@@ -1535,6 +1597,16 @@ def render_question():
                 "what has happened in this session."
             )
         st.session_state.show_adaptive_message = False
+
+    if (
+        st.session_state.get("returning_learner")
+        and st.session_state.get("diagnostic_questions")
+        and st.session_state.get("diagnostic_index", 0) == 1
+    ):
+        st.info(
+            "Welcome back. You have not finished the diagnostic yet, "
+            "so DOJO is continuing it from where you left off."
+        )
 
     if total is None:
         st.caption(f"{phase.upper()} QUESTION {number}")
