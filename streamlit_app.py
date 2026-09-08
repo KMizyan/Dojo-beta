@@ -1514,6 +1514,9 @@ def render_finished():
             "Automatic session saving failed. Please use the sidebar download "
             "as a backup for this session."
         )
+        error_detail = st.session_state.get("database_save_error")
+        if error_detail:
+            st.error(f"Database error: {error_detail}")
 
     st.write(
         f"Questions attempted: **{len(st.session_state.attempt_summaries)}**"
