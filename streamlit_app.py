@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import re
+import urllib.error
+import urllib.request
 from datetime import datetime
 from pathlib import Path
 from time import perf_counter
@@ -521,6 +523,77 @@ def render_answer_value(value):
         st.write(text)
 
 # ============================================================
+# PERSISTENT SESSION STORAGE
+# ============================================================
+
+def build_session_payload():
+    """Build the complete session record used for download and persistence."""
+    return {
+        "session_id": st.session_state.get("session_id"),
+        "session_started_at": st.session_state.get("session_started_at"),
+        "session_finished_at": st.session_state.get("session_finished_at"),
+        "session_outcome": st.session_state.get("session_outcome"),
+        "events": st.session_state.get("events", []),
+        "attempt_summaries": st.session_state.get("attempt_summaries", []),
+    }
+
+
+def save_session_to_supabase():
+    """Persist one completed DOJO session to Supabase."""
+    try:
+        supabase_url = st.secrets["SUPABASE_URL"].rstrip("/")
+        secret_key = st.secrets["SUPABASE_SECRET_KEY"]
+    except Exception as exc:
+        st.session_state.database_save_status = "failed"
+        st.session_state.database_save_error = (
+            f"Supabase secrets are unavailable: {exc}"
+        )
+        return False
+
+    payload = build_session_payload()
+    row = {
+        "session_id": payload["session_id"],
+        "started_at": payload["session_started_at"],
+        "finished_at": payload["session_finished_at"],
+        "session_data": payload,
+    }
+
+    request = urllib.request.Request(
+        f"{supabase_url}/rest/v1/dojo_sessions",
+        data=json.dumps(row, ensure_ascii=False).encode("utf-8"),
+        method="POST",
+        headers={
+            "apikey": secret_key,
+            "Authorization": f"Bearer {secret_key}",
+            "Content-Type": "application/json",
+            "Prefer": "resolution=merge-duplicates,return=minimal",
+        },
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=10) as response:
+            response.read()
+    except urllib.error.HTTPError as exc:
+        try:
+            detail = exc.read().decode("utf-8", errors="replace")
+        except Exception:
+            detail = str(exc)
+        st.session_state.database_save_status = "failed"
+        st.session_state.database_save_error = (
+            f"Supabase returned HTTP {exc.code}: {detail}"
+        )
+        return False
+    except Exception as exc:
+        st.session_state.database_save_status = "failed"
+        st.session_state.database_save_error = str(exc)
+        return False
+
+    st.session_state.database_save_status = "saved"
+    st.session_state.database_save_error = None
+    return True
+
+
+# ============================================================
 # IN-MEMORY SESSION / ATTEMPT LOGGING
 # ============================================================
 
@@ -845,6 +918,10 @@ def start_session():
     st.session_state.attempt_summaries = []
     st.session_state.question_history = []
     st.session_state.history_index = None
+    st.session_state.database_save_status = "not_saved"
+    st.session_state.database_save_error = None
+    st.session_state.session_finished_at = None
+    st.session_state.session_outcome = None
     st.session_state.current_question = None
     st.session_state.attempt = None
 
@@ -956,8 +1033,13 @@ def end_session(outcome="user_quit"):
             len(st.session_state.get("diagnostic_questions", [])),
         ),
     )
-    st.session_state.finished = True
+
     st.session_state.session_outcome = outcome
+    st.session_state.session_finished_at = now_iso()
+
+    save_session_to_supabase()
+
+    st.session_state.finished = True
     st.session_state.current_question = None
     st.session_state.attempt = None
 
@@ -1288,14 +1370,7 @@ def render_session_download():
     if not st.session_state.get("started"):
         return
 
-    payload = {
-        "session_id": st.session_state.get("session_id"),
-        "session_started_at": st.session_state.get("session_started_at"),
-        "events": st.session_state.get("events", []),
-        "attempt_summaries": st.session_state.get(
-            "attempt_summaries", []
-        ),
-    }
+    payload = build_session_payload()
 
     st.sidebar.download_button(
         "Download session log",
@@ -1430,6 +1505,15 @@ def render_finished():
         )
     else:
         st.success("Session ended.")
+
+    save_status = st.session_state.get("database_save_status")
+    if save_status == "saved":
+        st.caption("Session data saved automatically.")
+    elif save_status == "failed":
+        st.warning(
+            "Automatic session saving failed. Please use the sidebar download "
+            "as a backup for this session."
+        )
 
     st.write(
         f"Questions attempted: **{len(st.session_state.attempt_summaries)}**"
