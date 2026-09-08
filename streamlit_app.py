@@ -8,6 +8,13 @@ from time import perf_counter
 from uuid import uuid4
 
 import streamlit as st
+import sympy as sp
+from sympy.parsing.sympy_parser import (
+    convert_xor,
+    implicit_multiplication_application,
+    parse_expr,
+    standard_transformations,
+)
 
 from diagnostic_selector import build_diagnostic_set
 from next_question_selector import (
@@ -230,6 +237,267 @@ def _display_value(value, indent=0):
 
     return prefix + str(value)
 
+
+# ============================================================
+# STUDENT-FACING MATHS RENDERING
+# ============================================================
+
+_MATH_TRANSFORMATIONS = (
+    standard_transformations
+    + (convert_xor, implicit_multiplication_application)
+)
+
+_MATH_LOCALS = {
+    "x": sp.Symbol("x"),
+    "y": sp.Symbol("y"),
+    "p": sp.Symbol("p"),
+    "q": sp.Symbol("q"),
+    "F": sp.Function("F"),
+    "sin": sp.sin,
+    "cos": sp.cos,
+    "tan": sp.tan,
+    "sec": sp.sec,
+    "exp": sp.exp,
+    "log": sp.log,
+    "sqrt": sp.sqrt,
+    "pi": sp.pi,
+    "E": sp.E,
+}
+
+
+def _strip_mark_annotation(text):
+    return re.sub(r"\s*\[\d+\]\s*$", "", str(text)).strip()
+
+
+def _prepare_expression(text):
+    """
+    Convert the small amount of Python-style maths stored in the current bank
+    into something SymPy can parse, while protecting derivative notation.
+    """
+    prepared = _strip_mark_annotation(text)
+    prepared = prepared.replace("d²y/dx²", "D2")
+    prepared = prepared.replace("d2y/dx2", "D2")
+    prepared = prepared.replace("dy/dx", "D1")
+    prepared = prepared.replace("Fx", "FX")
+    prepared = prepared.replace("Fy", "FY")
+    prepared = prepared.replace("^", "**")
+    return prepared
+
+
+def _expression_to_latex(text):
+    prepared = _prepare_expression(text)
+
+    local_dict = dict(_MATH_LOCALS)
+    local_dict.update({
+        "D1": sp.Symbol("D1"),
+        "D2": sp.Symbol("D2"),
+        "FX": sp.Symbol("FX"),
+        "FY": sp.Symbol("FY"),
+    })
+
+    expr = parse_expr(
+        prepared,
+        local_dict=local_dict,
+        transformations=_MATH_TRANSFORMATIONS,
+        evaluate=False,
+    )
+
+    latex = sp.latex(expr)
+    latex = latex.replace("D_{1}", r"\frac{dy}{dx}")
+    latex = latex.replace("D_{2}", r"\frac{d^{2}y}{dx^{2}}")
+    latex = latex.replace("FX", r"F_x")
+    latex = latex.replace("FY", r"F_y")
+    return latex
+
+
+def _equation_to_latex(text):
+    cleaned = _strip_mark_annotation(text)
+
+    if "=" not in cleaned:
+        return _expression_to_latex(cleaned)
+
+    left, right = cleaned.split("=", 1)
+    return (
+        _expression_to_latex(left.strip())
+        + " = "
+        + _expression_to_latex(right.strip())
+    )
+
+
+def _looks_like_math_line(text):
+    stripped = _strip_mark_annotation(text)
+
+    if not stripped:
+        return False
+
+    lowered = stripped.lower()
+    if lowered.startswith(("therefore", "hence", "since", "from ", "using ")):
+        return False
+
+    if stripped.startswith("d/dx["):
+        return True
+
+    if "=" in stripped:
+        # Ordinary prose containing "=" is rare in the bank. Exclude lines that
+        # are clearly sentences rather than mathematical statements.
+        prose_starts = (
+            "the ",
+            "at ",
+            "a ",
+            "when ",
+            "where ",
+            "given ",
+        )
+        if not lowered.startswith(prose_starts):
+            return True
+
+    math_tokens = (
+        "**", "^", "sqrt(", "sin(", "cos(", "tan(", "log(",
+        "dy/dx", "d²y/dx²",
+    )
+    return any(token in stripped for token in math_tokens) and " " not in stripped
+
+
+def _inline_math_markdown(text):
+    """
+    Lightweight inline formatting for derivative notation and a few common
+    symbols inside otherwise ordinary English sentences.
+    """
+    rendered = str(text)
+    rendered = rendered.replace(
+        "d²y/dx²",
+        r"$\frac{d^{2}y}{dx^{2}}$",
+    )
+    rendered = rendered.replace(
+        "dy/dx",
+        r"$\frac{dy}{dx}$",
+    )
+    rendered = re.sub(r"\bFx\b", r"$F_x$", rendered)
+    rendered = re.sub(r"\bFy\b", r"$F_y$", rendered)
+    return rendered
+
+
+def render_math_text(text):
+    """
+    Render question/solution text line-by-line.
+
+    Standalone mathematical statements are shown with Streamlit's LaTeX
+    renderer. Ordinary English remains ordinary text, with derivative notation
+    rendered inline.
+    """
+    lines = str(text).splitlines()
+
+    for raw_line in lines:
+        line = raw_line.strip()
+
+        if not line:
+            st.write("")
+            continue
+
+        if line.startswith("•"):
+            st.markdown("- " + _inline_math_markdown(line[1:].strip()))
+            continue
+
+        # Common solution-engine connectors followed by a mathematical result.
+        connector_match = re.match(
+            r"^(Hence|Therefore)\s+(.+)$",
+            line,
+            flags=re.IGNORECASE,
+        )
+        if connector_match:
+            connector = connector_match.group(1).capitalize()
+            remainder = connector_match.group(2).strip()
+            st.write(connector)
+            try:
+                st.latex(_equation_to_latex(remainder))
+            except Exception:
+                st.markdown(_inline_math_markdown(remainder))
+            continue
+
+        if _looks_like_math_line(line):
+            try:
+                # d/dx[...] = ... needs a small display-only conversion because
+                # it is operator notation rather than a normal algebraic expr.
+                derivative_match = re.match(
+                    r"^d/dx\[(.+)\]\s*=\s*(.+)$",
+                    _strip_mark_annotation(line),
+                )
+                if derivative_match:
+                    inside = _expression_to_latex(
+                        derivative_match.group(1)
+                    )
+                    result = _expression_to_latex(
+                        derivative_match.group(2)
+                    )
+                    st.latex(
+                        rf"\frac{{d}}{{dx}}\left[{inside}\right] = {result}"
+                    )
+                else:
+                    st.latex(_equation_to_latex(line))
+            except Exception:
+                st.markdown(_inline_math_markdown(line))
+            continue
+
+        st.markdown(_inline_math_markdown(line))
+
+
+def render_answer_value(value):
+    """
+    Keep the bank's existing answer structure, but render mathematical leaves
+    with the same student-facing maths renderer.
+    """
+    if isinstance(value, dict):
+        value_type = value.get("__type__")
+
+        if value_type == "sympy":
+            expression = value.get("expression", "")
+            try:
+                st.latex(_expression_to_latex(expression))
+            except Exception:
+                st.write(expression)
+            return
+
+        if value_type == "tuple":
+            items = value.get("items", [])
+            rendered = ", ".join(_display_value(item).strip() for item in items)
+            try:
+                st.latex(
+                    r"\left(" + _expression_to_latex(rendered) + r"\right)"
+                )
+            except Exception:
+                st.write(f"({rendered})")
+            return
+
+        if value_type == "set":
+            items = value.get("items", [])
+            st.write("{" + ", ".join(_display_value(item).strip() for item in items) + "}")
+            return
+
+        if value_type == "repr":
+            render_math_text(value.get("value", ""))
+            return
+
+        for key, item in value.items():
+            readable_key = key.replace("_", " ").title()
+            st.markdown(f"**{readable_key}**")
+            render_answer_value(item)
+        return
+
+    if isinstance(value, list):
+        for item in value:
+            render_answer_value(item)
+        return
+
+    text = str(value)
+    try:
+        if _looks_like_math_line(text) or any(
+            token in text for token in ("x", "y", "p", "q", "/")
+        ):
+            st.latex(_equation_to_latex(text))
+        else:
+            st.write(text)
+    except Exception:
+        st.write(text)
 
 # ============================================================
 # IN-MEMORY SESSION / ATTEMPT LOGGING
@@ -617,7 +885,7 @@ def render_step(step):
 
     working = step.get("working")
     if working:
-        st.text(working)
+        render_math_text(working)
 
     marks_available = step.get("marks_available")
     if marks_available is not None:
@@ -835,8 +1103,14 @@ def render_check(question):
             elif status is False:
                 st.caption("Last check: recorded not correct.")
 
+        check_button_label = (
+            "Confirm my working"
+            if is_show_that_task(question, part)
+            else "Compare / check my work"
+        )
+
         if st.button(
-            "Compare / check my work",
+            check_button_label,
             type="primary",
             key=f"begin_check_{question.get('question_id')}_{part}",
         ):
@@ -851,17 +1125,17 @@ def render_check(question):
         st.markdown(f"### Part {str(part).upper()}")
 
     if show_that:
-        st.markdown("### Show-that check")
+        st.markdown("### Check your working")
         st.write(
-            "The required result is already stated in the question, "
-            "so there is no separate final answer to reveal."
+            "Because the final result is already given, this check is about "
+            "whether you produced a valid route to it yourself."
         )
         st.write(
-            "Use the mark scheme if you want to compare the route or "
-            "individual working steps."
+            "You can use the mark scheme afterwards if you want to compare "
+            "individual steps."
         )
         st.write(
-            "**Did you successfully reach the stated result from valid working?**"
+            "**Did you reach the stated result using valid working of your own?**"
         )
     else:
         st.markdown("### Compare your answer")
@@ -870,7 +1144,7 @@ def render_check(question):
             if is_multipart(question)
             else question.get("answer", {})
         )
-        st.code(_display_value(answer), language=None)
+        render_answer_value(answer)
         st.write("**Does your answer agree with this?**")
 
     yes_col, no_col = st.columns(2)
@@ -966,7 +1240,7 @@ def render_question():
     if total_marks is not None:
         st.caption(f"{total_marks} marks")
 
-    st.text(question.get("question", {}).get(
+    render_math_text(question.get("question", {}).get(
         "text", "Question text missing."
     ))
 
