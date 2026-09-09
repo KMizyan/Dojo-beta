@@ -365,6 +365,233 @@ def _equation_to_latex(text):
     )
 
 
+def _normalise_compact_variable_products(text):
+    allowed_letters = {"p", "q", "x", "y"}
+
+    def repl(match):
+        token = match.group(0)
+        if len(token) >= 2 and set(token).issubset(allowed_letters):
+            return "*".join(token)
+        return token
+
+    return re.sub(r"\b[pqxy]{2,}\b", repl, str(text))
+
+
+def _math_identifiers_are_safe(text):
+    candidate = _normalise_compact_variable_products(text)
+    allowed = {
+        "x", "y", "p", "q",
+        "sin", "cos", "tan", "sec", "exp", "log", "sqrt",
+        "pi", "E", "dy", "dx",
+    }
+    identifiers = re.findall(r"[A-Za-z]+", str(candidate))
+    return all(identifier in allowed for identifier in identifiers)
+
+
+def _safe_expression_latex(text):
+    candidate = _normalise_compact_variable_products(str(text).strip())
+    if not candidate or not _math_identifiers_are_safe(candidate):
+        return None
+    try:
+        return _expression_to_latex(candidate)
+    except Exception:
+        return None
+
+
+def _safe_equation_latex(text):
+    candidate = _normalise_compact_variable_products(str(text).strip())
+    if "=" not in candidate or not _math_identifiers_are_safe(candidate):
+        return None
+    try:
+        return _equation_to_latex(candidate)
+    except Exception:
+        return None
+
+
+def _balanced_parenthesis_spans(text):
+    spans = []
+    depth = 0
+    start = None
+
+    for index, char in enumerate(str(text)):
+        if char == "(":
+            if depth == 0:
+                start = index
+            depth += 1
+        elif char == ")" and depth:
+            depth -= 1
+            if depth == 0 and start is not None:
+                spans.append((start, index + 1))
+                start = None
+
+    return spans
+
+
+def _latex_for_parenthesised_fragment(fragment):
+    raw = str(fragment).strip()
+    if len(raw) < 2 or not (raw.startswith("(") and raw.endswith(")")):
+        return None
+
+    inner = raw[1:-1].strip()
+
+    depth = 0
+    comma_index = None
+    for index, char in enumerate(inner):
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            depth = max(0, depth - 1)
+        elif char == "," and depth == 0:
+            comma_index = index
+            break
+
+    if comma_index is not None:
+        left = inner[:comma_index].strip()
+        right = inner[comma_index + 1:].strip()
+        left_latex = _safe_expression_latex(left)
+        right_latex = _safe_expression_latex(right)
+        if left_latex is not None and right_latex is not None:
+            return rf"\left({left_latex}, {right_latex}\right)"
+        return None
+
+    expr_latex = _safe_expression_latex(inner)
+    if expr_latex is not None:
+        return rf"\left({expr_latex}\right)"
+
+    return None
+
+
+def _replace_balanced_parenthesised_math(text):
+    raw = str(text)
+    spans = _balanced_parenthesis_spans(raw)
+    if not spans:
+        return raw
+
+    pieces = []
+    cursor = 0
+    changed = False
+
+    for start, end in spans:
+        fragment = raw[start:end]
+        latex = _latex_for_parenthesised_fragment(fragment)
+        if latex is None:
+            continue
+
+        pieces.append(raw[cursor:start])
+        pieces.append(f"${latex}$")
+        cursor = end
+        changed = True
+
+    if not changed:
+        return raw
+
+    pieces.append(raw[cursor:])
+    return "".join(pieces)
+
+
+def _candidate_math_substrings(text):
+    raw = str(text)
+    eq_positions = [m.start() for m in re.finditer("=", raw)]
+
+    boundaries = {0, len(raw)}
+    for m in re.finditer(r"[\s,;:•]", raw):
+        boundaries.add(m.start())
+        boundaries.add(m.end())
+    for m in re.finditer(r"[.!?]", raw):
+        boundaries.add(m.start())
+        boundaries.add(m.end())
+
+    ordered = sorted(boundaries)
+
+    for eq_pos in eq_positions:
+        lefts = [b for b in ordered if b <= eq_pos]
+        rights = [b for b in ordered if b > eq_pos]
+
+        for left in reversed(lefts):
+            for right in rights:
+                candidate = raw[left:right].strip(" ,;:")
+                if "=" not in candidate:
+                    continue
+                yield left, right, candidate
+
+
+def _find_embedded_equation_span(text):
+    best = None
+    raw = str(text)
+
+    for left, right, candidate in _candidate_math_substrings(raw):
+        latex = _safe_equation_latex(candidate)
+        if latex is None:
+            continue
+
+        length = len(candidate)
+        if best is None or length > best[0]:
+            best = (length, left, right, candidate, latex)
+
+    if best is None:
+        return None
+
+    _, left, right, candidate, latex = best
+    return left, right, candidate, latex
+
+
+def _replace_embedded_equations(text):
+    rendered = str(text)
+    safety = 0
+
+    while "=" in rendered and safety < 8:
+        safety += 1
+        found = _find_embedded_equation_span(rendered)
+        if not found:
+            break
+
+        left, right, candidate, latex = found
+        new_rendered = rendered[:left] + f"${latex}$" + rendered[right:]
+
+        if new_rendered == rendered:
+            break
+
+        rendered = new_rendered
+
+    return rendered
+
+
+def _replace_function_tokens(text):
+    rendered = str(text)
+
+    pattern = re.compile(
+        r"(?<![A-Za-z])"
+        r"(?P<expr>-?(?:\d+(?:\.\d+)?\*)?"
+        r"(?:sqrt|sin|cos|tan|sec|log|exp)\([^()]+\))"
+    )
+
+    def repl(match):
+        expr = match.group("expr")
+        latex = _safe_expression_latex(expr)
+        return f"${latex}$" if latex is not None else expr
+
+    return pattern.sub(repl, rendered)
+
+
+def _replace_compact_algebra_tokens(text):
+    rendered = str(text)
+    rendered = _replace_balanced_parenthesised_math(rendered)
+    rendered = _replace_function_tokens(rendered)
+
+    rendered = rendered.replace(
+        "d²y/dx²",
+        r"$\frac{d^{2}y}{dx^{2}}$",
+    )
+    rendered = rendered.replace(
+        "dy/dx",
+        r"$\frac{dy}{dx}$",
+    )
+    rendered = re.sub(r"\bFx\b", r"$F_x$", rendered)
+    rendered = re.sub(r"\bFy\b", r"$F_y$", rendered)
+
+    return rendered
+
+
 def _looks_like_math_line(text):
     """
     Decide whether the entire line is maths.
