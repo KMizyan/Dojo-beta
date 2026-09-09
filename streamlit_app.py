@@ -417,10 +417,78 @@ def _looks_like_math_line(text):
 
 
 
+def _math_identifiers_are_safe(text):
+    """
+    Only allow identifiers that belong to the maths vocabulary we intentionally
+    support. This prevents prose words such as 'set' or 'tangent' being parsed
+    as multiplied SymPy symbols.
+    """
+    allowed = {
+        "x", "y", "p", "q",
+        "sin", "cos", "tan", "sec", "exp", "log", "sqrt",
+        "pi", "E", "dy", "dx",
+    }
+    identifiers = re.findall(r"[A-Za-z]+", str(text))
+    return all(identifier in allowed for identifier in identifiers)
+
+
+def _split_embedded_equation(text):
+    """
+    Find a mathematical equation embedded at the end of a prose sentence.
+
+    Example:
+        'For a vertical tangent, set 3*(x + 2*y) = 0.'
+    becomes:
+        ('For a vertical tangent, set ', '3*(x + 2*y) = 0', '.')
+    """
+    raw = str(text).rstrip()
+    punctuation = ""
+    if raw and raw[-1] in ".,;:":
+        punctuation = raw[-1]
+        raw = raw[:-1].rstrip()
+
+    if "=" not in raw:
+        return None
+
+    # Try suffixes beginning after each whitespace position, longest prose
+    # prefix first. Accept only suffixes whose identifiers are known maths.
+    starts = [0]
+    starts.extend(match.end() for match in re.finditer(r"\s+", raw))
+
+    for start in reversed(starts):
+        candidate = raw[start:].strip()
+        prefix = raw[:start]
+
+        if "=" not in candidate:
+            continue
+        if not _math_identifiers_are_safe(candidate):
+            continue
+
+        try:
+            _equation_to_latex(candidate)
+        except Exception:
+            continue
+
+        return prefix, candidate, punctuation
+
+    return None
+
+
+def _render_inline_math_fragment(fragment):
+    """Convert a compact algebraic fragment to inline LaTeX when safe."""
+    candidate = str(fragment).strip()
+    if not candidate or not _math_identifiers_are_safe(candidate):
+        return None
+    try:
+        return "$" + _expression_to_latex(candidate) + "$"
+    except Exception:
+        return None
+
+
 def _inline_math_markdown(text):
     """
-    Format maths embedded inside ordinary English without sending the whole
-    sentence to SymPy.
+    Format maths embedded inside ordinary English without ever sending prose
+    words into the SymPy parser.
     """
     rendered = str(text)
 
@@ -443,51 +511,35 @@ def _inline_math_markdown(text):
         except Exception:
             pass
 
-    # General prose + embedded equation, e.g.
-    # "For a vertical tangent, set 3*(x + 2*y) = 0."
-    equation_match = re.match(
-        r"^(?P<prefix>.*?)(?P<expr>"
-        r"(?:dy/dx|d²y/dx²|[A-Za-z0-9_()*+\-/.^ ]+)"
-        r"\s*=\s*"
-        r"[A-Za-z0-9_()*+\-/.^ ]+)"
-        r"(?P<punct>[.,;:]?)$",
-        rendered,
-    )
-    if equation_match:
-        prefix = equation_match.group("prefix")
-        expr = equation_match.group("expr").strip()
-        punct = equation_match.group("punct")
-        # Require a genuine mathematical token so ordinary prose with "="
-        # is not accidentally converted.
-        if any(token in expr for token in ("x", "y", "=", "sqrt", "dy/dx", "d²y/dx²")):
-            try:
-                latex = _equation_to_latex(expr)
-                return f"{prefix}${latex}${punct}"
-            except Exception:
-                pass
-
-    # Convert common standalone coordinate/point expressions embedded in prose.
-    # This catches forms such as "(-2*sqrt(2), sqrt(2))".
-    def replace_point(match):
-        raw = match.group(0)
-        inner = raw[1:-1]
+    embedded = _split_embedded_equation(rendered)
+    if embedded:
+        prefix, expr, punct = embedded
         try:
-            left, right = inner.split(",", 1)
-            return (
-                "$\\left("
-                + _expression_to_latex(left.strip())
-                + ", "
-                + _expression_to_latex(right.strip())
-                + "\\right)$"
-            )
+            latex = _equation_to_latex(expr)
+            return f"{prefix}${latex}${punct}"
         except Exception:
-            return raw
+            pass
 
-    rendered = re.sub(
-        r"\([^()]*sqrt\([^()]+\)[^(),]*,\s*[^()]*sqrt\([^()]+\)[^()]*\)",
-        replace_point,
-        rendered,
-    )
+    # Render compact parenthesised algebra inside prose when it is clearly maths.
+    # Example: "the remaining differentiated part (3*(2*x + y)) ..."
+    paren_pattern = re.compile(r"\(([^()\n]+)\)")
+    pieces = []
+    last = 0
+    changed = False
+
+    for match in paren_pattern.finditer(rendered):
+        fragment = match.group(1)
+        inline = _render_inline_math_fragment(fragment)
+        if inline is None:
+            continue
+        pieces.append(rendered[last:match.start()])
+        pieces.append(inline)
+        last = match.end()
+        changed = True
+
+    if changed:
+        pieces.append(rendered[last:])
+        rendered = "".join(pieces)
 
     rendered = rendered.replace(
         "d²y/dx²",
@@ -499,6 +551,7 @@ def _inline_math_markdown(text):
     )
     rendered = re.sub(r"\bFx\b", r"$F_x$", rendered)
     rendered = re.sub(r"\bFy\b", r"$F_y$", rendered)
+
     return rendered
 
 
