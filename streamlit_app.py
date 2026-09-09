@@ -366,31 +366,48 @@ def _equation_to_latex(text):
 
 
 def _looks_like_math_line(text):
+    """
+    Decide whether an entire line is mathematical notation.
+
+    Be deliberately conservative: prose that merely contains an equation
+    should stay prose so only the embedded equation is parsed.
+    """
     stripped = _strip_mark_annotation(text)
 
     if not stripped:
         return False
 
     lowered = stripped.lower()
-    if lowered.startswith(("therefore", "hence", "since", "from ", "using ")):
-        return False
 
     if stripped.startswith("d/dx["):
         return True
 
+    if lowered.startswith(("therefore", "hence")):
+        return False
+
+    # If the line contains ordinary sentence punctuation or common prose
+    # lead-ins, do not send the whole line to SymPy.
+    prose_starts = (
+        "the ", "at ", "a ", "an ", "when ", "where ", "given ",
+        "for ", "in ", "from ", "using ", "minimum ", "maximum ",
+        "vertical ", "horizontal ", "coordinates", "candidate",
+        "point ", "normal ", "tangent ",
+    )
+    if lowered.startswith(prose_starts):
+        return False
+
+    # Standalone equations are normally short mathematical strings without
+    # sentence-like wording.
     if "=" in stripped:
-        # Ordinary prose containing "=" is rare in the bank. Exclude lines that
-        # are clearly sentences rather than mathematical statements.
-        prose_starts = (
-            "the ",
-            "at ",
-            "a ",
-            "when ",
-            "where ",
-            "given ",
-        )
-        if not lowered.startswith(prose_starts):
-            return True
+        before_eq = stripped.split("=", 1)[0].strip()
+        prose_words = re.findall(r"[A-Za-z]{3,}", before_eq)
+        allowed_math_words = {
+            "sin", "cos", "tan", "sec", "log", "exp", "sqrt",
+            "dy", "dx",
+        }
+        if any(word.lower() not in allowed_math_words for word in prose_words):
+            return False
+        return True
 
     math_tokens = (
         "**", "^", "sqrt(", "sin(", "cos(", "tan(", "log(",
@@ -399,10 +416,11 @@ def _looks_like_math_line(text):
     return any(token in stripped for token in math_tokens) and " " not in stripped
 
 
+
 def _inline_math_markdown(text):
     """
-    Format maths embedded inside ordinary English, including generated
-    show-that equalities whose right-hand side is stored as Python/SymPy text.
+    Format maths embedded inside ordinary English without sending the whole
+    sentence to SymPy.
     """
     rendered = str(text)
 
@@ -419,12 +437,57 @@ def _inline_math_markdown(text):
         lhs = show_that_match.group("lhs")
         rhs = show_that_match.group("rhs").strip()
         punct = show_that_match.group("punct")
-
         try:
             latex = _equation_to_latex(f"{lhs} = {rhs}")
             return f"{prefix} ${latex}${punct}"
         except Exception:
             pass
+
+    # General prose + embedded equation, e.g.
+    # "For a vertical tangent, set 3*(x + 2*y) = 0."
+    equation_match = re.match(
+        r"^(?P<prefix>.*?)(?P<expr>"
+        r"(?:dy/dx|d²y/dx²|[A-Za-z0-9_()*+\-/.^ ]+)"
+        r"\s*=\s*"
+        r"[A-Za-z0-9_()*+\-/.^ ]+)"
+        r"(?P<punct>[.,;:]?)$",
+        rendered,
+    )
+    if equation_match:
+        prefix = equation_match.group("prefix")
+        expr = equation_match.group("expr").strip()
+        punct = equation_match.group("punct")
+        # Require a genuine mathematical token so ordinary prose with "="
+        # is not accidentally converted.
+        if any(token in expr for token in ("x", "y", "=", "sqrt", "dy/dx", "d²y/dx²")):
+            try:
+                latex = _equation_to_latex(expr)
+                return f"{prefix}${latex}${punct}"
+            except Exception:
+                pass
+
+    # Convert common standalone coordinate/point expressions embedded in prose.
+    # This catches forms such as "(-2*sqrt(2), sqrt(2))".
+    def replace_point(match):
+        raw = match.group(0)
+        inner = raw[1:-1]
+        try:
+            left, right = inner.split(",", 1)
+            return (
+                "$\\left("
+                + _expression_to_latex(left.strip())
+                + ", "
+                + _expression_to_latex(right.strip())
+                + "\\right)$"
+            )
+        except Exception:
+            return raw
+
+    rendered = re.sub(
+        r"\([^()]*sqrt\([^()]+\)[^(),]*,\s*[^()]*sqrt\([^()]+\)[^()]*\)",
+        replace_point,
+        rendered,
+    )
 
     rendered = rendered.replace(
         "d²y/dx²",
@@ -437,6 +500,7 @@ def _inline_math_markdown(text):
     rendered = re.sub(r"\bFx\b", r"$F_x$", rendered)
     rendered = re.sub(r"\bFy\b", r"$F_y$", rendered)
     return rendered
+
 
 
 def render_math_text(text):
