@@ -284,6 +284,32 @@ def _latex_mark_suffix(mark_count):
     return rf"\qquad \text{{[{mark_count} {label}]}}"
 
 
+def _split_trailing_rule_note(text):
+    """
+    Separate a short trailing prose note such as '(chain rule)' from a maths
+    line before sending the maths through SymPy/LaTeX parsing.
+    """
+    cleaned = str(text).rstrip()
+    match = re.match(
+        r"^(?P<math>.*?)(?:\s{2,}|\s+)\((?P<note>[^()]+)\)\s*$",
+        cleaned,
+    )
+    if not match:
+        return cleaned, None
+
+    note = match.group("note").strip()
+    # Only treat it as prose when it looks like a rule/method label rather
+    # than part of the mathematical expression.
+    if not re.search(
+        r"\b(rule|differentiation|substitution|identity|method)\b",
+        note,
+        flags=re.IGNORECASE,
+    ):
+        return cleaned, None
+
+    return match.group("math").rstrip(), note
+
+
 def _prepare_expression(text):
     """
     Convert the small amount of Python-style maths stored in the current bank
@@ -416,7 +442,8 @@ def _inline_math_markdown(text):
 def render_math_text(text):
     """
     Render question/solution text line-by-line, keeping compact mark annotations
-    attached to the mathematical line they belong to.
+    attached to the mathematical line they belong to and keeping prose rule
+    labels out of the SymPy parser.
     """
     lines = str(text).splitlines()
 
@@ -440,15 +467,18 @@ def render_math_text(text):
             connector = connector_match.group(1).capitalize()
             remainder = connector_match.group(2).strip()
             mark_count = _extract_mark_annotation(remainder)
+            remainder_no_mark = _strip_mark_annotation(remainder)
+            math_text, rule_note = _split_trailing_rule_note(remainder_no_mark)
             st.write(connector)
             try:
                 st.latex(
-                    _equation_to_latex(remainder)
+                    _equation_to_latex(math_text)
                     + _latex_mark_suffix(mark_count)
                 )
+                if rule_note:
+                    st.caption(rule_note)
             except Exception:
-                display = _strip_mark_annotation(remainder)
-                rendered = _inline_math_markdown(display)
+                rendered = _inline_math_markdown(remainder_no_mark)
                 if mark_count is not None:
                     label = "mark" if mark_count == 1 else "marks"
                     rendered += f"  **[{mark_count} {label}]**"
@@ -457,10 +487,13 @@ def render_math_text(text):
 
         if _looks_like_math_line(line):
             mark_count = _extract_mark_annotation(line)
+            line_no_mark = _strip_mark_annotation(line)
+            math_line, rule_note = _split_trailing_rule_note(line_no_mark)
+
             try:
                 derivative_match = re.match(
                     r"^d/dx\[(.+)\]\s*=\s*(.+)$",
-                    _strip_mark_annotation(line),
+                    math_line,
                 )
                 if derivative_match:
                     inside = _expression_to_latex(
@@ -475,12 +508,15 @@ def render_math_text(text):
                     )
                 else:
                     st.latex(
-                        _equation_to_latex(line)
+                        _equation_to_latex(math_line)
                         + _latex_mark_suffix(mark_count)
                     )
+
+                if rule_note:
+                    st.caption(rule_note)
+
             except Exception:
-                display = _strip_mark_annotation(line)
-                rendered = _inline_math_markdown(display)
+                rendered = _inline_math_markdown(line_no_mark)
                 if mark_count is not None:
                     label = "mark" if mark_count == 1 else "marks"
                     rendered += f"  **[{mark_count} {label}]**"
