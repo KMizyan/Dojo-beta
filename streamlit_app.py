@@ -399,15 +399,16 @@ def _looks_like_math_line(text):
     # Standalone equations are normally short mathematical strings without
     # sentence-like wording.
     if "=" in stripped:
-        before_eq = stripped.split("=", 1)[0].strip()
-        prose_words = re.findall(r"[A-Za-z]{3,}", before_eq)
+        normalised = _normalise_compact_variable_products(stripped)
+        before_eq = normalised.split("=", 1)[0].strip()
+        prose_words = re.findall(r"[A-Za-z]{2,}", before_eq)
         allowed_math_words = {
             "sin", "cos", "tan", "sec", "log", "exp", "sqrt",
             "dy", "dx",
         }
         if any(word.lower() not in allowed_math_words for word in prose_words):
             return False
-        return True
+        return _safe_equation_latex(normalised) is not None
 
     math_tokens = (
         "**", "^", "sqrt(", "sin(", "cos(", "tan(", "log(",
@@ -415,6 +416,29 @@ def _looks_like_math_line(text):
     )
     return any(token in stripped for token in math_tokens) and " " not in stripped
 
+
+
+def _normalise_compact_variable_products(text):
+    """
+    Expand compact products made only from the known single-letter variables.
+
+    Examples:
+        px^4   -> p*x^4
+        qxy^2  -> q*x*y^2
+        xy     -> x*y
+
+    Longer English identifiers are untouched, so prose still cannot leak into
+    SymPy parsing.
+    """
+    allowed_letters = {"p", "q", "x", "y"}
+
+    def repl(match):
+        token = match.group(0)
+        if len(token) >= 2 and set(token).issubset(allowed_letters):
+            return "*".join(token)
+        return token
+
+    return re.sub(r"\b[pqxy]{2,}\b", repl, str(text))
 
 
 def _math_identifiers_are_safe(text):
@@ -432,7 +456,7 @@ def _math_identifiers_are_safe(text):
 
 
 def _safe_expression_latex(text):
-    candidate = str(text).strip()
+    candidate = _normalise_compact_variable_products(str(text).strip())
     if not candidate or not _math_identifiers_are_safe(candidate):
         return None
     try:
@@ -442,7 +466,7 @@ def _safe_expression_latex(text):
 
 
 def _safe_equation_latex(text):
-    candidate = str(text).strip()
+    candidate = _normalise_compact_variable_products(str(text).strip())
     if "=" not in candidate or not _math_identifiers_are_safe(candidate):
         return None
     try:
