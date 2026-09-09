@@ -419,9 +419,8 @@ def _looks_like_math_line(text):
 
 def _math_identifiers_are_safe(text):
     """
-    Only allow identifiers that belong to the maths vocabulary we intentionally
-    support. This prevents prose words such as 'set' or 'tangent' being parsed
-    as multiplied SymPy symbols.
+    Only allow identifiers from the maths vocabulary we intentionally support.
+    Prose words must never reach the SymPy parser.
     """
     allowed = {
         "x", "y", "p", "q",
@@ -432,17 +431,137 @@ def _math_identifiers_are_safe(text):
     return all(identifier in allowed for identifier in identifiers)
 
 
-def _split_embedded_equation(text):
+def _safe_expression_latex(text):
+    candidate = str(text).strip()
+    if not candidate or not _math_identifiers_are_safe(candidate):
+        return None
+    try:
+        return _expression_to_latex(candidate)
+    except Exception:
+        return None
+
+
+def _safe_equation_latex(text):
+    candidate = str(text).strip()
+    if "=" not in candidate or not _math_identifiers_are_safe(candidate):
+        return None
+    try:
+        return _equation_to_latex(candidate)
+    except Exception:
+        return None
+
+
+def _outer_parenthesised_spans(text):
     """
-    Find a mathematical equation embedded at the end of a prose sentence.
+    Return outermost balanced (...) spans, including nested parentheses.
+
+    This is intentionally not regex-based so expressions such as
+    (-2*sqrt(2), sqrt(2)) remain one intact coordinate pair.
+    """
+    spans = []
+    depth = 0
+    start = None
+
+    for index, char in enumerate(str(text)):
+        if char == "(":
+            if depth == 0:
+                start = index
+            depth += 1
+        elif char == ")" and depth:
+            depth -= 1
+            if depth == 0 and start is not None:
+                spans.append((start, index + 1))
+                start = None
+
+    return spans
+
+
+def _latex_for_parenthesised_fragment(fragment):
+    """
+    Convert one complete (...) fragment to LaTeX if it is clearly maths.
+
+    Supports ordinary grouped algebra and coordinate pairs, including nested
+    functions such as sqrt(...). Returns None if uncertain.
+    """
+    raw = str(fragment).strip()
+    if len(raw) < 2 or not (raw.startswith("(") and raw.endswith(")")):
+        return None
+
+    inner = raw[1:-1].strip()
+
+    # Coordinate pair: split only on a comma at top level.
+    depth = 0
+    comma_index = None
+    for index, char in enumerate(inner):
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            depth = max(0, depth - 1)
+        elif char == "," and depth == 0:
+            comma_index = index
+            break
+
+    if comma_index is not None:
+        left = inner[:comma_index].strip()
+        right = inner[comma_index + 1:].strip()
+        left_latex = _safe_expression_latex(left)
+        right_latex = _safe_expression_latex(right)
+        if left_latex is not None and right_latex is not None:
+            return rf"\left({left_latex}, {right_latex}\right)"
+        return None
+
+    expr_latex = _safe_expression_latex(inner)
+    if expr_latex is not None:
+        return rf"\left({expr_latex}\right)"
+
+    return None
+
+
+def _replace_parenthesised_math(text):
+    """
+    Replace only complete, safely parsed outer parenthesised maths fragments.
+    Nested syntax stays intact.
+    """
+    raw = str(text)
+    spans = _outer_parenthesised_spans(raw)
+    if not spans:
+        return raw
+
+    pieces = []
+    cursor = 0
+
+    for start, end in spans:
+        fragment = raw[start:end]
+        latex = _latex_for_parenthesised_fragment(fragment)
+        if latex is None:
+            continue
+
+        pieces.append(raw[cursor:start])
+        pieces.append(f"${latex}$")
+        cursor = end
+
+    if not pieces:
+        return raw
+
+    pieces.append(raw[cursor:])
+    return "".join(pieces)
+
+
+def _split_safe_equation_suffix(text):
+    """
+    Find a safely parseable equation suffix in prose.
 
     Example:
         'For a vertical tangent, set 3*(x + 2*y) = 0.'
-    becomes:
+    ->
         ('For a vertical tangent, set ', '3*(x + 2*y) = 0', '.')
+
+    We try candidate suffixes and only accept one that contains no prose
+    identifiers and parses successfully.
     """
     raw = str(text).rstrip()
     punctuation = ""
+
     if raw and raw[-1] in ".,;:":
         punctuation = raw[-1]
         raw = raw[:-1].rstrip()
@@ -450,45 +569,48 @@ def _split_embedded_equation(text):
     if "=" not in raw:
         return None
 
-    # Try suffixes beginning after each whitespace position, longest prose
-    # prefix first. Accept only suffixes whose identifiers are known maths.
     starts = [0]
     starts.extend(match.end() for match in re.finditer(r"\s+", raw))
 
     for start in reversed(starts):
         candidate = raw[start:].strip()
-        prefix = raw[:start]
-
         if "=" not in candidate:
             continue
-        if not _math_identifiers_are_safe(candidate):
-            continue
 
-        try:
-            _equation_to_latex(candidate)
-        except Exception:
-            continue
-
-        return prefix, candidate, punctuation
+        latex = _safe_equation_latex(candidate)
+        if latex is not None:
+            return raw[:start], candidate, punctuation
 
     return None
 
 
-def _render_inline_math_fragment(fragment):
-    """Convert a compact algebraic fragment to inline LaTeX when safe."""
-    candidate = str(fragment).strip()
-    if not candidate or not _math_identifiers_are_safe(candidate):
-        return None
-    try:
-        return "$" + _expression_to_latex(candidate) + "$"
-    except Exception:
-        return None
+def _replace_simple_function_tokens(text):
+    """
+    Convert simple function tokens that remain in prose, e.g. sqrt(2), without
+    attempting to parse any surrounding words.
+    """
+    rendered = str(text)
+
+    token_pattern = re.compile(
+        r"(?<![A-Za-z])"
+        r"(?P<expr>-?\d*\*?(?:sqrt|sin|cos|tan|sec|log|exp)\([^()]+\))"
+    )
+
+    def repl(match):
+        expr = match.group("expr")
+        latex = _safe_expression_latex(expr)
+        return f"${latex}$" if latex is not None else expr
+
+    return token_pattern.sub(repl, rendered)
 
 
 def _inline_math_markdown(text):
     """
-    Format maths embedded inside ordinary English without ever sending prose
-    words into the SymPy parser.
+    Render maths embedded in prose conservatively.
+
+    Nothing is converted unless the exact mathematical fragment can be safely
+    isolated and parsed. Uncertain text is left unchanged rather than allowing
+    SymPy to invent symbols from English words.
     """
     rendered = str(text)
 
@@ -505,41 +627,20 @@ def _inline_math_markdown(text):
         lhs = show_that_match.group("lhs")
         rhs = show_that_match.group("rhs").strip()
         punct = show_that_match.group("punct")
-        try:
-            latex = _equation_to_latex(f"{lhs} = {rhs}")
+        latex = _safe_equation_latex(f"{lhs} = {rhs}")
+        if latex is not None:
             return f"{prefix} ${latex}${punct}"
-        except Exception:
-            pass
 
-    embedded = _split_embedded_equation(rendered)
+    embedded = _split_safe_equation_suffix(rendered)
     if embedded:
         prefix, expr, punct = embedded
-        try:
-            latex = _equation_to_latex(expr)
+        latex = _safe_equation_latex(expr)
+        if latex is not None:
             return f"{prefix}${latex}${punct}"
-        except Exception:
-            pass
 
-    # Render compact parenthesised algebra inside prose when it is clearly maths.
-    # Example: "the remaining differentiated part (3*(2*x + y)) ..."
-    paren_pattern = re.compile(r"\(([^()\n]+)\)")
-    pieces = []
-    last = 0
-    changed = False
-
-    for match in paren_pattern.finditer(rendered):
-        fragment = match.group(1)
-        inline = _render_inline_math_fragment(fragment)
-        if inline is None:
-            continue
-        pieces.append(rendered[last:match.start()])
-        pieces.append(inline)
-        last = match.end()
-        changed = True
-
-    if changed:
-        pieces.append(rendered[last:])
-        rendered = "".join(pieces)
+    # Replace complete balanced maths groups before individual function tokens.
+    rendered = _replace_parenthesised_math(rendered)
+    rendered = _replace_simple_function_tokens(rendered)
 
     rendered = rendered.replace(
         "d²y/dx²",
