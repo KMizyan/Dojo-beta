@@ -394,6 +394,7 @@ def _latex_for_object(value):
     return latex
 
 
+@st.cache_data(show_spinner=False, max_entries=8192)
 def _expression_to_latex(text):
     prepared = _prepare_expression(text)
 
@@ -604,6 +605,7 @@ def _math_candidate_rank(text):
     return 2
 
 
+@st.cache_data(show_spinner=False, max_entries=8192)
 def _find_math_spans(line):
     """
     Find safely parseable maths spans inside one line of mixed prose/maths.
@@ -612,6 +614,30 @@ def _find_math_spans(line):
     vocabulary can enter a candidate span, and every chosen span must actually
     parse before it is rendered.
     """
+    raw_line = str(line)
+    stripped = raw_line.strip()
+
+    if stripped:
+        left_trim = len(raw_line) - len(raw_line.lstrip())
+        right_trimmed = raw_line.rstrip()
+        right_edge = len(right_trimmed)
+
+        candidate = stripped.rstrip(".;:")
+        candidate_end = left_trim + len(candidate)
+
+        if _math_candidate_meaningful(candidate):
+            try:
+                latex = _math_fragment_to_latex(candidate)
+                return [{
+                    "start": left_trim,
+                    "end": candidate_end,
+                    "raw": candidate,
+                    "latex": latex,
+                    "rank": _math_candidate_rank(candidate),
+                }]
+            except Exception:
+                pass
+
     tokens = [
         (
             match.start(),
