@@ -272,6 +272,18 @@ def _strip_mark_annotation(text):
     return re.sub(r"\s*\[\d+\]\s*$", "", str(text)).strip()
 
 
+def _extract_mark_annotation(text):
+    match = re.search(r"\s*\[(\d+)\]\s*$", str(text))
+    return int(match.group(1)) if match else None
+
+
+def _latex_mark_suffix(mark_count):
+    if mark_count is None:
+        return ""
+    label = "mark" if mark_count == 1 else "marks"
+    return rf"\qquad \text{{[{mark_count} {label}]}}"
+
+
 def _prepare_expression(text):
     """
     Convert the small amount of Python-style maths stored in the current bank
@@ -403,11 +415,8 @@ def _inline_math_markdown(text):
 
 def render_math_text(text):
     """
-    Render question/solution text line-by-line.
-
-    Standalone mathematical statements are shown with Streamlit's LaTeX
-    renderer. Ordinary English remains ordinary text, with derivative notation
-    rendered inline.
+    Render question/solution text line-by-line, keeping compact mark annotations
+    attached to the mathematical line they belong to.
     """
     lines = str(text).splitlines()
 
@@ -422,7 +431,6 @@ def render_math_text(text):
             st.markdown("- " + _inline_math_markdown(line[1:].strip()))
             continue
 
-        # Common solution-engine connectors followed by a mathematical result.
         connector_match = re.match(
             r"^(Hence|Therefore)\s+(.+)$",
             line,
@@ -431,17 +439,25 @@ def render_math_text(text):
         if connector_match:
             connector = connector_match.group(1).capitalize()
             remainder = connector_match.group(2).strip()
+            mark_count = _extract_mark_annotation(remainder)
             st.write(connector)
             try:
-                st.latex(_equation_to_latex(remainder))
+                st.latex(
+                    _equation_to_latex(remainder)
+                    + _latex_mark_suffix(mark_count)
+                )
             except Exception:
-                st.markdown(_inline_math_markdown(remainder))
+                display = _strip_mark_annotation(remainder)
+                rendered = _inline_math_markdown(display)
+                if mark_count is not None:
+                    label = "mark" if mark_count == 1 else "marks"
+                    rendered += f"  **[{mark_count} {label}]**"
+                st.markdown(rendered)
             continue
 
         if _looks_like_math_line(line):
+            mark_count = _extract_mark_annotation(line)
             try:
-                # d/dx[...] = ... needs a small display-only conversion because
-                # it is operator notation rather than a normal algebraic expr.
                 derivative_match = re.match(
                     r"^d/dx\[(.+)\]\s*=\s*(.+)$",
                     _strip_mark_annotation(line),
@@ -455,14 +471,30 @@ def render_math_text(text):
                     )
                     st.latex(
                         rf"\frac{{d}}{{dx}}\left[{inside}\right] = {result}"
+                        + _latex_mark_suffix(mark_count)
                     )
                 else:
-                    st.latex(_equation_to_latex(line))
+                    st.latex(
+                        _equation_to_latex(line)
+                        + _latex_mark_suffix(mark_count)
+                    )
             except Exception:
-                st.markdown(_inline_math_markdown(line))
+                display = _strip_mark_annotation(line)
+                rendered = _inline_math_markdown(display)
+                if mark_count is not None:
+                    label = "mark" if mark_count == 1 else "marks"
+                    rendered += f"  **[{mark_count} {label}]**"
+                st.markdown(rendered)
             continue
 
-        st.markdown(_inline_math_markdown(line))
+        mark_count = _extract_mark_annotation(line)
+        display = _strip_mark_annotation(line) if mark_count is not None else line
+        rendered = _inline_math_markdown(display)
+        if mark_count is not None:
+            label = "mark" if mark_count == 1 else "marks"
+            rendered += f"  **[{mark_count} {label}]**"
+        st.markdown(rendered)
+
 
 
 def render_answer_value(value):
@@ -1573,29 +1605,47 @@ def end_session(outcome="user_quit"):
 # RENDERING
 # ============================================================
 
-def render_step(step):
+def render_step(step, *, show_heading=True):
     step_number = step.get("step", "?")
     description = step.get("description", "")
-    st.markdown(f"**Step {step_number}: {description}**")
+
+    if show_heading:
+        st.markdown(f"**Step {step_number}: {description}**")
 
     working = step.get("working")
     if working:
         render_math_text(working)
 
-    marks_available = step.get("marks_available")
-    if marks_available is not None:
-        st.caption(f"{marks_available} mark(s)")
+    student_mark_notes = [
+        mark.get("student_note")
+        for mark in step.get("marks", [])
+        if mark.get("student_note")
+    ]
+    for note in student_mark_notes:
+        st.caption(note)
 
-    for mark in step.get("marks", []):
-        mark_value = mark.get("marks", 1)
-        criterion = mark.get("criterion", "")
-        st.markdown(f"- **{mark_value} mark:** {criterion}")
+    marks_available = step.get("marks_available")
+    has_inline_mark = bool(
+        working and re.search(r"\[\d+\]\s*(?:$|\n)", str(working))
+    )
+    if marks_available and not has_inline_mark and not student_mark_notes:
+        label = "mark" if marks_available == 1 else "marks"
+        st.caption(f"[{marks_available} {label}]")
+
+    for concept_data in step.get("concepts", []):
+        explanation = str(concept_data.get("explanation", "")).strip()
+        if explanation:
+            st.markdown(f"**Why this matters:** {explanation}")
+
+    for note in step.get("answer_notes", []):
+        st.caption(f"Answer note: {note}")
 
     alternatives = step.get("alternative_valid_routes", [])
     if alternatives:
-        st.markdown("**Alternative valid route(s):**")
+        st.markdown("**Alternative approach:**")
         for route in alternatives:
             st.markdown(f"- {route}")
+
 
 
 def render_full_solution(question, part=None):
@@ -1677,7 +1727,7 @@ def render_markscheme(question):
             )
 
             if revealed:
-                render_step(step)
+                render_step(step, show_heading=False)
             elif st.button(
                 f"Reveal step {index + 1}",
                 key=(
