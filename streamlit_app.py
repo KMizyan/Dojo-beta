@@ -11,13 +11,6 @@ from time import perf_counter
 from uuid import uuid4
 
 import streamlit as st
-import sympy as sp
-from sympy.parsing.sympy_parser import (
-    convert_xor,
-    implicit_multiplication_application,
-    parse_expr,
-    standard_transformations,
-)
 
 from diagnostic_selector import build_diagnostic_set
 from next_question_selector import (
@@ -27,7 +20,7 @@ from next_question_selector import (
 
 
 APP_DIR = Path(__file__).resolve().parent
-QUESTION_BANK_PATH = APP_DIR / "question_bank.json"
+QUESTION_BANK_PATH = APP_DIR / "rendered_question_bank.json"
 
 
 # ============================================================
@@ -45,7 +38,7 @@ def load_question_bank():
         return data
 
     raise ValueError(
-        "question_bank.json must be a list of questions or an object "
+        "rendered_question_bank.json must be a list of questions or an object "
         "containing a 'questions' list."
     )
 
@@ -243,720 +236,25 @@ def _display_value(value, indent=0):
 
 
 # ============================================================
-# STUDENT-FACING MATHS RENDERING
+# STUDENT-FACING PRE-RENDERED DISPLAY
 # ============================================================
 
-_MATH_TRANSFORMATIONS = (
-    standard_transformations
-    + (convert_xor, implicit_multiplication_application)
-)
-
-_MATH_LOCALS = {
-    "x": sp.Symbol("x"),
-    "y": sp.Symbol("y"),
-    "p": sp.Symbol("p"),
-    "q": sp.Symbol("q"),
-    "a": sp.Symbol("a"),
-    "b": sp.Symbol("b"),
-    "m": sp.Symbol("m"),
-    "F": sp.Function("F"),
-    "Eq": sp.Eq,
-    "sin": sp.sin,
-    "cos": sp.cos,
-    "tan": sp.tan,
-    "sec": sp.sec,
-    "exp": sp.exp,
-    "log": sp.log,
-    "sqrt": sp.sqrt,
-    "pi": sp.pi,
-    "E": sp.E,
-    "oo": sp.oo,
-}
-
-_MATH_WORDS = {
-    "x", "y", "p", "q", "a", "b", "m",
-    "F", "Eq", "Fx", "Fy",
-    "sin", "cos", "tan", "sec", "exp", "log", "sqrt",
-    "pi", "E", "oo",
-}
-
-_MATH_OPERATORS = {
-    "**", ">=", "<=", "≠", "≥", "≤",
-    "+", "-", "*", "/", "^", "=",
-    "(", ")", ",", "[", "]", "±",
-}
-
-_MATH_TOKEN_RE = re.compile(
-    r"d/dx|d²y/dx²|d2y/dx2|dy/dx|Fx|Fy|"
-    r"[A-Za-z]+|"
-    r"\d+(?:\.\d+)?|"
-    r"\*\*|>=|<=|≠|≥|≤|"
-    r"[+\-*/^=(),\[\]±]|"
-    r"\s+|."
-)
-
-
-def _strip_mark_annotation(text):
-    return re.sub(r"\s*\[\d+\]\s*$", "", str(text)).strip()
-
-
-def _extract_mark_annotation(text):
-    match = re.search(r"\s*\[(\d+)\]\s*$", str(text))
-    return int(match.group(1)) if match else None
-
-
-def _latex_mark_suffix(mark_count):
-    if mark_count is None:
-        return ""
-    label = "mark" if mark_count == 1 else "marks"
-    return rf"\qquad \text{{[{mark_count} {label}]}}"
-
-
-def _split_trailing_rule_note(text):
-    """
-    Pull a short method label such as '(chain rule)' out of an otherwise
-    mathematical line. The note is rendered as prose, never parsed as maths.
-    """
-    cleaned = str(text).rstrip()
-    match = re.search(
-        r"\s+\(([^()]*(?:rule|differentiation|method)[^()]*)\)\s*$",
-        cleaned,
-        flags=re.IGNORECASE,
-    )
-    if not match:
-        return cleaned, None
-
-    return cleaned[:match.start()].rstrip(), match.group(1).strip()
-
-
-def _is_compact_product_identifier(token):
-    """
-    Recognise the compact multiplication used by the generator without treating
-    ordinary English words as algebra.
-
-    Examples: px, qxy, xy, ax, mx.
-    """
-    if re.fullmatch(r"[pq][xy]+", token):
-        return True
-    if re.fullmatch(r"[xy]{2,}", token):
-        return True
-    if token in {"ax", "bx", "mx"}:
-        return True
-    return False
-
-
-def _normalise_compact_products(text):
-    def replace_identifier(match):
-        token = match.group(0)
-        if _is_compact_product_identifier(token):
-            return "*".join(token)
-        return token
-
-    return re.sub(r"[A-Za-z]+", replace_identifier, str(text))
-
-
-def _prepare_expression(text):
-    """
-    Convert the controlled Python/SymPy-style maths stored in DOJO into input
-    SymPy can parse. English prose must be removed before this function is used.
-    """
-    prepared = _normalise_compact_products(str(text).strip())
-    prepared = prepared.replace("d²y/dx²", "zzD2")
-    prepared = prepared.replace("d2y/dx2", "zzD2")
-    prepared = prepared.replace("dy/dx", "zzD1")
-    prepared = prepared.replace("Fx", "zzFX")
-    prepared = prepared.replace("Fy", "zzFY")
-    prepared = prepared.replace("^", "**")
-    return prepared
-
-
-def _latex_for_object(value):
-    """
-    Render a parsed mathematical object while preserving the order written by
-    the solution engine wherever SymPy permits it.
-    """
-    if (
-        isinstance(value, tuple)
-        and value
-        and all(isinstance(item, tuple) for item in value)
-    ):
-        latex = r",\ ".join(
-            sp.latex(item, order="none")
-            for item in value
-        )
-    else:
-        latex = sp.latex(value, order="none")
-
-    latex = latex.replace("zzD_{1}", r"\frac{dy}{dx}")
-    latex = latex.replace("zzD_{2}", r"\frac{d^{2}y}{dx^{2}}")
-    latex = latex.replace("zzFX", r"F_x")
-    latex = latex.replace("zzFY", r"F_y")
-    return latex
-
-
-@st.cache_data(show_spinner=False)
-def _expression_to_latex(text):
-    prepared = _prepare_expression(text)
-
-    local_dict = dict(_MATH_LOCALS)
-    local_dict.update({
-        "zzD1": sp.Symbol("zzD1"),
-        "zzD2": sp.Symbol("zzD2"),
-        "zzFX": sp.Symbol("zzFX"),
-        "zzFY": sp.Symbol("zzFY"),
-    })
-
-    expression = parse_expr(
-        prepared,
-        local_dict=local_dict,
-        transformations=_MATH_TRANSFORMATIONS,
-        evaluate=False,
-    )
-    return _latex_for_object(expression)
-
-
-def _split_top_level_commas(text):
-    """
-    Split only on commas that are not inside (), [].
-    """
-    raw = str(text)
-    pieces = []
-    start = 0
-    paren_depth = 0
-    bracket_depth = 0
-
-    for index, char in enumerate(raw):
-        if char == "(":
-            paren_depth += 1
-        elif char == ")":
-            paren_depth = max(0, paren_depth - 1)
-        elif char == "[":
-            bracket_depth += 1
-        elif char == "]":
-            bracket_depth = max(0, bracket_depth - 1)
-        elif char == "," and paren_depth == 0 and bracket_depth == 0:
-            pieces.append(raw[start:index].strip())
-            start = index + 1
-
-    pieces.append(raw[start:].strip())
-    return [piece for piece in pieces if piece]
-
-
-def _contains_relation(text):
-    return any(
-        operator in str(text)
-        for operator in ("≠", ">=", "<=", "≥", "≤", "=")
-    )
-
-
-@st.cache_data(show_spinner=False)
-def _math_fragment_to_latex(text):
-    """
-    Parse one isolated maths fragment.
-
-    Supports expressions, equations/inequalities, multiple assignments such as
-    'p = 2, q = -5', lists/coordinates, and d/dx[...] operator notation.
-    """
-    cleaned = str(text).strip()
-
-    derivative_match = re.fullmatch(
-        r"d/dx\[(.+)\]\s*=\s*(.+)",
-        cleaned,
-    )
-    if derivative_match:
-        inside = _expression_to_latex(derivative_match.group(1))
-        result = _expression_to_latex(derivative_match.group(2))
-        return rf"\frac{{d}}{{dx}}\left[{inside}\right] = {result}"
-
-    comma_parts = _split_top_level_commas(cleaned)
-    if (
-        len(comma_parts) > 1
-        and all(_contains_relation(part) for part in comma_parts)
-    ):
-        return r",\qquad ".join(
-            _math_fragment_to_latex(part)
-            for part in comma_parts
-        )
-
-    for operator, latex_operator in (
-        ("≠", r"\ne"),
-        (">=", r"\ge"),
-        ("<=", r"\le"),
-        ("≥", r"\ge"),
-        ("≤", r"\le"),
-        ("=", "="),
-    ):
-        if operator not in cleaned:
-            continue
-
-        left, right = cleaned.split(operator, 1)
-        left_latex = _expression_to_latex(left.strip())
-        right = right.strip()
-
-        if right.startswith("±"):
-            right_latex = (
-                r"\pm "
-                + _expression_to_latex(right[1:].strip())
-            )
-        else:
-            right_latex = _expression_to_latex(right)
-
-        return f"{left_latex} {latex_operator} {right_latex}"
-
-    return _expression_to_latex(cleaned)
-
-
-def _math_token_allowed(token):
-    if token.isspace():
-        return True
-
-    if token in _MATH_OPERATORS:
-        return True
-
-    if token in {
-        "d/dx",
-        "d²y/dx²",
-        "d2y/dx2",
-        "dy/dx",
-        "Fx",
-        "Fy",
-    }:
-        return True
-
-    if re.fullmatch(r"\d+(?:\.\d+)?", token):
-        return True
-
-    if re.fullmatch(r"[A-Za-z]+", token):
-        return (
-            token in _MATH_WORDS
-            or _is_compact_product_identifier(token)
-        )
-
-    return False
-
-
-def _trim_math_candidate(line, start, end):
-    while start < end and line[start].isspace():
-        start += 1
-    while end > start and line[end - 1].isspace():
-        end -= 1
-
-    while end > start and line[end - 1] in ".;:":
-        end -= 1
-
-    raw = line[start:end]
-
-    # A comma after a relation is normally sentence punctuation, whereas
-    # commas inside coordinates/lists must remain part of the maths.
-    if (
-        raw.endswith(",")
-        and _contains_relation(raw)
-    ):
-        end -= 1
-        raw = line[start:end]
-
-    return start, end, raw
-
-
-def _math_candidate_meaningful(text):
-    cleaned = str(text).strip()
-
-    if not cleaned:
-        return False
-
-    if re.fullmatch(r"\d+(?:\.\d+)?", cleaned):
-        return False
-
-    if re.fullmatch(r"[A-Za-z]+", cleaned):
-        return False
-
-    if cleaned in {"(a)", "(b)", "(c)"}:
-        return False
-
-    if cleaned in _MATH_OPERATORS:
-        return False
-
-    if cleaned[-1:] in "+-*/^=,":
-        return False
-
-    if cleaned[:1] in "*/^=,":
-        return False
-
-    return True
-
-
-def _math_candidate_rank(text):
-    cleaned = str(text).strip()
-
-    if cleaned.startswith("d/dx["):
-        return 4
-
-    if cleaned.startswith("Eq("):
-        return 4
-
-    if _contains_relation(cleaned):
-        return 4
-
-    if (
-        (cleaned.startswith("(") and "," in cleaned)
-        or (cleaned.startswith("[") and cleaned.endswith("]"))
-    ):
-        return 3
-
-    return 2
-
-
-@st.cache_data(show_spinner=False)
-def _find_math_spans(line):
-    """
-    Find safely parseable maths spans inside one line of mixed prose/maths.
-
-    This is deliberately conservative: only tokens from DOJO's mathematical
-    vocabulary can enter a candidate span, and every chosen span must actually
-    parse before it is rendered.
-    """
-    tokens = [
-        (
-            match.start(),
-            match.end(),
-            match.group(0),
-            _math_token_allowed(match.group(0)),
-        )
-        for match in _MATH_TOKEN_RE.finditer(str(line))
-    ]
-
-    runs = []
-    index = 0
-
-    while index < len(tokens):
-        if not tokens[index][3]:
-            index += 1
-            continue
-
-        end_index = index + 1
-        while (
-            end_index < len(tokens)
-            and tokens[end_index][3]
-        ):
-            end_index += 1
-
-        runs.append((index, end_index))
-        index = end_index
-
-    candidates = []
-
-    for run_start, run_end in runs:
-        for start_index in range(run_start, run_end):
-            first_token = tokens[start_index][2]
-
-            if (
-                first_token.isspace()
-                or first_token in {
-                    ")", "]", ",", "=", "*", "/", "^", "**",
-                    "≥", "≤", "≠", ">=", "<=",
-                }
-            ):
-                continue
-
-            for end_index in range(start_index + 1, run_end + 1):
-                start = tokens[start_index][0]
-                end = tokens[end_index - 1][1]
-
-                start, end, raw = _trim_math_candidate(
-                    str(line),
-                    start,
-                    end,
-                )
-
-                if not _math_candidate_meaningful(raw):
-                    continue
-
-                previous_char = (
-                    str(line)[start - 1]
-                    if start > 0
-                    else ""
-                )
-                next_char = (
-                    str(line)[end]
-                    if end < len(str(line))
-                    else ""
-                )
-
-                # Avoid taking a substring out of the middle of an English word.
-                # P(-1, 2) / C(...) are allowed because the parenthesised part is
-                # a mathematical coordinate immediately after a label.
-                if previous_char.isalpha() or next_char.isalpha():
-                    if not (
-                        raw.startswith("(")
-                        and previous_char in {"P", "C"}
-                    ):
-                        continue
-
-                # Avoid interpreting the x in prose such as "minimum-x" as -x.
-                if (
-                    start >= 2
-                    and str(line)[start - 1] == "-"
-                    and str(line)[start - 2].isalpha()
-                ):
-                    continue
-
-                if (
-                    end + 1 < len(str(line))
-                    and str(line)[end] == "-"
-                    and str(line)[end + 1].isalpha()
-                ):
-                    continue
-
-                try:
-                    latex = _math_fragment_to_latex(raw)
-                except Exception:
-                    continue
-
-                candidates.append({
-                    "start": start,
-                    "end": end,
-                    "raw": raw,
-                    "latex": latex,
-                    "rank": _math_candidate_rank(raw),
-                })
-
-    # Strong complete structures beat their internal subexpressions. Within the
-    # same structure type, prefer the longest valid span.
-    candidates.sort(
-        key=lambda item: (
-            item["rank"],
-            item["end"] - item["start"],
-        ),
-        reverse=True,
-    )
-
-    selected = []
-
-    for candidate in candidates:
-        overlaps = any(
-            not (
-                candidate["end"] <= existing["start"]
-                or candidate["start"] >= existing["end"]
-            )
-            for existing in selected
-        )
-
-        if not overlaps:
-            selected.append(candidate)
-
-    selected.sort(key=lambda item: item["start"])
-    return selected
-
-
-def _format_inline_math(text, spans=None):
-    raw = str(text)
-    if spans is None:
-        spans = _find_math_spans(raw)
-
-    if not spans:
-        return raw
-
-    pieces = []
-    cursor = 0
-
-    for span in spans:
-        pieces.append(raw[cursor:span["start"]])
-        pieces.append(f'${span["latex"]}$')
-        cursor = span["end"]
-
-    pieces.append(raw[cursor:])
-    return "".join(pieces)
-
-
-def _display_math_span_for_line(text, spans=None):
-    """
-    Return LaTeX when a line is essentially one mathematical statement.
-
-    A trailing full stop/comma is ignored for display purposes.
-    """
-    raw = str(text)
-    if spans is None:
-        spans = _find_math_spans(raw)
-
-    if len(spans) != 1:
-        return None
-
-    span = spans[0]
-    prefix = raw[:span["start"]].strip()
-    suffix = raw[span["end"]:].strip()
-
-    if prefix:
-        return None
-
-    if suffix not in {"", ".", ",", ";", ":"}:
-        return None
-
-    return span["latex"]
-
-
-def render_math_text(text):
-    """
-    Render controlled DOJO question/solution text without ever asking SymPy to
-    interpret English prose.
-
-    Whole mathematical lines use Streamlit LaTeX. In mixed lines, only isolated
-    parseable mathematical spans are converted to inline LaTeX.
-    """
-    for raw_line in str(text).splitlines():
-        line = raw_line.strip()
-
-        if not line:
-            st.write("")
-            continue
-
-        if line.startswith("•"):
-            bullet_text = line[1:].strip()
-            st.markdown("- " + _format_inline_math(bullet_text))
-            continue
-
-        mark_count = _extract_mark_annotation(line)
-        line_without_mark = (
-            _strip_mark_annotation(line)
-            if mark_count is not None
-            else line
-        )
-
-        line_without_mark, rule_note = _split_trailing_rule_note(
-            line_without_mark
-        )
-
-        connector_match = re.match(
-            r"^(Hence|Therefore)\s+(.+)$",
-            line_without_mark,
-            flags=re.IGNORECASE,
-        )
-
-        if connector_match:
-            connector = connector_match.group(1).capitalize()
-            remainder = connector_match.group(2).strip()
-            latex = _display_math_span_for_line(remainder)
-
-            if latex is not None:
-                st.write(connector)
-                st.latex(
-                    latex
-                    + _latex_mark_suffix(mark_count)
-                )
-                if rule_note:
-                    st.caption(rule_note)
-                continue
-
-        # Find mathematical spans once for this line, then reuse the result for
-        # both whole-line and inline rendering. This avoids performing the same
-        # expensive SymPy candidate search twice on mixed prose/maths lines.
-        spans = _find_math_spans(line_without_mark)
-
-        display_latex = _display_math_span_for_line(
-            line_without_mark,
-            spans=spans,
-        )
-
-        if display_latex is not None:
-            st.latex(
-                display_latex
-                + _latex_mark_suffix(mark_count)
-            )
-            if rule_note:
-                st.caption(rule_note)
-            continue
-
-        rendered = _format_inline_math(
-            line_without_mark,
-            spans=spans,
-        )
-
-        if mark_count is not None:
-            label = "mark" if mark_count == 1 else "marks"
-            rendered += f"  **[{mark_count} {label}]**"
-
-        st.markdown(rendered)
-
-        if rule_note:
-            st.caption(rule_note)
-
-
-def render_answer_value(value):
-    """
-    Render the bank's structured answer values through the same safe maths
-    conversion used for questions and worked solutions.
-    """
-    if isinstance(value, dict):
-        value_type = value.get("__type__")
-
-        if value_type == "sympy":
-            expression = value.get("expression", "")
-            try:
-                st.latex(_expression_to_latex(expression))
-            except Exception:
-                st.write(expression)
-            return
-
-        if value_type == "tuple":
-            items = value.get("items", [])
-            source = "(" + ", ".join(
-                _display_value(item).strip()
-                for item in items
-            ) + ")"
-            try:
-                st.latex(_expression_to_latex(source))
-            except Exception:
-                st.write(source)
-            return
-
-        if value_type == "set":
-            items = value.get("items", [])
-            latex_items = []
-            try:
-                for item in items:
-                    latex_items.append(
-                        _expression_to_latex(
-                            _display_value(item).strip()
-                        )
-                    )
-                st.latex(
-                    r"\left\{"
-                    + r",\ ".join(latex_items)
-                    + r"\right\}"
-                )
-            except Exception:
-                st.write(
-                    "{"
-                    + ", ".join(
-                        _display_value(item).strip()
-                        for item in items
-                    )
-                    + "}"
-                )
-            return
-
-        if value_type == "repr":
-            render_math_text(value.get("value", ""))
-            return
-
-        for key, item in value.items():
-            readable_key = key.replace("_", " ").title()
-            st.markdown(f"**{readable_key}**")
-            render_answer_value(item)
-        return
-
-    if isinstance(value, list):
-        for item in value:
-            render_answer_value(item)
-        return
-
-    text = str(value)
-    display_latex = _display_math_span_for_line(text)
-
-    if display_latex is not None:
-        st.latex(display_latex)
-    else:
-        st.markdown(_format_inline_math(text))
-
+def render_display_blocks(blocks):
+    """Display blocks built offline. No SymPy parsing happens here."""
+    for block in blocks or []:
+        block_type=block.get("type"); content=block.get("content","")
+        if block_type=="spacer": st.write("")
+        elif block_type=="latex": st.latex(content)
+        elif block_type=="caption": st.caption(content)
+        else: st.markdown(content)
+
+def get_answer_display_blocks(question,part=None):
+    answer_blocks=question.get("display",{}).get("answer_blocks",{})
+    if not is_multipart(question): return answer_blocks.get("__whole_question__",[])
+    target=normalise_part_name(part)
+    for key,blocks in answer_blocks.items():
+        if normalise_part_name(key)==target: return blocks
+    return []
 
 # ============================================================
 # PERSISTENT SESSION STORAGE
@@ -1917,8 +1215,8 @@ def render_read_only_question(entry):
     if total_marks is not None:
         st.caption(f"{total_marks} marks")
 
-    render_math_text(
-        question.get("question", {}).get("text", "Question text missing.")
+    render_display_blocks(
+        question.get("question", {}).get("display_blocks", [])
     )
     st.info(
         "Looking back does not change your recorded attempt or DOJO's "
@@ -2009,46 +1307,22 @@ def end_session(outcome="user_quit"):
 # ============================================================
 
 def render_step(step, *, show_heading=True):
-    step_number = step.get("step", "?")
-    description = step.get("description", "")
-
-    if show_heading:
-        st.markdown(f"**Step {step_number}: {description}**")
-
-    working = step.get("working")
-    if working:
-        render_math_text(working)
-
-    student_mark_notes = [
-        mark.get("student_note")
-        for mark in step.get("marks", [])
-        if mark.get("student_note")
-    ]
-    for note in student_mark_notes:
-        st.caption(note)
-
-    marks_available = step.get("marks_available")
-    has_inline_mark = bool(
-        working and re.search(r"\[\d+\]\s*(?:$|\n)", str(working))
-    )
-    if marks_available and not has_inline_mark and not student_mark_notes:
-        label = "mark" if marks_available == 1 else "marks"
-        st.caption(f"[{marks_available} {label}]")
-
-    for concept_data in step.get("concepts", []):
-        explanation = str(concept_data.get("explanation", "")).strip()
-        if explanation:
-            st.markdown(f"**Why this matters:** {explanation}")
-
-    for note in step.get("answer_notes", []):
-        st.caption(f"Answer note: {note}")
-
-    alternatives = step.get("alternative_valid_routes", [])
+    step_number=step.get("step","?"); description=step.get("description",""); display=step.get("display",{})
+    if show_heading: st.markdown(f"**Step {step_number}: {description}**")
+    render_display_blocks(display.get("working_blocks",[]))
+    for note_blocks in display.get("student_mark_note_blocks",[]):
+        text_parts=[b.get("content","") for b in note_blocks if b.get("type")!="spacer"]
+        if text_parts: st.caption(" ".join(text_parts))
+    fallback=display.get("fallback_mark_caption")
+    if fallback: st.caption(fallback)
+    for concept_blocks in display.get("concept_blocks",[]):
+        st.markdown("**Why this matters:**"); render_display_blocks(concept_blocks)
+    for note_blocks in display.get("answer_note_blocks",[]):
+        st.caption("Answer note:"); render_display_blocks(note_blocks)
+    alternatives=display.get("alternative_blocks",[])
     if alternatives:
         st.markdown("**Alternative approach:**")
-        for route in alternatives:
-            st.markdown(f"- {route}")
-
+        for route_blocks in alternatives: render_display_blocks(route_blocks)
 
 
 def render_full_solution(question, part=None):
@@ -2297,7 +1571,7 @@ def render_check(question):
             if is_multipart(question)
             else question.get("answer", {})
         )
-        render_answer_value(answer)
+        render_display_blocks(get_answer_display_blocks(question, part))
         st.write("**Does your answer agree with this?**")
 
     yes_col, no_col = st.columns(2)
@@ -2402,9 +1676,11 @@ def render_question():
     if total_marks is not None:
         st.caption(f"{total_marks} marks")
 
-    render_math_text(question.get("question", {}).get(
-        "text", "Question text missing."
-    ))
+    question_blocks=question.get("question",{}).get("display_blocks",[])
+    if question_blocks:
+        render_display_blocks(question_blocks)
+    else:
+        st.error("This question has not been pre-rendered. Run render_question_bank.py before deployment.")
 
     if is_multipart(question):
         st.info(
