@@ -394,6 +394,7 @@ def _latex_for_object(value):
     return latex
 
 
+@st.cache_data(show_spinner=False)
 def _expression_to_latex(text):
     prepared = _prepare_expression(text)
 
@@ -448,6 +449,7 @@ def _contains_relation(text):
     )
 
 
+@st.cache_data(show_spinner=False)
 def _math_fragment_to_latex(text):
     """
     Parse one isolated maths fragment.
@@ -604,6 +606,7 @@ def _math_candidate_rank(text):
     return 2
 
 
+@st.cache_data(show_spinner=False)
 def _find_math_spans(line):
     """
     Find safely parseable maths spans inside one line of mixed prose/maths.
@@ -745,9 +748,10 @@ def _find_math_spans(line):
     return selected
 
 
-def _format_inline_math(text):
+def _format_inline_math(text, spans=None):
     raw = str(text)
-    spans = _find_math_spans(raw)
+    if spans is None:
+        spans = _find_math_spans(raw)
 
     if not spans:
         return raw
@@ -764,14 +768,15 @@ def _format_inline_math(text):
     return "".join(pieces)
 
 
-def _display_math_span_for_line(text):
+def _display_math_span_for_line(text, spans=None):
     """
     Return LaTeX when a line is essentially one mathematical statement.
 
     A trailing full stop/comma is ignored for display purposes.
     """
     raw = str(text)
-    spans = _find_math_spans(raw)
+    if spans is None:
+        spans = _find_math_spans(raw)
 
     if len(spans) != 1:
         return None
@@ -841,8 +846,14 @@ def render_math_text(text):
                     st.caption(rule_note)
                 continue
 
+        # Find mathematical spans once for this line, then reuse the result for
+        # both whole-line and inline rendering. This avoids performing the same
+        # expensive SymPy candidate search twice on mixed prose/maths lines.
+        spans = _find_math_spans(line_without_mark)
+
         display_latex = _display_math_span_for_line(
-            line_without_mark
+            line_without_mark,
+            spans=spans,
         )
 
         if display_latex is not None:
@@ -854,7 +865,10 @@ def render_math_text(text):
                 st.caption(rule_note)
             continue
 
-        rendered = _format_inline_math(line_without_mark)
+        rendered = _format_inline_math(
+            line_without_mark,
+            spans=spans,
+        )
 
         if mark_count is not None:
             label = "mark" if mark_count == 1 else "marks"
