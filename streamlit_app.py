@@ -440,7 +440,7 @@ def _ensure_question_chat(question):
 
 
 def render_dojo_chat(question):
-    """Always-present, question-scoped tutor chat."""
+    """Question-scoped tutor chat in a fixed-height side panel."""
     _ensure_question_chat(question)
 
     st.subheader("Ask DOJO")
@@ -451,9 +451,14 @@ def render_dojo_chat(question):
 
     messages = st.session_state.get("dojo_chat_messages", [])
 
-    for message in messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+    # Keep the conversation in its own scrollable pane so a longer chat does
+    # not push the question off-screen.
+    with st.container(height=560, border=True):
+        if not messages:
+            st.caption("Your conversation about this question will appear here.")
+        for message in messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
     prompt = st.chat_input(
         "Ask DOJO about this question...",
@@ -469,23 +474,19 @@ def render_dojo_chat(question):
     })
     st.session_state.dojo_chat_messages = messages
 
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
-    with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            try:
-                answer = ask_dojo_tutor(question, messages)
-            except Exception as exc:
-                st.error(str(exc))
-                return
-        st.markdown(answer)
+    with st.spinner("DOJO is thinking..."):
+        try:
+            answer = ask_dojo_tutor(question, messages)
+        except Exception as exc:
+            st.error(str(exc))
+            return
 
     messages.append({
         "role": "assistant",
         "content": answer,
     })
     st.session_state.dojo_chat_messages = messages
+    st.rerun()
 
 
 # ============================================================
@@ -1916,38 +1917,46 @@ def render_question():
     if total_marks is not None:
         st.caption(f"{total_marks} marks")
 
-    question_blocks=question.get("question",{}).get("display_blocks",[])
-    if question_blocks:
-        render_display_blocks(question_blocks)
-    else:
-        st.error("This question has not been pre-rendered. Run render_question_bank.py before deployment.")
+    # Desktop practice workspace: the question/solution tools and Ask DOJO
+    # remain visible side by side. Each side scrolls independently.
+    question_col, chat_col = st.columns([1.15, 0.85], gap="large")
 
-    if is_multipart(question):
-        st.info(
-            "Checks and mark-scheme reveals are tracked separately by part. "
-            "You can work on the parts in any order."
-        )
+    with question_col:
+        with st.container(height=700, border=True):
+            question_blocks = question.get("question", {}).get("display_blocks", [])
+            if question_blocks:
+                render_display_blocks(question_blocks)
+            else:
+                st.error(
+                    "This question has not been pre-rendered. "
+                    "Run render_question_bank.py before deployment."
+                )
 
-    st.divider()
+            if is_multipart(question):
+                st.info(
+                    "Checks and mark-scheme reveals are tracked separately by part. "
+                    "You can work on the parts in any order."
+                )
 
-    check_tab, markscheme_tab, solution_tab = st.tabs([
-        "Check",
-        "Mark scheme",
-        "Full solution",
-    ])
+            st.divider()
 
-    with check_tab:
-        render_check(question)
+            check_tab, markscheme_tab, solution_tab = st.tabs([
+                "Check",
+                "Mark scheme",
+                "Full solution",
+            ])
 
-    with markscheme_tab:
-        render_markscheme(question)
+            with check_tab:
+                render_check(question)
 
-    with solution_tab:
-        render_solution_area(question)
+            with markscheme_tab:
+                render_markscheme(question)
 
-    st.divider()
+            with solution_tab:
+                render_solution_area(question)
 
-    render_dojo_chat(question)
+    with chat_col:
+        render_dojo_chat(question)
 
     st.divider()
 
@@ -2072,7 +2081,7 @@ def render_finished():
 st.set_page_config(
     page_title="DOJO",
     page_icon="🥋",
-    layout="centered",
+    layout="wide",
 )
 
 st.title("DOJO")
