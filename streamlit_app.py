@@ -257,6 +257,233 @@ def get_answer_display_blocks(question,part=None):
     return []
 
 # ============================================================
+# ASK DOJO — QUESTION-SCOPED TUTOR CHAT
+# ============================================================
+
+DOJO_TUTOR_MODEL = "gpt-5.6-luna"
+
+
+def _strip_display_fields(value):
+    """Remove pre-rendered UI data before sending question context to the tutor."""
+    if isinstance(value, dict):
+        return {
+            key: _strip_display_fields(item)
+            for key, item in value.items()
+            if key not in {"display", "display_blocks"}
+        }
+    if isinstance(value, list):
+        return [_strip_display_fields(item) for item in value]
+    return value
+
+
+def _tutor_context(question):
+    """
+    Build temporary context for the current question only.
+
+    The reviewed stored solution is the mathematical source of truth.
+    No learner history or previous-question information is included.
+    """
+    return {
+        "question_id": question.get("question_id"),
+        "question_text": question.get("question", {}).get("text", ""),
+        "answer": _strip_display_fields(question.get("answer", {})),
+        "reviewed_model_solution": _strip_display_fields(
+            question.get("solution", {})
+        ),
+        "generative_structure": _strip_display_fields(
+            question.get("generative_structure", {})
+        ),
+        "emergent_structure": _strip_display_fields(
+            question.get("emergent_structure", {})
+        ),
+    }
+
+
+def _openai_response_text(response_data):
+    """Extract assistant text from a raw Responses API response."""
+    pieces = []
+
+    for item in response_data.get("output", []):
+        if item.get("type") != "message":
+            continue
+        for content in item.get("content", []):
+            if content.get("type") == "output_text":
+                text_value = content.get("text")
+                if text_value:
+                    pieces.append(str(text_value))
+
+    return "\n".join(pieces).strip()
+
+
+def ask_dojo_tutor(question, chat_messages):
+    """
+    Ask the tutor about the current question.
+
+    Uses the OpenAI Responses API directly so the app needs no extra Python
+    package. The response is not stored by OpenAI through the Responses API.
+    """
+    try:
+        api_key = str(st.secrets["OPENAI_API_KEY"])
+    except Exception as exc:
+        raise RuntimeError(
+            "OPENAI_API_KEY is not available in Streamlit secrets."
+        ) from exc
+
+    context = _tutor_context(question)
+
+    instructions = """You are Ask DOJO, an A-level mathematics teacher helping a
+student with ONE current practice question.
+
+The supplied reviewed DOJO model solution is your mathematical source of truth.
+Use it to understand the intended method, answer and reasoning rather than
+re-solving the question from scratch unnecessarily.
+
+Your job is to respond like a teacher who has walked over to the student's desk:
+answer the exact point of confusion they raise. Explain why a step works, unpack
+notation, expand a conceptual point, compare expressions, or give a small nudge
+when appropriate.
+
+Important behaviour:
+- Work only with the current question and supplied DOJO context.
+- Do not infer or discuss a learner profile, ability level, previous questions,
+  or personalised history.
+- Do not claim to remember anything outside this question's chat.
+- Prefer familiar A-level notation and clear mathematical language.
+- Be concise by default, but expand when the student asks for more detail.
+- Do not automatically dump the whole solution when the student asks about one
+  step.
+- Do not reveal later steps unnecessarily. If the student explicitly asks for
+  the answer, full method, or later working, you may provide it.
+- If the student's wording is ambiguous, use the question and reviewed solution
+  to infer the most likely mathematical reference; ask a short clarification
+  only when genuinely necessary.
+- If the supplied reviewed solution does not support a claim, say so rather
+  than inventing a DOJO-specific fact.
+- Format mathematics clearly using Markdown/LaTeX where useful."""
+
+    input_items = [
+        {
+            "role": "user",
+            "content": (
+                "Here is the complete DOJO context for the current question. "
+                "Treat it as reference material, not as a student message:\n\n"
+                + json.dumps(context, ensure_ascii=False, indent=2)
+            ),
+        }
+    ]
+
+    for message in chat_messages:
+        role = message.get("role")
+        content = str(message.get("content", "")).strip()
+        if role in {"user", "assistant"} and content:
+            input_items.append({
+                "role": role,
+                "content": content,
+            })
+
+    payload = {
+        "model": DOJO_TUTOR_MODEL,
+        "instructions": instructions,
+        "input": input_items,
+        "reasoning": {"effort": "low"},
+        "text": {"verbosity": "low"},
+        "max_output_tokens": 700,
+        "store": False,
+    }
+
+    request = urllib.request.Request(
+        "https://api.openai.com/v1/responses",
+        data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=45) as response:
+            response_data = json.loads(
+                response.read().decode("utf-8")
+            )
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(
+            f"Ask DOJO returned HTTP {exc.code}: {body}"
+        ) from exc
+    except Exception as exc:
+        raise RuntimeError(f"Ask DOJO could not respond: {exc}") from exc
+
+    answer = _openai_response_text(response_data)
+    if not answer:
+        raise RuntimeError("Ask DOJO returned no text.")
+
+    return answer
+
+
+def _ensure_question_chat(question):
+    """
+    Give every new question a clean chat.
+
+    This deliberately does not restore chat from Supabase or learner history.
+    """
+    question_id = str(question.get("question_id", "unknown"))
+
+    if st.session_state.get("dojo_chat_question_id") != question_id:
+        st.session_state.dojo_chat_question_id = question_id
+        st.session_state.dojo_chat_messages = []
+
+
+def render_dojo_chat(question):
+    """Always-present, question-scoped tutor chat."""
+    _ensure_question_chat(question)
+
+    st.subheader("Ask DOJO")
+    st.caption(
+        "Ask about this question, a mark-scheme step, or a concept you "
+        "want explained further. The chat starts fresh on every question."
+    )
+
+    messages = st.session_state.get("dojo_chat_messages", [])
+
+    for message in messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    prompt = st.chat_input(
+        "Ask DOJO about this question...",
+        key=f"dojo_chat_input_{question.get('question_id', 'unknown')}",
+    )
+
+    if not prompt:
+        return
+
+    messages.append({
+        "role": "user",
+        "content": prompt,
+    })
+    st.session_state.dojo_chat_messages = messages
+
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            try:
+                answer = ask_dojo_tutor(question, messages)
+            except Exception as exc:
+                st.error(str(exc))
+                return
+        st.markdown(answer)
+
+    messages.append({
+        "role": "assistant",
+        "content": answer,
+    })
+    st.session_state.dojo_chat_messages = messages
+
+
+# ============================================================
 # PERSISTENT SESSION STORAGE
 # ============================================================
 
@@ -702,6 +929,10 @@ def restore_active_session(payload, historical_attempt_summaries):
         pending = "__none__"
     st.session_state.check_pending_part = pending
     st.session_state.attempt = restored_attempt
+    st.session_state.dojo_chat_question_id = str(
+        current_question.get("question_id", "unknown")
+    )
+    st.session_state.dojo_chat_messages = []
 
 
 def begin_for_username(raw_username, mode):
@@ -966,6 +1197,10 @@ def initialise_question(question, number, total, phase_label):
     st.session_state.last_check_correct = {part: None for part in keys}
     st.session_state.solution_seen = {part: False for part in keys}
     st.session_state.check_pending_part = "__none__"
+    st.session_state.dojo_chat_question_id = str(
+        question.get("question_id", "unknown")
+    )
+    st.session_state.dojo_chat_messages = []
     st.session_state.attempt = {
         "attempt_id": make_id("attempt"),
         "question_id": question.get("question_id", "unknown"),
@@ -1704,6 +1939,10 @@ def render_question():
 
     with solution_tab:
         render_solution_area(question)
+
+    st.divider()
+
+    render_dojo_chat(question)
 
     st.divider()
 
