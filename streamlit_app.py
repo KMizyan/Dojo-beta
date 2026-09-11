@@ -443,17 +443,13 @@ def render_dojo_chat(question):
     """Question-scoped tutor chat in a fixed-height side panel."""
     _ensure_question_chat(question)
 
-    st.subheader("Ask DOJO")
-    st.caption(
-        "Ask about this question, a mark-scheme step, or a concept you "
-        "want explained further. The chat starts fresh on every question."
-    )
+    st.markdown("#### Ask DOJO")
 
     messages = st.session_state.get("dojo_chat_messages", [])
 
     # Keep the conversation in its own scrollable pane so a longer chat does
     # not push the question off-screen.
-    with st.container(height=560, border=True):
+    with st.container(height=640, border=True):
         if not messages:
             st.caption("Your conversation about this question will appear here.")
         for message in messages:
@@ -1910,19 +1906,21 @@ def render_question():
         )
 
     if total is None:
-        st.caption(f"{phase.upper()} QUESTION {number}")
+        question_label = f"{phase.upper()} QUESTION {number}"
     else:
-        st.caption(f"{phase.upper()} QUESTION {number} OF {total}")
+        question_label = f"{phase.upper()} QUESTION {number} OF {total}"
 
     if total_marks is not None:
-        st.caption(f"{total_marks} marks")
+        question_label += f"  ·  {total_marks} marks"
+
+    st.caption(question_label)
 
     # Desktop practice workspace: the question/solution tools and Ask DOJO
     # remain visible side by side. Each side scrolls independently.
     question_col, chat_col = st.columns([1.15, 0.85], gap="large")
 
     with question_col:
-        with st.container(height=700, border=True):
+        with st.container(height=740, border=True):
             question_blocks = question.get("question", {}).get("display_blocks", [])
             if question_blocks:
                 render_display_blocks(question_blocks)
@@ -2082,12 +2080,25 @@ st.set_page_config(
     page_title="DOJO",
     page_icon="🥋",
     layout="wide",
+    initial_sidebar_state="collapsed",
 )
 
-st.title("DOJO")
-st.caption("A-level Maths Practice — Implicit Differentiation")
+st.markdown(
+    """
+    <style>
+        .block-container {
+            padding-top: 1.0rem;
+            padding-bottom: 1.0rem;
+            max-width: 100%;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 if not st.session_state.get("started"):
+    st.title("DOJO")
+    st.caption("A-level Maths Practice — Implicit Differentiation")
     remembered_username = st.query_params.get("user")
     if remembered_username:
         if begin_for_username(remembered_username, "auto"):
