@@ -1905,15 +1905,19 @@ def render_question():
             "so DOJO is continuing it from where you left off."
         )
 
+    # Compact location + question-status bar. This keeps the student oriented
+    # without giving branding/navigation more space than the two work panels.
+    st.caption("Pure  ›  Differentiation  ›  Implicit differentiation")
+
     if total is None:
-        question_label = f"{phase.upper()} QUESTION {number}"
+        question_label = f"{phase.title()} question {number}"
     else:
-        question_label = f"{phase.upper()} QUESTION {number} OF {total}"
+        question_label = f"{phase.title()} question {number} of {total}"
 
     if total_marks is not None:
         question_label += f"  ·  {total_marks} marks"
 
-    st.caption(question_label)
+    st.markdown(f"**{question_label}**")
 
     # Desktop practice workspace: the question/solution tools and Ask DOJO
     # remain visible side by side. Each side scrolls independently.
