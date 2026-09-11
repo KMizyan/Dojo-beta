@@ -359,7 +359,12 @@ Important behaviour:
   only when genuinely necessary.
 - If the supplied reviewed solution does not support a claim, say so rather
   than inventing a DOJO-specific fact.
-- Format mathematics clearly using Markdown/LaTeX where useful."""
+- Format mathematics for Streamlit Markdown using dollar-sign LaTeX delimiters ONLY.
+  Use `$...$` for inline mathematics and `$$...$$` for displayed mathematics.
+  Never use `\\(...\\)` or `\\[...\\]` delimiters, because this app will display
+  those as literal text rather than rendered maths.
+- Put important algebraic working on its own displayed-maths line where that makes
+  the steps easier to follow. Keep explanatory prose outside the maths delimiters."""
 
     input_items = [
         {
