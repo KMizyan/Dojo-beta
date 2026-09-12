@@ -2076,6 +2076,251 @@ def render_finished():
         st.rerun()
 
 
+
+# ============================================================
+# JUST QUESTIONS — CONTENT BROWSER / QA
+# ============================================================
+
+def _pretty_topic_name(raw):
+    name = str(raw or "").replace("_", " ").replace("-", " ").strip()
+    return " ".join(word.capitalize() for word in name.split())
+
+
+def discover_rendered_banks():
+    """
+    Find rendered banks anywhere inside the deployed app/repository.
+
+    Practice continues to use the existing root rendered_question_bank.json.
+    This browser is deliberately separate and may inspect any additional topic
+    banks placed in subfolders.
+    """
+    banks = []
+    for path in sorted(APP_DIR.rglob("rendered_question_bank.json")):
+        if not path.is_file():
+            continue
+
+        if path.parent == APP_DIR:
+            label = "Implicit Differentiation"
+        else:
+            relative_parent = path.parent.relative_to(APP_DIR)
+            # Prefer the directory immediately containing the bank. If that is
+            # a generic data folder, use its parent topic directory instead.
+            parts = list(relative_parent.parts)
+            if parts and parts[-1].lower() in {"data", "bank", "banks"} and len(parts) > 1:
+                label = _pretty_topic_name(parts[-2])
+            elif parts:
+                label = _pretty_topic_name(parts[-1])
+            else:
+                label = "Question Bank"
+
+        banks.append({"label": label, "path": path})
+
+    # Make duplicate labels unambiguous without imposing a folder structure.
+    counts = {}
+    for item in banks:
+        counts[item["label"]] = counts.get(item["label"], 0) + 1
+    for item in banks:
+        if counts[item["label"]] > 1:
+            item["label"] = f"{item['label']} — {item['path'].relative_to(APP_DIR)}"
+
+    return banks
+
+
+def load_question_bank_from_path(path):
+    with Path(path).open("r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    if isinstance(data, dict) and isinstance(data.get("questions"), list):
+        return data["questions"]
+    if isinstance(data, list):
+        return data
+    raise ValueError(
+        f"{Path(path).name} must be a list of questions or an object "
+        "containing a 'questions' list."
+    )
+
+
+def _browser_question_label(index, question):
+    qid = str(question.get("question_id", "")).strip()
+    family = str(
+        question.get("generative_structure", {}).get("family")
+        or question.get("structure", {}).get("generative", {}).get("family")
+        or ""
+    ).strip()
+
+    label = f"{index + 1}"
+    if qid:
+        label += f" · {qid}"
+    if family:
+        label += f" · {family}"
+    return label
+
+
+def render_just_questions():
+    """Fast, read-only inspection of rendered questions and reviewed solutions."""
+    st.title("Just Questions")
+    st.caption(
+        "Content browser only — no diagnostic, ordering, logging, Supabase writes "
+        "or Ask DOJO."
+    )
+
+    banks = discover_rendered_banks()
+    if not banks:
+        st.error(
+            "No rendered_question_bank.json files were found inside the deployed app."
+        )
+        return
+
+    bank_labels = [item["label"] for item in banks]
+    selected_label = st.selectbox(
+        "Topic",
+        bank_labels,
+        key="jq_topic",
+    )
+    selected_bank = next(
+        item for item in banks if item["label"] == selected_label
+    )
+
+    try:
+        questions = load_question_bank_from_path(selected_bank["path"])
+    except Exception as exc:
+        st.error(f"Could not load this rendered bank: {exc}")
+        return
+
+    if not questions:
+        st.info("This rendered question bank is empty.")
+        return
+
+    # Reset to the first question when changing topic.
+    bank_key = str(selected_bank["path"])
+    if st.session_state.get("jq_bank_key") != bank_key:
+        st.session_state.jq_bank_key = bank_key
+        st.session_state.jq_index = 0
+
+    index = int(st.session_state.get("jq_index", 0))
+    index = max(0, min(index, len(questions) - 1))
+    st.session_state.jq_index = index
+
+    nav_left, nav_middle, nav_right = st.columns([1, 3, 1])
+
+    if nav_left.button(
+        "← Previous",
+        disabled=index == 0,
+        use_container_width=True,
+        key="jq_previous",
+    ):
+        st.session_state.jq_index = index - 1
+        st.rerun()
+
+    labels = [
+        _browser_question_label(i, question)
+        for i, question in enumerate(questions)
+    ]
+    selected_index = nav_middle.selectbox(
+        "Question",
+        range(len(questions)),
+        index=index,
+        format_func=lambda i: labels[i],
+        key=f"jq_question_picker_{bank_key}",
+        label_visibility="collapsed",
+    )
+    if selected_index != index:
+        st.session_state.jq_index = selected_index
+        st.rerun()
+
+    if nav_right.button(
+        "Next →",
+        disabled=index >= len(questions) - 1,
+        use_container_width=True,
+        key="jq_next",
+    ):
+        st.session_state.jq_index = index + 1
+        st.rerun()
+
+    question = questions[index]
+    qid = str(question.get("question_id", "unknown"))
+    total_marks = question.get("solution", {}).get("total_marks")
+
+    context = f"{selected_label} · Question {index + 1} of {len(questions)} · {qid}"
+    if total_marks is not None:
+        context += f" · {total_marks} marks"
+    st.caption(context)
+
+    with st.container(border=True):
+        render_display_blocks(
+            question.get("question", {}).get("display_blocks", [])
+        )
+
+    answer_tab, markscheme_tab, solution_tab = st.tabs(
+        ["Answer", "Part-by-part mark scheme", "Full solution"]
+    )
+
+    with answer_tab:
+        parts = get_question_parts(question) or [None]
+        for part in parts:
+            if part is not None:
+                st.markdown(f"### Part {str(part).upper()}")
+            blocks = get_answer_display_blocks(question, part)
+            if blocks:
+                render_display_blocks(blocks)
+            else:
+                stored_answer = get_part_answer(question, part)
+                if stored_answer not in (None, {}, []):
+                    st.code(_display_value(stored_answer))
+                else:
+                    st.info("No stored answer is available for this part.")
+
+    with markscheme_tab:
+        parts = get_question_parts(question) or [None]
+        for part in parts:
+            if part is not None:
+                solution_part = get_solution_part(question, part)
+                marks = (
+                    solution_part.get("marks_available")
+                    if solution_part else None
+                )
+                heading = f"Part {str(part).upper()}"
+                if marks is not None:
+                    heading += f" — {marks} marks"
+                st.markdown(f"### {heading}")
+
+            steps = get_solution_steps(question, part)
+            if not steps:
+                st.info("No mark scheme steps are stored for this part.")
+                continue
+
+            for step in steps:
+                render_step(step)
+
+    with solution_tab:
+        render_full_solution(question)
+
+    st.divider()
+    bottom_left, bottom_middle, bottom_right = st.columns([1, 3, 1])
+
+    if bottom_left.button(
+        "← Previous",
+        disabled=index == 0,
+        use_container_width=True,
+        key="jq_previous_bottom",
+    ):
+        st.session_state.jq_index = index - 1
+        st.rerun()
+
+    bottom_middle.caption(
+        f"{index + 1} / {len(questions)}"
+    )
+
+    if bottom_right.button(
+        "Next →",
+        disabled=index >= len(questions) - 1,
+        use_container_width=True,
+        key="jq_next_bottom",
+    ):
+        st.session_state.jq_index = index + 1
+        st.rerun()
+
+
 # ============================================================
 # APP
 # ============================================================
@@ -2099,6 +2344,16 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+app_section = st.sidebar.radio(
+    "Section",
+    ["Practice", "Just Questions"],
+    key="dojo_app_section",
+)
+
+if app_section == "Just Questions":
+    render_just_questions()
+    st.stop()
 
 if not st.session_state.get("started"):
     st.title("DOJO")
