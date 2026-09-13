@@ -1543,23 +1543,54 @@ def end_session(outcome="user_quit"):
 # RENDERING
 # ============================================================
 
-def render_step(step, *, show_heading=True):
-    step_number=step.get("step","?"); description=step.get("description",""); display=step.get("display",{})
-    if show_heading: st.markdown(f"**Step {step_number}: {description}**")
-    render_display_blocks(display.get("working_blocks",[]))
-    for note_blocks in display.get("student_mark_note_blocks",[]):
-        text_parts=[b.get("content","") for b in note_blocks if b.get("type")!="spacer"]
-        if text_parts: st.caption(" ".join(text_parts))
-    fallback=display.get("fallback_mark_caption")
-    if fallback: st.caption(fallback)
-    for concept_blocks in display.get("concept_blocks",[]):
-        st.markdown("**Why this matters:**"); render_display_blocks(concept_blocks)
-    for note_blocks in display.get("answer_note_blocks",[]):
-        st.caption("Answer note:"); render_display_blocks(note_blocks)
-    alternatives=display.get("alternative_blocks",[])
+def render_step(step, *, show_heading=True, solution_mode=False):
+    """Render one reviewed step.
+
+    In a full worked solution the mathematics is the main object on the page:
+    descriptions orient the student, while useful teaching notes sit underneath
+    without turning the solution into a report. The mark-scheme view can still
+    use the same stored step with its explicit numbered heading.
+    """
+    step_number = step.get("step", "?")
+    description = str(step.get("description", "")).strip()
+    display = step.get("display", {})
+
+    if show_heading:
+        if solution_mode:
+            if description:
+                st.markdown(f"**{description}**")
+        else:
+            st.markdown(f"**Step {step_number}: {description}**")
+
+    render_display_blocks(display.get("working_blocks", []))
+
+    for note_blocks in display.get("student_mark_note_blocks", []):
+        text_parts = [
+            b.get("content", "")
+            for b in note_blocks
+            if b.get("type") != "spacer"
+        ]
+        if text_parts:
+            st.caption(" ".join(text_parts))
+
+    fallback = display.get("fallback_mark_caption")
+    if fallback:
+        st.caption(fallback)
+
+    # These are useful teaching annotations, not extra report sections.
+    for concept_blocks in display.get("concept_blocks", []):
+        with st.container(border=True):
+            render_display_blocks(concept_blocks)
+
+    for note_blocks in display.get("answer_note_blocks", []):
+        st.caption("Note")
+        render_display_blocks(note_blocks)
+
+    alternatives = display.get("alternative_blocks", [])
     if alternatives:
-        st.markdown("**Alternative approach:**")
-        for route_blocks in alternatives: render_display_blocks(route_blocks)
+        with st.expander("Alternative method"):
+            for route_blocks in alternatives:
+                render_display_blocks(route_blocks)
 
 
 def render_full_solution(question, part=None):
@@ -1580,7 +1611,7 @@ def render_full_solution(question, part=None):
             f"Worked solution — Part {str(part).upper()} — {marks} marks"
         )
         for step in solution_part.get("steps", []):
-            render_step(step)
+            render_step(step, solution_mode=True)
         return
 
     total_marks = solution.get("total_marks")
@@ -1595,10 +1626,10 @@ def render_full_solution(question, part=None):
             marks = solution_part.get("marks_available", "?")
             st.markdown(f"### Part {part_name} — {marks} marks")
             for step in solution_part.get("steps", []):
-                render_step(step)
+                render_step(step, solution_mode=True)
     else:
         for step in solution.get("steps", []):
-            render_step(step)
+            render_step(step, solution_mode=True)
 
     important_note = solution.get("important_note")
     if important_note:
