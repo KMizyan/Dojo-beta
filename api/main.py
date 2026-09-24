@@ -8,7 +8,22 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 app=FastAPI(title='DOJO API')
-app.add_middleware(CORSMiddleware,allow_origins=['http://localhost:3000'],allow_methods=['*'],allow_headers=['*'])
+ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        'DOJO_ALLOWED_ORIGINS',
+        'http://localhost:3000'
+    ).split(',')
+    if origin.strip()
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
 
 TOPIC_NAMES={
     'a_level_integration':'Integration','as integration':'Integration','integration':'Integration',
@@ -415,4 +430,5 @@ def generated_paper(area:str='Pure',level:str='A-level',target_marks:int=100,see
     return {'level':level,'area':area,'requested_marks':target_marks,'total_marks':total,
       'suggested_minutes':round(total*1.2),'paper_structure':'edexcel_empirical_v1',
       'exact_mark_total':total==target_marks,'questions':questions}
+
 
