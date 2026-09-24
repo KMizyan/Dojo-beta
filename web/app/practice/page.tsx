@@ -23,7 +23,8 @@ export default async function Practice({searchParams}:{searchParams:Promise<Reco
   return <main className="main practiceShell">
     <div className="crumb"><Link href="/topics">Topics</Link><span>›</span>{label}<span>›</span>Practice</div>
     {qs.length
-      ? <PracticeSession persistWork={requested.length>0} topic={label} mode={p.mode==='exam'?'exam':'practice'} questions={qs} options={{ask:p.ask!=='0',solutions:p.solutions!=='0',timer:p.timer==='1',freeNav:p.freeNav!=='0'}}/>
+      ? <PracticeSession persistWork={requested.length>0} topic={label} mode={p.mode==='exam'?'exam':'practice'} questions={qs} options={{askDojo:p.ask!=='0',solutions:p.solutions!=='0',timer:p.timer==='1',freeNav:p.freeNav!=='0'}}/>
       : <div className="placeholder"><b>No questions available for this selection yet.</b><p>Make sure the DOJO backend is running and can see your PrjDojo/topics folder.</p></div>}
   </main>
 }
+
