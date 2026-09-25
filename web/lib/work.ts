@@ -11,10 +11,6 @@ export async function createWorkItem(input: {
   const { data: auth, error: authError } = await supabase.auth.getUser();
 
   if (authError || !auth.user) {
-    console.error(
-      'SUPABASE AUTH ERROR:',
-      JSON.stringify(authError, null, 2)
-    );
     throw new Error('You must be logged in to save your work.');
   }
 
@@ -25,18 +21,15 @@ export async function createWorkItem(input: {
       kind: input.kind ?? 'question_set',
       title: input.title,
       status: 'in_progress',
-      settings: input.settings ?? {},
+      settings: {
+        ...(input.settings ?? {}),
+        currentQuestion: 0,
+      },
     })
     .select()
     .single();
 
-  if (workError) {
-    console.error(
-      'SUPABASE WORK ERROR:',
-      JSON.stringify(workError, null, 2)
-    );
-    throw workError;
-  }
+  if (workError) throw workError;
 
   const questions = input.question_ids.map((questionId, position) => ({
     work_id: work.id,
@@ -50,16 +43,7 @@ export async function createWorkItem(input: {
       .insert(questions);
 
     if (questionError) {
-      console.error(
-        'SUPABASE QUESTION ERROR:',
-        JSON.stringify(questionError, null, 2)
-      );
-
-      await supabase
-        .from('work_items')
-        .delete()
-        .eq('id', work.id);
-
+      await supabase.from('work_items').delete().eq('id', work.id);
       throw questionError;
     }
   }
@@ -84,13 +68,37 @@ export async function updateWorkItem(
     .select()
     .single();
 
-  if (error) {
-    console.error(
-      'SUPABASE UPDATE ERROR:',
-      JSON.stringify(error, null, 2)
-    );
-    throw error;
-  }
+  if (error) throw error;
+
+  return data;
+}
+
+export async function updateWorkProgress(
+  id: string,
+  currentQuestion: number
+) {
+  const { data: existing, error: readError } = await supabase
+    .from('work_items')
+    .select('settings')
+    .eq('id', id)
+    .single();
+
+  if (readError) throw readError;
+
+  const { data, error } = await supabase
+    .from('work_items')
+    .update({
+      settings: {
+        ...(existing?.settings ?? {}),
+        currentQuestion,
+      },
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
 
   return data;
 }

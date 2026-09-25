@@ -183,7 +183,9 @@ export default function MyWorkPage() {
                     <span>{dateLabel(item.created_at)}</span>
                   </div>
 
-                  <button>{actionLabel(item.status)}</button>
+                  <Link href={`/practice?work=${encodeURIComponent(item.id)}`}>
+                    {actionLabel(item.status)}
+                  </Link>
                 </article>
               );
             })}

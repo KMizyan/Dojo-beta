@@ -16,6 +16,14 @@ export async function selectQuestions(topics:string[],count:number){
     return await r.json();
   }catch{return null}
 }
+
+export async function getQuestion(id:string){
+  try{
+    const r=await fetch(`${API}/questions/${encodeURIComponent(id)}`,{cache:'no-store'});
+    if(!r.ok)throw new Error();
+    return await r.json();
+  }catch{return null}
+}
 export function matchBankTopic(displayName:string, topics:any[]){
   const norm=(s:string)=>s.toLowerCase().replace(/a-level/g,'').replace(/[^a-z0-9]+/g,' ').trim();
   const wanted=norm(displayName);
