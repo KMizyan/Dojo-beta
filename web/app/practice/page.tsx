@@ -28,3 +28,4 @@ export default async function Practice({searchParams}:{searchParams:Promise<Reco
   </main>
 }
 
+

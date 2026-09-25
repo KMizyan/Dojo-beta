@@ -81,3 +81,4 @@ export function focusGroups(slug:string): FocusGroup[] {
   if (FOCUS_GROUPS[slug]) return FOCUS_GROUPS[slug];
   return (SUBTOPICS[slug] || []).map(label => ({label, skills:[label]}));
 }
+

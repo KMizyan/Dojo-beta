@@ -105,7 +105,7 @@ function AskDojo({q}:{q:any}) {
     const next=[...messages,{role:'user' as const,content:prompt}];
     setMessages(next); setInput(''); setBusy(true); setError('');
     try {
-      const r=await fetch('http://localhost:8000/ask-dojo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question_id:q.id,messages:next})});
+      const r=await fetch((process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:8000') + '/ask-dojo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question_id:q.id,messages:next})});
       const data=await r.json();
       if(!r.ok) throw new Error(data.detail||'Ask DOJO could not respond.');
       setMessages([...next,{role:'assistant',content:data.text}]);
@@ -234,3 +234,4 @@ export default function PracticeSession({topic,mode,questions,options:rawOptions
     </footer>
   </section>;
 }
+

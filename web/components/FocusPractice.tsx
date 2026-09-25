@@ -23,3 +23,4 @@ export default function FocusPractice({topic,groups,available}:{topic:string;gro
     </div>
   })}</div>;
 }
+

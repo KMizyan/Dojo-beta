@@ -2,7 +2,7 @@
 import {useEffect,useState} from 'react';
 export default function CoverageSnapshot(){
  const [data,setData]=useState<any>(null);
- useEffect(()=>{const api=process.env.NEXT_PUBLIC_DOJO_API ?? 'http://127.0.0.1:8000';
+ useEffect(()=>{const api=process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:8000';
    fetch(`${api}/coverage`).then(r=>r.ok?r.json():null).then(setData).catch(()=>{});},[]);
  if(!data)return null;
  const active=(data.topics||[]).filter((t:any)=>t.questions_completed>0).sort((a:any,b:any)=>b.coverage_percent-a.coverage_percent);
@@ -19,3 +19,4 @@ export default function CoverageSnapshot(){
    </div>)}</div>}
  </section>
 }
+

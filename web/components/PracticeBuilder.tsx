@@ -23,3 +23,4 @@ export default function PracticeBuilder({topic,available}:{topic:string;availabl
     </div>}
   </section>;
 }
+

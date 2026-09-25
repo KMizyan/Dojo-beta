@@ -150,3 +150,4 @@ export default function GeneratedExam({paper,options}:{paper:any;options?:Partia
     {finished&&<div className="examFinishedBar"><div><b>Paper finished</b><span>Saved to My Work. You can return to this paper from there.</span></div><Link href="/my-work">Go to My Work →</Link></div>}
   </main>;
 }
+

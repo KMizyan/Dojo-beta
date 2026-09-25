@@ -1,4 +1,4 @@
-const API=process.env.NEXT_PUBLIC_DOJO_API ?? 'http://127.0.0.1:8000';
+const API=process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:8000';
 
 export async function getTopics(){
   try{const r=await fetch(`${API}/topics`,{cache:'no-store'});if(!r.ok)throw new Error();return await r.json()}catch{return []}
@@ -21,3 +21,4 @@ export function matchBankTopic(displayName:string, topics:any[]){
   const wanted=norm(displayName);
   return topics.find(t=>{const n=norm(t.name);return n===wanted || n.includes(wanted) || wanted.includes(n)})?.name ?? null;
 }
+

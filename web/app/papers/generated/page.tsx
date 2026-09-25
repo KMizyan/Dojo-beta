@@ -1,3 +1,4 @@
 import GeneratedExam from '../../../components/GeneratedExam';
-const API=process.env.NEXT_PUBLIC_DOJO_API ?? 'http://127.0.0.1:8000';
+const API=process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:8000';
 export default async function GeneratedPaperPage({searchParams}:{searchParams:Promise<{level?:string;area?:string;marks?:string;examMode?:string;askDojo?:string;solutions?:string;timer?:string;freeNav?:string}>}){const p=await searchParams;const level=p.level||'A-level',area=p.area||'Pure',marks=Math.max(10,Math.min(Number(p.marks)||40,100));let paper:any=null;try{const r=await fetch(`${API}/papers/generated?level=${encodeURIComponent(level)}&area=${encodeURIComponent(area)}&target_marks=${marks}`,{cache:'no-store'});if(r.ok)paper=await r.json()}catch{}if(!paper)return <main className="generatedExamPage"><div className="examLoadError"><h1>Paper unavailable</h1><p>Make sure the DOJO backend is running, then refresh this page.</p></div></main>;return <GeneratedExam paper={paper} options={{examMode:p.examMode!=='0',askDojo:p.askDojo==='1',solutions:p.solutions==='1',timer:p.examMode!=='0'||p.timer==='1',freeNav:p.freeNav==='1'}}/>}
+
