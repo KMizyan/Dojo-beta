@@ -1,0 +1,2698 @@
+{
+  "schema_version": 2,
+  "updated_at": "2026-09-18T16:27:09.953687+00:00",
+  "questions": [
+    {
+      "question_id": "Q000001",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_986acf467a7b40e4",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-18T16:26:38.863740+00:00",
+        "generation_selection": {
+          "family": "root_location",
+          "requested_depth": 0.0,
+          "actual_depth": 0.0,
+          "architecture": "two_positive_roots_bracketing",
+          "validation_attempt": 1,
+          "architecture_requested": null,
+          "seed": 2005547712,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "The equation $x^{4} - 7 x^{2} + 3=0$ has two positive roots $\\alpha$ and $\\beta$, where $\\beta>\\alpha$.\n\nShow that $0.6<\\alpha<0.7$ and $2.5<\\beta<2.6$.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The equation $x^{4} - 7 x^{2} + 3=0$ has two positive roots $\\alpha$ and $\\beta$, where $\\beta>\\alpha$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Show that $0.6<\\alpha<0.7$ and $2.5<\\beta<2.6$."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "root_location",
+        "architecture": "two_positive_roots_bracketing",
+        "variant": "quartic_1",
+        "depth_position": 0.0,
+        "object_kind": "quartic_two_positive_roots",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "locate_two_positive_roots",
+            "depends_on": []
+          }
+        ],
+        "part_dependencies": {
+          "a": []
+        },
+        "task_sequence": [
+          "locate_two_positive_roots"
+        ],
+        "part_count": 1,
+        "generation_spec": {
+          "family": "root_location",
+          "depth": 0.0,
+          "architecture": null,
+          "seed": 2005547712,
+          "pmt_primary_topic": "Numerical Methods",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "diversity_dimensions": {
+          "variant": "quartic_1",
+          "object_profile": "quartic_two_positive_roots",
+          "technique_profile": "change_of_sign+continuity"
+        },
+        "core_diversity_signature": "two_positive_roots_bracketing|quartic_1",
+        "diversity_signature": "two_positive_roots_bracketing|quartic_1",
+        "structural_signature": "root_location|two_positive_roots_bracketing|quartic_1",
+        "exact_fingerprint": "03dacc018b2a042ef542b07a5c34f53bac5d6c717489f682c46db29b7706be20"
+      },
+      "emergent_structure": {
+        "multipart": false,
+        "part_count": 1,
+        "required_techniques": [
+          "change_of_sign",
+          "continuity"
+        ],
+        "cross_topic_links": [],
+        "pmt_overlap_labels": [
+          "Numerical Methods"
+        ],
+        "structural_variant": "quartic_1",
+        "core_diversity_signature": "two_positive_roots_bracketing|quartic_1",
+        "diversity_signature": "two_positive_roots_bracketing|quartic_1"
+      },
+      "topic_metadata": {
+        "primary": "Numerical Methods",
+        "overlaps": [
+          "Numerical Methods"
+        ],
+        "taxonomy_source": "PMT",
+        "pmt_taxonomy": {
+          "primary": "Numerical Methods",
+          "labels": [
+            "Numerical Methods"
+          ],
+          "multi_label": false
+        },
+        "generator_design": "construct_valid_math_then_render_v1",
+        "generator_version": 1
+      },
+      "answer": {
+        "validated_math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "x**4 - 7*x**2 + 3",
+            "srepr": "Add(Pow(Symbol('x', real=True), Integer(4)), Mul(Integer(-1), Integer(7), Pow(Symbol('x', real=True), Integer(2))), Integer(3))"
+          },
+          "interval1": {
+            "__type__": "tuple",
+            "items": [
+              0.6,
+              0.7
+            ]
+          },
+          "interval2": {
+            "__type__": "tuple",
+            "items": [
+              2.5,
+              2.6
+            ]
+          },
+          "positive_roots": [
+            0.677213950573148,
+            2.557612414958355
+          ],
+          "family": "root_location",
+          "architecture": "two_positive_roots_bracketing",
+          "object_kind": "quartic_two_positive_roots",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "locate_two_positive_roots",
+              "depends_on": []
+            }
+          ],
+          "task_sequence": [
+            "locate_two_positive_roots"
+          ]
+        },
+        "parts": {
+          "a": {
+            "operation": "locate_two_positive_roots",
+            "working": [
+              {
+                "description": "Shows a sign change for alpha.",
+                "paper": "$$f(0.6)=0.6096,\\qquad f(0.7)=-0.1899$$",
+                "prose": "",
+                "equations": [],
+                "criterion": "Shows a sign change for alpha.",
+                "mark_type": "M",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              },
+              {
+                "description": "Shows a sign change for beta.",
+                "paper": "$$f(2.5)=-1.6875,\\qquad f(2.6)=1.3776$$",
+                "prose": "",
+                "equations": [],
+                "criterion": "Shows a sign change for beta.",
+                "mark_type": "M",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              },
+              {
+                "description": "States both intervals.",
+                "paper": "$$0.6<\\alpha<0.7,\\qquad 2.5<\\beta<2.6$$",
+                "prose": "f is continuous, so each sign change contains a root.",
+                "equations": [],
+                "criterion": "States both intervals.",
+                "mark_type": "A",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              }
+            ],
+            "answer": [
+              0.677213950573148,
+              2.557612414958355
+            ]
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 2,
+        "solution_style": "a_level_numerical_methods_worked_answer_v2",
+        "total_marks": 3,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "locate_two_positive_roots",
+            "marks_available": 3,
+            "steps": [
+              {
+                "step": 1,
+                "description": "Evaluate the function at both ends of the interval and compare the signs.",
+                "working": "$$f(0.6)=0.6096,\\qquad f(0.7)=-0.1899$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.1.1",
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Shows a sign change for alpha.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "f(0.6)=0.6096,\\qquad f(0.7)=-0.1899"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "step": 2,
+                "description": "Evaluate the function at both ends of the interval and compare the signs.",
+                "working": "$$f(2.5)=-1.6875,\\qquad f(2.6)=1.3776$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.2.1",
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Shows a sign change for beta.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "f(2.5)=-1.6875,\\qquad f(2.6)=1.3776"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "step": 3,
+                "description": "Use the change of sign, together with continuity, to locate the root.",
+                "working": "$$0.6<\\alpha<0.7,\\qquad 2.5<\\beta<2.6$$\n\nf is continuous, so each sign change contains a root.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.3.1",
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "States both intervals.",
+                    "depends_on": [
+                      "a.2.1"
+                    ],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  2
+                ],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "0.6<\\alpha<0.7,\\qquad 2.5<\\beta<2.6"
+                    },
+                    {
+                      "type": "spacer"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "f is continuous, so each sign change contains a root."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              0.677213950573148,
+              2.557612414958355
+            ]
+          }
+        ],
+        "marking_model": {
+          "status": "a_level_achievement_marks_v2",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B"
+          ],
+          "note": "Mark scheme uses criterion descriptions; full solution uses student-facing worked narration."
+        },
+        "learning_layer": {
+          "concepts": [],
+          "display_policy": "Optional hooks, not automatically expanded."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "both_sign_changes": true,
+          "metadata_architecture_match": true,
+          "metadata_family_match": true,
+          "part_count_match": true
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "x**4 - 7*x**2 + 3",
+            "srepr": "Add(Pow(Symbol('x', real=True), Integer(4)), Mul(Integer(-1), Integer(7), Pow(Symbol('x', real=True), Integer(2))), Integer(3))"
+          },
+          "interval1": {
+            "__type__": "tuple",
+            "items": [
+              0.6,
+              0.7
+            ]
+          },
+          "interval2": {
+            "__type__": "tuple",
+            "items": [
+              2.5,
+              2.6
+            ]
+          },
+          "positive_roots": [
+            0.677213950573148,
+            2.557612414958355
+          ],
+          "family": "root_location",
+          "architecture": "two_positive_roots_bracketing",
+          "object_kind": "quartic_two_positive_roots",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "locate_two_positive_roots",
+              "depends_on": []
+            }
+          ],
+          "task_sequence": [
+            "locate_two_positive_roots"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "root_location",
+            "architecture": "two_positive_roots_bracketing",
+            "variant": "quartic_1",
+            "depth_position": 0.0,
+            "object_kind": "quartic_two_positive_roots",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "locate_two_positive_roots",
+                "depends_on": []
+              }
+            ],
+            "part_dependencies": {
+              "a": []
+            },
+            "task_sequence": [
+              "locate_two_positive_roots"
+            ],
+            "part_count": 1,
+            "generation_spec": {
+              "family": "root_location",
+              "depth": 0.0,
+              "architecture": null,
+              "seed": 2005547712,
+              "pmt_primary_topic": "Numerical Methods",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "diversity_dimensions": {
+              "variant": "quartic_1",
+              "object_profile": "quartic_two_positive_roots",
+              "technique_profile": "change_of_sign+continuity"
+            },
+            "core_diversity_signature": "two_positive_roots_bracketing|quartic_1",
+            "diversity_signature": "two_positive_roots_bracketing|quartic_1",
+            "structural_signature": "root_location|two_positive_roots_bracketing|quartic_1",
+            "exact_fingerprint": "03dacc018b2a042ef542b07a5c34f53bac5d6c717489f682c46db29b7706be20"
+          },
+          "emergent": {
+            "multipart": false,
+            "part_count": 1,
+            "required_techniques": [
+              "change_of_sign",
+              "continuity"
+            ],
+            "cross_topic_links": [],
+            "pmt_overlap_labels": [
+              "Numerical Methods"
+            ],
+            "structural_variant": "quartic_1",
+            "core_diversity_signature": "two_positive_roots_bracketing|quartic_1",
+            "diversity_signature": "two_positive_roots_bracketing|quartic_1"
+          },
+          "topic_metadata": {
+            "primary": "Numerical Methods",
+            "overlaps": [
+              "Numerical Methods"
+            ],
+            "taxonomy_source": "PMT",
+            "pmt_taxonomy": {
+              "primary": "Numerical Methods",
+              "labels": [
+                "Numerical Methods"
+              ],
+              "multi_label": false
+            },
+            "generator_design": "construct_valid_math_then_render_v1",
+            "generator_version": 1
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "0.677213950573148"
+            },
+            {
+              "type": "markdown",
+              "content": "2.557612414958355"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000002",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_947e07f24f50421d",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-18T16:26:38.864340+00:00",
+        "generation_selection": {
+          "family": "root_location",
+          "requested_depth": 0.5,
+          "actual_depth": 0.5,
+          "architecture": "sign_change_polynomial",
+          "validation_attempt": 1,
+          "architecture_requested": null,
+          "seed": 2002302215,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "Let $f(x)=x^{3} + 2 x - 4$.\n\nShow that the equation $f(x)=0$ has a root $\\alpha$ in the interval $1<\\alpha<2$.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "Let $f(x)=x^{3} + 2 x - 4$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Show that the equation $f(x)=0$ has a root $\\alpha$ in the interval $1<\\alpha<2$."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "root_location",
+        "architecture": "sign_change_polynomial",
+        "variant": "cubic_a2_interval1",
+        "depth_position": 0.5,
+        "object_kind": "monotone_cubic",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "show_root_in_interval",
+            "depends_on": []
+          }
+        ],
+        "part_dependencies": {
+          "a": []
+        },
+        "task_sequence": [
+          "show_root_in_interval"
+        ],
+        "part_count": 1,
+        "generation_spec": {
+          "family": "root_location",
+          "depth": 0.5,
+          "architecture": null,
+          "seed": 2002302215,
+          "pmt_primary_topic": "Numerical Methods",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "diversity_dimensions": {
+          "variant": "cubic_a2_interval1",
+          "object_profile": "monotone_cubic",
+          "technique_profile": "change_of_sign+continuity"
+        },
+        "core_diversity_signature": "sign_change_polynomial|cubic_a2_interval1",
+        "diversity_signature": "sign_change_polynomial|cubic_a2_interval1",
+        "structural_signature": "root_location|sign_change_polynomial|cubic_a2_interval1",
+        "exact_fingerprint": "9ec4adf0b76a91be6257c1eafbd982b7c239cf0539e242f06f9161141b811b00"
+      },
+      "emergent_structure": {
+        "multipart": false,
+        "part_count": 1,
+        "required_techniques": [
+          "change_of_sign",
+          "continuity"
+        ],
+        "cross_topic_links": [],
+        "pmt_overlap_labels": [
+          "Numerical Methods"
+        ],
+        "structural_variant": "cubic_a2_interval1",
+        "core_diversity_signature": "sign_change_polynomial|cubic_a2_interval1",
+        "diversity_signature": "sign_change_polynomial|cubic_a2_interval1"
+      },
+      "topic_metadata": {
+        "primary": "Numerical Methods",
+        "overlaps": [
+          "Numerical Methods"
+        ],
+        "taxonomy_source": "PMT",
+        "pmt_taxonomy": {
+          "primary": "Numerical Methods",
+          "labels": [
+            "Numerical Methods"
+          ],
+          "multi_label": false
+        },
+        "generator_design": "construct_valid_math_then_render_v1",
+        "generator_version": 1
+      },
+      "answer": {
+        "validated_math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "x**3 + 2*x - 4",
+            "srepr": "Add(Pow(Symbol('x', real=True), Integer(3)), Mul(Integer(2), Symbol('x', real=True)), Integer(-4))"
+          },
+          "lower": {
+            "__type__": "sympy",
+            "expression": "1",
+            "srepr": "Integer(1)"
+          },
+          "upper": {
+            "__type__": "sympy",
+            "expression": "2",
+            "srepr": "Integer(2)"
+          },
+          "root": 1.1795090246029167,
+          "family": "root_location",
+          "architecture": "sign_change_polynomial",
+          "object_kind": "monotone_cubic",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "show_root_in_interval",
+              "depends_on": []
+            }
+          ],
+          "task_sequence": [
+            "show_root_in_interval"
+          ]
+        },
+        "parts": {
+          "a": {
+            "operation": "show_root_in_interval",
+            "working": [
+              {
+                "description": "Opposite signs at the interval endpoints.",
+                "paper": "$$f(1)=-1.0,\\qquad f(2)=8.0$$",
+                "prose": "",
+                "equations": [],
+                "criterion": "Opposite signs at the interval endpoints.",
+                "mark_type": "M",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              },
+              {
+                "description": "Uses continuity with a change of sign.",
+                "paper": null,
+                "prose": "The function is continuous on the interval and the signs are opposite.",
+                "equations": [],
+                "criterion": "Uses continuity with a change of sign.",
+                "mark_type": "A",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              },
+              {
+                "description": "States the root lies in the required interval.",
+                "paper": "$$1<\\alpha<2$$",
+                "prose": "",
+                "equations": [],
+                "criterion": "States the root lies in the required interval.",
+                "mark_type": "A",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              }
+            ],
+            "answer": true
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 2,
+        "solution_style": "a_level_numerical_methods_worked_answer_v2",
+        "total_marks": 3,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "show_root_in_interval",
+            "marks_available": 3,
+            "steps": [
+              {
+                "step": 1,
+                "description": "Evaluate the function at both ends of the interval and compare the signs.",
+                "working": "$$f(1)=-1.0,\\qquad f(2)=8.0$$\n\nThe two function values have opposite signs.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.1.1",
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Opposite signs at the interval endpoints.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "f(1)=-1.0,\\qquad f(2)=8.0"
+                    },
+                    {
+                      "type": "spacer"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "The two function values have opposite signs."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "step": 2,
+                "description": "Use the change of sign, together with continuity, to locate the root.",
+                "working": "The function is continuous on the interval and the signs are opposite.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.2.1",
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Uses continuity with a change of sign.",
+                    "depends_on": [
+                      "a.1.1"
+                    ],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "The function is continuous on the interval and the signs are opposite."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "step": 3,
+                "description": "Carry out the next step of the calculation, keeping the working visible.",
+                "working": "$$1<\\alpha<2$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.3.1",
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "States the root lies in the required interval.",
+                    "depends_on": [
+                      "a.1.1"
+                    ],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  2
+                ],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "1<\\alpha<2"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": true
+          }
+        ],
+        "marking_model": {
+          "status": "a_level_achievement_marks_v2",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B"
+          ],
+          "note": "Mark scheme uses criterion descriptions; full solution uses student-facing worked narration."
+        },
+        "learning_layer": {
+          "concepts": [],
+          "display_policy": "Optional hooks, not automatically expanded."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "opposite_signs": true,
+          "metadata_architecture_match": true,
+          "metadata_family_match": true,
+          "part_count_match": true
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "x**3 + 2*x - 4",
+            "srepr": "Add(Pow(Symbol('x', real=True), Integer(3)), Mul(Integer(2), Symbol('x', real=True)), Integer(-4))"
+          },
+          "lower": {
+            "__type__": "sympy",
+            "expression": "1",
+            "srepr": "Integer(1)"
+          },
+          "upper": {
+            "__type__": "sympy",
+            "expression": "2",
+            "srepr": "Integer(2)"
+          },
+          "root": 1.1795090246029167,
+          "family": "root_location",
+          "architecture": "sign_change_polynomial",
+          "object_kind": "monotone_cubic",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "show_root_in_interval",
+              "depends_on": []
+            }
+          ],
+          "task_sequence": [
+            "show_root_in_interval"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "root_location",
+            "architecture": "sign_change_polynomial",
+            "variant": "cubic_a2_interval1",
+            "depth_position": 0.5,
+            "object_kind": "monotone_cubic",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "show_root_in_interval",
+                "depends_on": []
+              }
+            ],
+            "part_dependencies": {
+              "a": []
+            },
+            "task_sequence": [
+              "show_root_in_interval"
+            ],
+            "part_count": 1,
+            "generation_spec": {
+              "family": "root_location",
+              "depth": 0.5,
+              "architecture": null,
+              "seed": 2002302215,
+              "pmt_primary_topic": "Numerical Methods",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "diversity_dimensions": {
+              "variant": "cubic_a2_interval1",
+              "object_profile": "monotone_cubic",
+              "technique_profile": "change_of_sign+continuity"
+            },
+            "core_diversity_signature": "sign_change_polynomial|cubic_a2_interval1",
+            "diversity_signature": "sign_change_polynomial|cubic_a2_interval1",
+            "structural_signature": "root_location|sign_change_polynomial|cubic_a2_interval1",
+            "exact_fingerprint": "9ec4adf0b76a91be6257c1eafbd982b7c239cf0539e242f06f9161141b811b00"
+          },
+          "emergent": {
+            "multipart": false,
+            "part_count": 1,
+            "required_techniques": [
+              "change_of_sign",
+              "continuity"
+            ],
+            "cross_topic_links": [],
+            "pmt_overlap_labels": [
+              "Numerical Methods"
+            ],
+            "structural_variant": "cubic_a2_interval1",
+            "core_diversity_signature": "sign_change_polynomial|cubic_a2_interval1",
+            "diversity_signature": "sign_change_polynomial|cubic_a2_interval1"
+          },
+          "topic_metadata": {
+            "primary": "Numerical Methods",
+            "overlaps": [
+              "Numerical Methods"
+            ],
+            "taxonomy_source": "PMT",
+            "pmt_taxonomy": {
+              "primary": "Numerical Methods",
+              "labels": [
+                "Numerical Methods"
+              ],
+              "multi_label": false
+            },
+            "generator_design": "construct_valid_math_then_render_v1",
+            "generator_version": 1
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "True"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000003",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_eee90a3983f242b6",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-18T16:26:38.864698+00:00",
+        "generation_selection": {
+          "family": "root_location",
+          "requested_depth": 1.0,
+          "actual_depth": 1.0,
+          "architecture": "rounding_certificate",
+          "validation_attempt": 1,
+          "architecture_requested": null,
+          "seed": 983887491,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "The equation $x^{3} + 4 x - 5=0$ has a single real root $\\alpha$.\n\nUsing a suitable interval and a suitable function that you should state, show that $\\alpha=1.000$ to 3 decimal places.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The equation $x^{3} + 4 x - 5=0$ has a single real root $\\alpha$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Using a suitable interval and a suitable function that you should state, show that $\\alpha=1.000$ to 3 decimal places."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "root_location",
+        "architecture": "rounding_certificate",
+        "variant": "cubic_a4_c5_3dp",
+        "depth_position": 1.0,
+        "object_kind": "root_rounding_certificate",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "certify_decimal_place_root",
+            "depends_on": []
+          }
+        ],
+        "part_dependencies": {
+          "a": []
+        },
+        "task_sequence": [
+          "certify_decimal_place_root"
+        ],
+        "part_count": 1,
+        "generation_spec": {
+          "family": "root_location",
+          "depth": 1.0,
+          "architecture": null,
+          "seed": 983887491,
+          "pmt_primary_topic": "Numerical Methods",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "diversity_dimensions": {
+          "variant": "cubic_a4_c5_3dp",
+          "object_profile": "root_rounding_certificate",
+          "technique_profile": "rounding_interval+change_of_sign+continuity"
+        },
+        "core_diversity_signature": "rounding_certificate|cubic_a4_c5_3dp",
+        "diversity_signature": "rounding_certificate|cubic_a4_c5_3dp",
+        "structural_signature": "root_location|rounding_certificate|cubic_a4_c5_3dp",
+        "exact_fingerprint": "0c8e59b548235d96b8de623f3fff36bc5ff397591d64c6605363b5883fd71f9f"
+      },
+      "emergent_structure": {
+        "multipart": false,
+        "part_count": 1,
+        "required_techniques": [
+          "rounding_interval",
+          "change_of_sign",
+          "continuity"
+        ],
+        "cross_topic_links": [],
+        "pmt_overlap_labels": [
+          "Numerical Methods"
+        ],
+        "structural_variant": "cubic_a4_c5_3dp",
+        "core_diversity_signature": "rounding_certificate|cubic_a4_c5_3dp",
+        "diversity_signature": "rounding_certificate|cubic_a4_c5_3dp"
+      },
+      "topic_metadata": {
+        "primary": "Numerical Methods",
+        "overlaps": [
+          "Numerical Methods"
+        ],
+        "taxonomy_source": "PMT",
+        "pmt_taxonomy": {
+          "primary": "Numerical Methods",
+          "labels": [
+            "Numerical Methods"
+          ],
+          "multi_label": false
+        },
+        "generator_design": "construct_valid_math_then_render_v1",
+        "generator_version": 1
+      },
+      "answer": {
+        "validated_math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "x**3 + 4*x - 5",
+            "srepr": "Add(Pow(Symbol('x', real=True), Integer(3)), Mul(Integer(4), Symbol('x', real=True)), Integer(-5))"
+          },
+          "root": 1.0,
+          "dp": 3,
+          "rounded": 1.0,
+          "lower": 0.9995,
+          "upper": 1.0005,
+          "family": "root_location",
+          "architecture": "rounding_certificate",
+          "object_kind": "root_rounding_certificate",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "certify_decimal_place_root",
+              "depends_on": []
+            }
+          ],
+          "task_sequence": [
+            "certify_decimal_place_root"
+          ]
+        },
+        "parts": {
+          "a": {
+            "operation": "certify_decimal_place_root",
+            "working": [
+              {
+                "description": "States a suitable root function.",
+                "paper": "$$h(x)=x^{3} + 4 x - 5$$",
+                "prose": "",
+                "equations": [],
+                "criterion": "States a suitable root function.",
+                "mark_type": "M",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              },
+              {
+                "description": "Evaluates the function on either side of the rounding boundary.",
+                "paper": "$$h(0.9995)=-0.00349925,\\qquad h(1.0005)=0.00350075$$",
+                "prose": "",
+                "equations": [],
+                "criterion": "Evaluates the function on either side of the rounding boundary.",
+                "mark_type": "M",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              },
+              {
+                "description": "Correct decimal-place conclusion.",
+                "paper": "$$\\alpha=1.000\\quad(3\\text{ d.p.})$$",
+                "prose": "There is a sign change and h is continuous.",
+                "equations": [],
+                "criterion": "Correct decimal-place conclusion.",
+                "mark_type": "A",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              }
+            ],
+            "answer": 1.0
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 2,
+        "solution_style": "a_level_numerical_methods_worked_answer_v2",
+        "total_marks": 3,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "certify_decimal_place_root",
+            "marks_available": 3,
+            "steps": [
+              {
+                "step": 1,
+                "description": "Carry out the next step of the calculation, keeping the working visible.",
+                "working": "$$h(x)=x^{3} + 4 x - 5$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.1.1",
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "States a suitable root function.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "h(x)=x^{3} + 4 x - 5"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "step": 2,
+                "description": "Evaluate the function at the two rounding boundaries.",
+                "working": "$$h(0.9995)=-0.00349925,\\qquad h(1.0005)=0.00350075$$\n\nThese values lie on opposite sides of zero, so the root lies between the two rounding boundaries.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.2.1",
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Evaluates the function on either side of the rounding boundary.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "h(0.9995)=-0.00349925,\\qquad h(1.0005)=0.00350075"
+                    },
+                    {
+                      "type": "spacer"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "These values lie on opposite sides of zero, so the root lies between the two rounding boundaries."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "step": 3,
+                "description": "Use the change of sign, together with continuity, to locate the root.",
+                "working": "$$\\alpha=1.000\\quad(3\\text{ d.p.})$$\n\nThere is a sign change and h is continuous.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.3.1",
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct decimal-place conclusion.",
+                    "depends_on": [
+                      "a.2.1"
+                    ],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  2
+                ],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\alpha=1.000\\quad(3\\text{ d.p.})"
+                    },
+                    {
+                      "type": "spacer"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "There is a sign change and h is continuous."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": 1.0
+          }
+        ],
+        "marking_model": {
+          "status": "a_level_achievement_marks_v2",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B"
+          ],
+          "note": "Mark scheme uses criterion descriptions; full solution uses student-facing worked narration."
+        },
+        "learning_layer": {
+          "concepts": [],
+          "display_policy": "Optional hooks, not automatically expanded."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "rounding_sign_change": true,
+          "metadata_architecture_match": true,
+          "metadata_family_match": true,
+          "part_count_match": true
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "x**3 + 4*x - 5",
+            "srepr": "Add(Pow(Symbol('x', real=True), Integer(3)), Mul(Integer(4), Symbol('x', real=True)), Integer(-5))"
+          },
+          "root": 1.0,
+          "dp": 3,
+          "rounded": 1.0,
+          "lower": 0.9995,
+          "upper": 1.0005,
+          "family": "root_location",
+          "architecture": "rounding_certificate",
+          "object_kind": "root_rounding_certificate",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "certify_decimal_place_root",
+              "depends_on": []
+            }
+          ],
+          "task_sequence": [
+            "certify_decimal_place_root"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "root_location",
+            "architecture": "rounding_certificate",
+            "variant": "cubic_a4_c5_3dp",
+            "depth_position": 1.0,
+            "object_kind": "root_rounding_certificate",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "certify_decimal_place_root",
+                "depends_on": []
+              }
+            ],
+            "part_dependencies": {
+              "a": []
+            },
+            "task_sequence": [
+              "certify_decimal_place_root"
+            ],
+            "part_count": 1,
+            "generation_spec": {
+              "family": "root_location",
+              "depth": 1.0,
+              "architecture": null,
+              "seed": 983887491,
+              "pmt_primary_topic": "Numerical Methods",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "diversity_dimensions": {
+              "variant": "cubic_a4_c5_3dp",
+              "object_profile": "root_rounding_certificate",
+              "technique_profile": "rounding_interval+change_of_sign+continuity"
+            },
+            "core_diversity_signature": "rounding_certificate|cubic_a4_c5_3dp",
+            "diversity_signature": "rounding_certificate|cubic_a4_c5_3dp",
+            "structural_signature": "root_location|rounding_certificate|cubic_a4_c5_3dp",
+            "exact_fingerprint": "0c8e59b548235d96b8de623f3fff36bc5ff397591d64c6605363b5883fd71f9f"
+          },
+          "emergent": {
+            "multipart": false,
+            "part_count": 1,
+            "required_techniques": [
+              "rounding_interval",
+              "change_of_sign",
+              "continuity"
+            ],
+            "cross_topic_links": [],
+            "pmt_overlap_labels": [
+              "Numerical Methods"
+            ],
+            "structural_variant": "cubic_a4_c5_3dp",
+            "core_diversity_signature": "rounding_certificate|cubic_a4_c5_3dp",
+            "diversity_signature": "rounding_certificate|cubic_a4_c5_3dp"
+          },
+          "topic_metadata": {
+            "primary": "Numerical Methods",
+            "overlaps": [
+              "Numerical Methods"
+            ],
+            "taxonomy_source": "PMT",
+            "pmt_taxonomy": {
+              "primary": "Numerical Methods",
+              "labels": [
+                "Numerical Methods"
+              ],
+              "multi_label": false
+            },
+            "generator_design": "construct_valid_math_then_render_v1",
+            "generator_version": 1
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "1.0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000004",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_c9441f55ec3f4d29",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-18T16:27:09.952452+00:00",
+        "generation_selection": {
+          "family": "newton_raphson",
+          "requested_depth": 0.0,
+          "actual_depth": 0.0,
+          "architecture": "invalid_start_derivative_zero",
+          "validation_attempt": 1,
+          "architecture_requested": null,
+          "seed": 2037424744,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "The Newton-Raphson method is to be used to solve $3 x^{3} + 2 x^{2} - 1=0$.\n\nExplain why $x_0=0$ cannot be used as the first approximation.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The Newton-Raphson method is to be used to solve $3 x^{3} + 2 x^{2} - 1=0$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Explain why $x_0=0$ cannot be used as the first approximation."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "newton_raphson",
+        "architecture": "invalid_start_derivative_zero",
+        "variant": "A3_B2_C1",
+        "depth_position": 0.0,
+        "object_kind": "newton_zero_derivative_failure",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "explain_invalid_newton_start",
+            "depends_on": []
+          }
+        ],
+        "part_dependencies": {
+          "a": []
+        },
+        "task_sequence": [
+          "explain_invalid_newton_start"
+        ],
+        "part_count": 1,
+        "generation_spec": {
+          "family": "newton_raphson",
+          "depth": 0.0,
+          "architecture": null,
+          "seed": 2037424744,
+          "pmt_primary_topic": "Numerical Methods",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "diversity_dimensions": {
+          "variant": "A3_B2_C1",
+          "object_profile": "newton_zero_derivative_failure",
+          "technique_profile": "newton_raphson+derivative_zero"
+        },
+        "core_diversity_signature": "invalid_start_derivative_zero|A3_B2_C1",
+        "diversity_signature": "invalid_start_derivative_zero|A3_B2_C1",
+        "structural_signature": "newton_raphson|invalid_start_derivative_zero|A3_B2_C1",
+        "exact_fingerprint": "480cd39f5d1e8b2cc3c8f9414cfbbab00658c6e3a5a2261be4e9147a3e8c12ca"
+      },
+      "emergent_structure": {
+        "multipart": false,
+        "part_count": 1,
+        "required_techniques": [
+          "newton_raphson",
+          "derivative_zero"
+        ],
+        "cross_topic_links": [],
+        "pmt_overlap_labels": [
+          "Numerical Methods"
+        ],
+        "structural_variant": "A3_B2_C1",
+        "core_diversity_signature": "invalid_start_derivative_zero|A3_B2_C1",
+        "diversity_signature": "invalid_start_derivative_zero|A3_B2_C1"
+      },
+      "topic_metadata": {
+        "primary": "Numerical Methods",
+        "overlaps": [
+          "Numerical Methods"
+        ],
+        "taxonomy_source": "PMT",
+        "pmt_taxonomy": {
+          "primary": "Numerical Methods",
+          "labels": [
+            "Numerical Methods"
+          ],
+          "multi_label": false
+        },
+        "generator_design": "construct_valid_math_then_render_v1",
+        "generator_version": 1
+      },
+      "answer": {
+        "validated_math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "3*x**3 + 2*x**2 - 1",
+            "srepr": "Add(Mul(Integer(3), Pow(Symbol('x', real=True), Integer(3))), Mul(Integer(2), Pow(Symbol('x', real=True), Integer(2))), Integer(-1))"
+          },
+          "fp": {
+            "__type__": "sympy",
+            "expression": "9*x**2 + 4*x",
+            "srepr": "Add(Mul(Integer(9), Pow(Symbol('x', real=True), Integer(2))), Mul(Integer(4), Symbol('x', real=True)))"
+          },
+          "x0": {
+            "__type__": "sympy",
+            "expression": "0",
+            "srepr": "Integer(0)"
+          },
+          "family": "newton_raphson",
+          "architecture": "invalid_start_derivative_zero",
+          "object_kind": "newton_zero_derivative_failure",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "explain_invalid_newton_start",
+              "depends_on": []
+            }
+          ],
+          "task_sequence": [
+            "explain_invalid_newton_start"
+          ]
+        },
+        "parts": {
+          "a": {
+            "operation": "explain_invalid_newton_start",
+            "working": [
+              {
+                "description": "Finds the zero derivative.",
+                "paper": "$$f'(0)=0$$",
+                "prose": "",
+                "equations": [],
+                "criterion": "Finds the zero derivative.",
+                "mark_type": "M",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              },
+              {
+                "description": "Explains why Newton-Raphson is undefined.",
+                "paper": "$$x_1=x_0-\\frac{f(x_0)}{f'(x_0)}$$",
+                "prose": "would require division by 0, so this starting value cannot be used.",
+                "equations": [],
+                "criterion": "Explains why Newton-Raphson is undefined.",
+                "mark_type": "A",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              }
+            ],
+            "answer": "derivative_zero"
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 2,
+        "solution_style": "a_level_numerical_methods_worked_answer_v2",
+        "total_marks": 2,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "explain_invalid_newton_start",
+            "marks_available": 2,
+            "steps": [
+              {
+                "step": 1,
+                "description": "Carry out the next step of the calculation, keeping the working visible.",
+                "working": "$$f'(0)=0$$\n\nNewton-Raphson needs a non-zero derivative at the current approximation.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.1.1",
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Finds the zero derivative.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "f'(0)=0"
+                    },
+                    {
+                      "type": "spacer"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Newton-Raphson needs a non-zero derivative at the current approximation."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "step": 2,
+                "description": "Use the Newton-Raphson formula with the function and derivative for this question.",
+                "working": "$$x_1=x_0-\\frac{f(x_0)}{f'(x_0)}$$\n\nwould require division by 0, so this starting value cannot be used.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.2.1",
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Explains why Newton-Raphson is undefined.",
+                    "depends_on": [
+                      "a.1.1"
+                    ],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "x_1=x_0-\\frac{f(x_0)}{f'(x_0)}"
+                    },
+                    {
+                      "type": "spacer"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "would require division by 0, so this starting value cannot be used."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": "derivative_zero"
+          }
+        ],
+        "marking_model": {
+          "status": "a_level_achievement_marks_v2",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B"
+          ],
+          "note": "Mark scheme uses criterion descriptions; full solution uses student-facing worked narration."
+        },
+        "learning_layer": {
+          "concepts": [],
+          "display_policy": "Optional hooks, not automatically expanded."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "derivative_zero": true,
+          "metadata_architecture_match": true,
+          "metadata_family_match": true,
+          "part_count_match": true
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "3*x**3 + 2*x**2 - 1",
+            "srepr": "Add(Mul(Integer(3), Pow(Symbol('x', real=True), Integer(3))), Mul(Integer(2), Pow(Symbol('x', real=True), Integer(2))), Integer(-1))"
+          },
+          "fp": {
+            "__type__": "sympy",
+            "expression": "9*x**2 + 4*x",
+            "srepr": "Add(Mul(Integer(9), Pow(Symbol('x', real=True), Integer(2))), Mul(Integer(4), Symbol('x', real=True)))"
+          },
+          "x0": {
+            "__type__": "sympy",
+            "expression": "0",
+            "srepr": "Integer(0)"
+          },
+          "family": "newton_raphson",
+          "architecture": "invalid_start_derivative_zero",
+          "object_kind": "newton_zero_derivative_failure",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "explain_invalid_newton_start",
+              "depends_on": []
+            }
+          ],
+          "task_sequence": [
+            "explain_invalid_newton_start"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "newton_raphson",
+            "architecture": "invalid_start_derivative_zero",
+            "variant": "A3_B2_C1",
+            "depth_position": 0.0,
+            "object_kind": "newton_zero_derivative_failure",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "explain_invalid_newton_start",
+                "depends_on": []
+              }
+            ],
+            "part_dependencies": {
+              "a": []
+            },
+            "task_sequence": [
+              "explain_invalid_newton_start"
+            ],
+            "part_count": 1,
+            "generation_spec": {
+              "family": "newton_raphson",
+              "depth": 0.0,
+              "architecture": null,
+              "seed": 2037424744,
+              "pmt_primary_topic": "Numerical Methods",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "diversity_dimensions": {
+              "variant": "A3_B2_C1",
+              "object_profile": "newton_zero_derivative_failure",
+              "technique_profile": "newton_raphson+derivative_zero"
+            },
+            "core_diversity_signature": "invalid_start_derivative_zero|A3_B2_C1",
+            "diversity_signature": "invalid_start_derivative_zero|A3_B2_C1",
+            "structural_signature": "newton_raphson|invalid_start_derivative_zero|A3_B2_C1",
+            "exact_fingerprint": "480cd39f5d1e8b2cc3c8f9414cfbbab00658c6e3a5a2261be4e9147a3e8c12ca"
+          },
+          "emergent": {
+            "multipart": false,
+            "part_count": 1,
+            "required_techniques": [
+              "newton_raphson",
+              "derivative_zero"
+            ],
+            "cross_topic_links": [],
+            "pmt_overlap_labels": [
+              "Numerical Methods"
+            ],
+            "structural_variant": "A3_B2_C1",
+            "core_diversity_signature": "invalid_start_derivative_zero|A3_B2_C1",
+            "diversity_signature": "invalid_start_derivative_zero|A3_B2_C1"
+          },
+          "topic_metadata": {
+            "primary": "Numerical Methods",
+            "overlaps": [
+              "Numerical Methods"
+            ],
+            "taxonomy_source": "PMT",
+            "pmt_taxonomy": {
+              "primary": "Numerical Methods",
+              "labels": [
+                "Numerical Methods"
+              ],
+              "multi_label": false
+            },
+            "generator_design": "construct_valid_math_then_render_v1",
+            "generator_version": 1
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "derivative_zero"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000005",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_28c801546a6b47e7",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-18T16:27:09.953225+00:00",
+        "generation_selection": {
+          "family": "newton_raphson",
+          "requested_depth": 0.5,
+          "actual_depth": 0.5,
+          "architecture": "newton_geometric_step",
+          "validation_attempt": 1,
+          "architecture_requested": null,
+          "seed": 921768983,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "Newton-Raphson is used to solve $x^{3} + 3 x - 4=0$ from $x_0=2$.\n\n(a) On a sketch, explain geometrically how the next approximation $x_1$ is obtained.\n\n(b) Calculate $x_1$ to 4 decimal places.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "Newton-Raphson is used to solve $x^{3} + 3 x - 4=0$ from $x_0=2$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) On a sketch, explain geometrically how the next approximation $x_1$ is obtained."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Calculate $x_1$ to 4 decimal places."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "newton_raphson",
+        "architecture": "newton_geometric_step",
+        "variant": "a3_c4_x02",
+        "depth_position": 0.5,
+        "object_kind": "newton_tangent_geometry",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "explain_newton_geometry",
+            "depends_on": []
+          },
+          {
+            "part": "b",
+            "operation": "calculate_x1",
+            "depends_on": [
+              "a"
+            ]
+          }
+        ],
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "task_sequence": [
+          "explain_newton_geometry",
+          "calculate_x1"
+        ],
+        "part_count": 2,
+        "generation_spec": {
+          "family": "newton_raphson",
+          "depth": 0.5,
+          "architecture": null,
+          "seed": 921768983,
+          "pmt_primary_topic": "Numerical Methods",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "diversity_dimensions": {
+          "variant": "a3_c4_x02",
+          "object_profile": "newton_tangent_geometry",
+          "technique_profile": "tangent+newton_raphson"
+        },
+        "core_diversity_signature": "newton_geometric_step|a3_c4_x02",
+        "diversity_signature": "newton_geometric_step|a3_c4_x02",
+        "structural_signature": "newton_raphson|newton_geometric_step|a3_c4_x02",
+        "exact_fingerprint": "ec6d7ad9607a1d9e96b3cfe90a2a0b00a69590c49c56e101c61851cc81cd84b9"
+      },
+      "emergent_structure": {
+        "multipart": true,
+        "part_count": 2,
+        "required_techniques": [
+          "tangent",
+          "newton_raphson"
+        ],
+        "cross_topic_links": [],
+        "pmt_overlap_labels": [
+          "Numerical Methods"
+        ],
+        "structural_variant": "a3_c4_x02",
+        "core_diversity_signature": "newton_geometric_step|a3_c4_x02",
+        "diversity_signature": "newton_geometric_step|a3_c4_x02"
+      },
+      "topic_metadata": {
+        "primary": "Numerical Methods",
+        "overlaps": [
+          "Numerical Methods"
+        ],
+        "taxonomy_source": "PMT",
+        "pmt_taxonomy": {
+          "primary": "Numerical Methods",
+          "labels": [
+            "Numerical Methods"
+          ],
+          "multi_label": false
+        },
+        "generator_design": "construct_valid_math_then_render_v1",
+        "generator_version": 1
+      },
+      "answer": {
+        "validated_math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "x**3 + 3*x - 4",
+            "srepr": "Add(Pow(Symbol('x', real=True), Integer(3)), Mul(Integer(3), Symbol('x', real=True)), Integer(-4))"
+          },
+          "fp": {
+            "__type__": "sympy",
+            "expression": "3*x**2 + 3",
+            "srepr": "Add(Mul(Integer(3), Pow(Symbol('x', real=True), Integer(2))), Integer(3))"
+          },
+          "x0": {
+            "__type__": "sympy",
+            "expression": "2.00000000000000",
+            "srepr": "Float('2.0', precision=53)"
+          },
+          "x1": {
+            "__type__": "sympy",
+            "expression": "1.333333333333333",
+            "srepr": "Float('1.333333333333333481', precision=56)"
+          },
+          "family": "newton_raphson",
+          "architecture": "newton_geometric_step",
+          "object_kind": "newton_tangent_geometry",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "explain_newton_geometry",
+              "depends_on": []
+            },
+            {
+              "part": "b",
+              "operation": "calculate_x1",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "task_sequence": [
+            "explain_newton_geometry",
+            "calculate_x1"
+          ],
+          "figure_data": {
+            "figure_type": "local_tangent_graph"
+          }
+        },
+        "parts": {
+          "a": {
+            "operation": "explain_newton_geometry",
+            "working": [
+              {
+                "description": "Correct geometric interpretation of one Newton-Raphson step.",
+                "paper": null,
+                "prose": "Draw the tangent to y=f(x) at x=x0. Its x-axis intercept is x1.",
+                "equations": [],
+                "criterion": "Correct geometric interpretation of one Newton-Raphson step.",
+                "mark_type": "B",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              }
+            ],
+            "answer": "tangent_x_intercept"
+          },
+          "b": {
+            "operation": "calculate_x1",
+            "working": [
+              {
+                "description": "Correct numerical step.",
+                "paper": "$$x_1=2.0-\\frac{f(2.0)}{f'(2.0)}=1.3333$$",
+                "prose": "",
+                "equations": [],
+                "criterion": "Correct numerical step.",
+                "mark_type": "M",
+                "marks": 2,
+                "concept": "",
+                "alternative_valid_routes": []
+              }
+            ],
+            "answer": {
+              "__type__": "sympy",
+              "expression": "1.3333333333333334814",
+              "srepr": "Float('1.3333333333333334813631', precision=70)"
+            }
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 2,
+        "solution_style": "a_level_numerical_methods_worked_answer_v2",
+        "total_marks": 3,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "explain_newton_geometry",
+            "marks_available": 1,
+            "steps": [
+              {
+                "step": 1,
+                "description": "Use the Newton-Raphson formula with the function and derivative for this question.",
+                "working": "Draw the tangent to y=f(x) at x=x0. Its x-axis intercept is x1.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.1.1",
+                    "type": "B",
+                    "marks": 1,
+                    "criterion": "Correct geometric interpretation of one Newton-Raphson step.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "alternative_valid_routes": [],
+                "figure": {
+                  "role": "solution_working",
+                  "placement": "after_working",
+                  "spec": {
+                    "status": "ready",
+                    "type": "local_tangent_graph",
+                    "renderer_family": "cartesian",
+                    "source": "numerical_methods_solution_engine_v2"
+                  }
+                },
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Draw the tangent to y=f(x) at $x = x 0$. Its x-axis intercept is $x 1$."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": "tangent_x_intercept"
+          },
+          {
+            "part": "b",
+            "operation": "calculate_x1",
+            "marks_available": 2,
+            "steps": [
+              {
+                "step": 1,
+                "description": "Carry out the next step of the calculation, keeping the working visible.",
+                "working": "$$x_1=2.0-\\frac{f(2.0)}{f'(2.0)}=1.3333$$",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "id": "b.1.1",
+                    "type": "M",
+                    "marks": 2,
+                    "criterion": "Correct numerical step.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "x_1=2.0-\\frac{f(2.0)}{f'(2.0)}=1.3333"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "__type__": "sympy",
+              "expression": "1.3333333333333334814",
+              "srepr": "Float('1.3333333333333334813631', precision=70)"
+            }
+          }
+        ],
+        "marking_model": {
+          "status": "a_level_achievement_marks_v2",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B"
+          ],
+          "note": "Mark scheme uses criterion descriptions; full solution uses student-facing worked narration."
+        },
+        "learning_layer": {
+          "concepts": [],
+          "display_policy": "Optional hooks, not automatically expanded."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "x1": true,
+          "metadata_architecture_match": true,
+          "metadata_family_match": true,
+          "part_count_match": true
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "x**3 + 3*x - 4",
+            "srepr": "Add(Pow(Symbol('x', real=True), Integer(3)), Mul(Integer(3), Symbol('x', real=True)), Integer(-4))"
+          },
+          "fp": {
+            "__type__": "sympy",
+            "expression": "3*x**2 + 3",
+            "srepr": "Add(Mul(Integer(3), Pow(Symbol('x', real=True), Integer(2))), Integer(3))"
+          },
+          "x0": {
+            "__type__": "sympy",
+            "expression": "2.00000000000000",
+            "srepr": "Float('2.0', precision=53)"
+          },
+          "x1": {
+            "__type__": "sympy",
+            "expression": "1.333333333333333",
+            "srepr": "Float('1.333333333333333481', precision=56)"
+          },
+          "family": "newton_raphson",
+          "architecture": "newton_geometric_step",
+          "object_kind": "newton_tangent_geometry",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "explain_newton_geometry",
+              "depends_on": []
+            },
+            {
+              "part": "b",
+              "operation": "calculate_x1",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "task_sequence": [
+            "explain_newton_geometry",
+            "calculate_x1"
+          ],
+          "figure_data": {
+            "figure_type": "local_tangent_graph"
+          }
+        },
+        "full_structure": {
+          "generative": {
+            "family": "newton_raphson",
+            "architecture": "newton_geometric_step",
+            "variant": "a3_c4_x02",
+            "depth_position": 0.5,
+            "object_kind": "newton_tangent_geometry",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "explain_newton_geometry",
+                "depends_on": []
+              },
+              {
+                "part": "b",
+                "operation": "calculate_x1",
+                "depends_on": [
+                  "a"
+                ]
+              }
+            ],
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "task_sequence": [
+              "explain_newton_geometry",
+              "calculate_x1"
+            ],
+            "part_count": 2,
+            "generation_spec": {
+              "family": "newton_raphson",
+              "depth": 0.5,
+              "architecture": null,
+              "seed": 921768983,
+              "pmt_primary_topic": "Numerical Methods",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "diversity_dimensions": {
+              "variant": "a3_c4_x02",
+              "object_profile": "newton_tangent_geometry",
+              "technique_profile": "tangent+newton_raphson"
+            },
+            "core_diversity_signature": "newton_geometric_step|a3_c4_x02",
+            "diversity_signature": "newton_geometric_step|a3_c4_x02",
+            "structural_signature": "newton_raphson|newton_geometric_step|a3_c4_x02",
+            "exact_fingerprint": "ec6d7ad9607a1d9e96b3cfe90a2a0b00a69590c49c56e101c61851cc81cd84b9"
+          },
+          "emergent": {
+            "multipart": true,
+            "part_count": 2,
+            "required_techniques": [
+              "tangent",
+              "newton_raphson"
+            ],
+            "cross_topic_links": [],
+            "pmt_overlap_labels": [
+              "Numerical Methods"
+            ],
+            "structural_variant": "a3_c4_x02",
+            "core_diversity_signature": "newton_geometric_step|a3_c4_x02",
+            "diversity_signature": "newton_geometric_step|a3_c4_x02"
+          },
+          "topic_metadata": {
+            "primary": "Numerical Methods",
+            "overlaps": [
+              "Numerical Methods"
+            ],
+            "taxonomy_source": "PMT",
+            "pmt_taxonomy": {
+              "primary": "Numerical Methods",
+              "labels": [
+                "Numerical Methods"
+              ],
+              "multi_label": false
+            },
+            "generator_design": "construct_valid_math_then_render_v1",
+            "generator_version": 1
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "tangent_x_intercept"
+            }
+          ],
+          "b": [
+            {
+              "type": "latex",
+              "content": "1.3333333333333334814"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000006",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_6f31a70b77bb4023",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-18T16:27:09.953552+00:00",
+        "generation_selection": {
+          "family": "newton_raphson",
+          "requested_depth": 1.0,
+          "actual_depth": 1.0,
+          "architecture": "invalid_start_derivative_zero",
+          "validation_attempt": 1,
+          "architecture_requested": null,
+          "seed": 1948370169,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "The Newton-Raphson method is to be used to solve $2 x^{3} + x^{2} - 1=0$.\n\nExplain why $x_0=0$ cannot be used as the first approximation.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The Newton-Raphson method is to be used to solve $2 x^{3} + x^{2} - 1=0$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Explain why $x_0=0$ cannot be used as the first approximation."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "newton_raphson",
+        "architecture": "invalid_start_derivative_zero",
+        "variant": "A2_B1_C1",
+        "depth_position": 1.0,
+        "object_kind": "newton_zero_derivative_failure",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "explain_invalid_newton_start",
+            "depends_on": []
+          }
+        ],
+        "part_dependencies": {
+          "a": []
+        },
+        "task_sequence": [
+          "explain_invalid_newton_start"
+        ],
+        "part_count": 1,
+        "generation_spec": {
+          "family": "newton_raphson",
+          "depth": 1.0,
+          "architecture": null,
+          "seed": 1948370169,
+          "pmt_primary_topic": "Numerical Methods",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "diversity_dimensions": {
+          "variant": "A2_B1_C1",
+          "object_profile": "newton_zero_derivative_failure",
+          "technique_profile": "newton_raphson+derivative_zero"
+        },
+        "core_diversity_signature": "invalid_start_derivative_zero|A2_B1_C1",
+        "diversity_signature": "invalid_start_derivative_zero|A2_B1_C1",
+        "structural_signature": "newton_raphson|invalid_start_derivative_zero|A2_B1_C1",
+        "exact_fingerprint": "7f112e4f2d245c88b8cf847ef37be35b6e5ab1a4e7937b48b9dbf33f05f297ad"
+      },
+      "emergent_structure": {
+        "multipart": false,
+        "part_count": 1,
+        "required_techniques": [
+          "newton_raphson",
+          "derivative_zero"
+        ],
+        "cross_topic_links": [],
+        "pmt_overlap_labels": [
+          "Numerical Methods"
+        ],
+        "structural_variant": "A2_B1_C1",
+        "core_diversity_signature": "invalid_start_derivative_zero|A2_B1_C1",
+        "diversity_signature": "invalid_start_derivative_zero|A2_B1_C1"
+      },
+      "topic_metadata": {
+        "primary": "Numerical Methods",
+        "overlaps": [
+          "Numerical Methods"
+        ],
+        "taxonomy_source": "PMT",
+        "pmt_taxonomy": {
+          "primary": "Numerical Methods",
+          "labels": [
+            "Numerical Methods"
+          ],
+          "multi_label": false
+        },
+        "generator_design": "construct_valid_math_then_render_v1",
+        "generator_version": 1
+      },
+      "answer": {
+        "validated_math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "2*x**3 + x**2 - 1",
+            "srepr": "Add(Mul(Integer(2), Pow(Symbol('x', real=True), Integer(3))), Pow(Symbol('x', real=True), Integer(2)), Integer(-1))"
+          },
+          "fp": {
+            "__type__": "sympy",
+            "expression": "6*x**2 + 2*x",
+            "srepr": "Add(Mul(Integer(6), Pow(Symbol('x', real=True), Integer(2))), Mul(Integer(2), Symbol('x', real=True)))"
+          },
+          "x0": {
+            "__type__": "sympy",
+            "expression": "0",
+            "srepr": "Integer(0)"
+          },
+          "family": "newton_raphson",
+          "architecture": "invalid_start_derivative_zero",
+          "object_kind": "newton_zero_derivative_failure",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "explain_invalid_newton_start",
+              "depends_on": []
+            }
+          ],
+          "task_sequence": [
+            "explain_invalid_newton_start"
+          ]
+        },
+        "parts": {
+          "a": {
+            "operation": "explain_invalid_newton_start",
+            "working": [
+              {
+                "description": "Finds the zero derivative.",
+                "paper": "$$f'(0)=0$$",
+                "prose": "",
+                "equations": [],
+                "criterion": "Finds the zero derivative.",
+                "mark_type": "M",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              },
+              {
+                "description": "Explains why Newton-Raphson is undefined.",
+                "paper": "$$x_1=x_0-\\frac{f(x_0)}{f'(x_0)}$$",
+                "prose": "would require division by 0, so this starting value cannot be used.",
+                "equations": [],
+                "criterion": "Explains why Newton-Raphson is undefined.",
+                "mark_type": "A",
+                "marks": 1,
+                "concept": "",
+                "alternative_valid_routes": []
+              }
+            ],
+            "answer": "derivative_zero"
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 2,
+        "solution_style": "a_level_numerical_methods_worked_answer_v2",
+        "total_marks": 2,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "explain_invalid_newton_start",
+            "marks_available": 2,
+            "steps": [
+              {
+                "step": 1,
+                "description": "Carry out the next step of the calculation, keeping the working visible.",
+                "working": "$$f'(0)=0$$\n\nNewton-Raphson needs a non-zero derivative at the current approximation.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.1.1",
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Finds the zero derivative.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "f'(0)=0"
+                    },
+                    {
+                      "type": "spacer"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Newton-Raphson needs a non-zero derivative at the current approximation."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "step": 2,
+                "description": "Use the Newton-Raphson formula with the function and derivative for this question.",
+                "working": "$$x_1=x_0-\\frac{f(x_0)}{f'(x_0)}$$\n\nwould require division by 0, so this starting value cannot be used.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "id": "a.2.1",
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Explains why Newton-Raphson is undefined.",
+                    "depends_on": [
+                      "a.1.1"
+                    ],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "alternative_valid_routes": [],
+                "figure": null,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "x_1=x_0-\\frac{f(x_0)}{f'(x_0)}"
+                    },
+                    {
+                      "type": "spacer"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "would require division by 0, so this starting value cannot be used."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": "derivative_zero"
+          }
+        ],
+        "marking_model": {
+          "status": "a_level_achievement_marks_v2",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B"
+          ],
+          "note": "Mark scheme uses criterion descriptions; full solution uses student-facing worked narration."
+        },
+        "learning_layer": {
+          "concepts": [],
+          "display_policy": "Optional hooks, not automatically expanded."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "derivative_zero": true,
+          "metadata_architecture_match": true,
+          "metadata_family_match": true,
+          "part_count_match": true
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "f": {
+            "__type__": "sympy",
+            "expression": "2*x**3 + x**2 - 1",
+            "srepr": "Add(Mul(Integer(2), Pow(Symbol('x', real=True), Integer(3))), Pow(Symbol('x', real=True), Integer(2)), Integer(-1))"
+          },
+          "fp": {
+            "__type__": "sympy",
+            "expression": "6*x**2 + 2*x",
+            "srepr": "Add(Mul(Integer(6), Pow(Symbol('x', real=True), Integer(2))), Mul(Integer(2), Symbol('x', real=True)))"
+          },
+          "x0": {
+            "__type__": "sympy",
+            "expression": "0",
+            "srepr": "Integer(0)"
+          },
+          "family": "newton_raphson",
+          "architecture": "invalid_start_derivative_zero",
+          "object_kind": "newton_zero_derivative_failure",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "explain_invalid_newton_start",
+              "depends_on": []
+            }
+          ],
+          "task_sequence": [
+            "explain_invalid_newton_start"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "newton_raphson",
+            "architecture": "invalid_start_derivative_zero",
+            "variant": "A2_B1_C1",
+            "depth_position": 1.0,
+            "object_kind": "newton_zero_derivative_failure",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "explain_invalid_newton_start",
+                "depends_on": []
+              }
+            ],
+            "part_dependencies": {
+              "a": []
+            },
+            "task_sequence": [
+              "explain_invalid_newton_start"
+            ],
+            "part_count": 1,
+            "generation_spec": {
+              "family": "newton_raphson",
+              "depth": 1.0,
+              "architecture": null,
+              "seed": 1948370169,
+              "pmt_primary_topic": "Numerical Methods",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "diversity_dimensions": {
+              "variant": "A2_B1_C1",
+              "object_profile": "newton_zero_derivative_failure",
+              "technique_profile": "newton_raphson+derivative_zero"
+            },
+            "core_diversity_signature": "invalid_start_derivative_zero|A2_B1_C1",
+            "diversity_signature": "invalid_start_derivative_zero|A2_B1_C1",
+            "structural_signature": "newton_raphson|invalid_start_derivative_zero|A2_B1_C1",
+            "exact_fingerprint": "7f112e4f2d245c88b8cf847ef37be35b6e5ab1a4e7937b48b9dbf33f05f297ad"
+          },
+          "emergent": {
+            "multipart": false,
+            "part_count": 1,
+            "required_techniques": [
+              "newton_raphson",
+              "derivative_zero"
+            ],
+            "cross_topic_links": [],
+            "pmt_overlap_labels": [
+              "Numerical Methods"
+            ],
+            "structural_variant": "A2_B1_C1",
+            "core_diversity_signature": "invalid_start_derivative_zero|A2_B1_C1",
+            "diversity_signature": "invalid_start_derivative_zero|A2_B1_C1"
+          },
+          "topic_metadata": {
+            "primary": "Numerical Methods",
+            "overlaps": [
+              "Numerical Methods"
+            ],
+            "taxonomy_source": "PMT",
+            "pmt_taxonomy": {
+              "primary": "Numerical Methods",
+              "labels": [
+                "Numerical Methods"
+              ],
+              "multi_label": false
+            },
+            "generator_design": "construct_valid_math_then_render_v1",
+            "generator_version": 1
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "derivative_zero"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

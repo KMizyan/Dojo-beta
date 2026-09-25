@@ -1,0 +1,5583 @@
+{
+  "schema_version": 2,
+  "updated_at": "2026-09-16T07:07:31.766406+00:00",
+  "questions": [
+    {
+      "question_id": "Q000001",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_641a1bf1e6274904",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-16T07:02:50.076622+00:00",
+        "generation_selection": {
+          "family": "explicit_curves",
+          "requested_depth": 0.0,
+          "actual_depth": 0.0,
+          "architecture": "polynomial",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "The curve C is given by $y = \\left(3 x + 9\\right) \\left(x^{2} - 3\\right)$, with $x$ in $\\mathbb{R}$. The point P on C has x-coordinate $2$.\n\n(a) Find the equation of the normal at P.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The curve C is given by $y = \\left(3 x + 9\\right) \\left(x^{2} - 3\\right)$, with $x$ in $\\mathbb{R}$. The point P on C has x-coordinate $2$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Find the equation of the normal at P."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "explicit_curves",
+        "architecture": "polynomial",
+        "depth_position": 0.0,
+        "object_kind": "explicit",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "line",
+            "prompt": "Find the equation of the normal at P.",
+            "depends_on": []
+          }
+        ],
+        "task_sequence": [
+          "line"
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "generation_spec": {
+          "family": "explicit_curves",
+          "depth": 0.0,
+          "architecture": null,
+          "seed": null,
+          "pmt_primary_topic": "Tangents and Normals",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "structural_signature": "polynomial|factored_product_4|normal|line",
+        "exact_fingerprint": "e18b632f002f702092e5cdfba4799ee1d186ece42bf745dcfad5a4ab1dd8eeb4"
+      },
+      "emergent_structure": {
+        "multipart": false,
+        "part_count": 1,
+        "curve_representation": "explicit",
+        "structural_variant": "factored_product_4",
+        "line_kind": "normal",
+        "requires_tangents_normals": true
+      },
+      "topic_metadata": {
+        "primary": "Tangents and Normals",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "parts": {
+          "a": {
+            "line": {
+              "__type__": "sympy",
+              "expression": "x + 63*y - 947",
+              "srepr": "Add(Symbol('x', real=True), Mul(Integer(63), Symbol('y', real=True)), Integer(-947))"
+            },
+            "answer": [
+              "$$x + 63 y - 947 = 0$$"
+            ]
+          }
+        },
+        "object": {
+          "function": {
+            "__type__": "sympy",
+            "expression": "(3*x + 9)*(x**2 - 3)",
+            "srepr": "Mul(Add(Mul(Integer(3), Symbol('x', real=True)), Integer(9)), Add(Pow(Symbol('x', real=True), Integer(2)), Integer(-3)))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "9*(x**2 + 2*x - 1)",
+            "srepr": "Mul(Integer(9), Add(Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(2), Symbol('x', real=True)), Integer(-1)))"
+          },
+          "point": {
+            "__type__": "sympy",
+            "expression": "(2, 15)",
+            "srepr": "Tuple(Integer(2), Integer(15))"
+          },
+          "direction": {
+            "__type__": "sympy",
+            "expression": "(1, 63)",
+            "srepr": "Tuple(Integer(1), Integer(63))"
+          },
+          "gradient": {
+            "__type__": "sympy",
+            "expression": "63",
+            "srepr": "Integer(63)"
+          },
+          "tangent": {
+            "__type__": "sympy",
+            "expression": "63*x - y - 111",
+            "srepr": "Add(Mul(Integer(63), Symbol('x', real=True)), Mul(Integer(-1), Symbol('y', real=True)), Integer(-111))"
+          },
+          "normal": {
+            "__type__": "sympy",
+            "expression": "x + 63*y - 947",
+            "srepr": "Add(Symbol('x', real=True), Mul(Integer(63), Symbol('y', real=True)), Integer(-947))"
+          },
+          "line": {
+            "__type__": "sympy",
+            "expression": "x + 63*y - 947",
+            "srepr": "Add(Symbol('x', real=True), Mul(Integer(63), Symbol('y', real=True)), Integer(-947))"
+          }
+        },
+        "source_key": "93e74a7462765a3c9da7e14014efab97f1e06dc5e8c7d49ef9650503ccf3a7f2"
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "line",
+            "marks_available": 5,
+            "steps": [
+              {
+                "description": "Differentiate the curve.",
+                "working": "$$\\frac{d}{d x} f{\\left(x \\right)} = 9 x^{2} + 18 x - 9$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct differentiation.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{d}{d x} f{\\left(x \\right)} = 9 x^{2} + 18 x - 9"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Evaluate the coordinates and tangent direction at P.",
+                "working": "$$\\left( 2, \\  15\\right)$$\n$$d_{x} = 1$$\n$$d_{y} = 63$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct point and evaluated direction.",
+                    "depends_on": [
+                      "a.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "a.2.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\left( 2, \\  15\\right)"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{x} = 1"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{y} = 63"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "The normal gradient is the negative reciprocal.",
+                "working": "$$m_{T} = 63$$\n$$m_{N} = - \\frac{1}{63}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct normal gradient.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.3.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 3,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{T} = 63"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "m_{N} = - \\frac{1}{63}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Use the point-gradient equation.",
+                "working": "$$y - 15 = \\frac{2}{63} - \\frac{x}{63}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the correct point and slope.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.4.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 4,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "y - 15 = \\frac{2}{63} - \\frac{x}{63}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Hence the required normal is:",
+                "working": "$$x + 63 y - 947 = 0$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct line equation.",
+                    "depends_on": [
+                      "a.4.1"
+                    ],
+                    "follow_through": false,
+                    "id": "a.5.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 5,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "x + 63 y - 947 = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$x + 63 y - 947 = 0$$"
+            ]
+          }
+        ],
+        "total_marks": 5,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A"
+          ],
+          "note": "Marks assess mathematical achievements; inspect in Content Lab."
+        },
+        "learning_layer": {
+          "concepts": [],
+          "display_policy": "Optional conceptual hooks."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "independent_mathematics": {
+            "passed": true
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "kind": "explicit",
+          "function": {
+            "__type__": "sympy",
+            "expression": "(3*x + 9)*(x**2 - 3)",
+            "srepr": "Mul(Add(Mul(Integer(3), Symbol('x', real=True)), Integer(9)), Add(Pow(Symbol('x', real=True), Integer(2)), Integer(-3)))"
+          },
+          "variable": {
+            "__type__": "sympy",
+            "expression": "x",
+            "srepr": "Symbol('x', real=True)"
+          },
+          "domain": {
+            "__type__": "sympy",
+            "expression": "Reals",
+            "srepr": "Reals"
+          },
+          "point_x": {
+            "__type__": "sympy",
+            "expression": "2",
+            "srepr": "Integer(2)"
+          },
+          "line_kind": "normal",
+          "family": "explicit_curves",
+          "architecture": "polynomial",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "line",
+              "prompt": "Find the equation of the normal at P.",
+              "depends_on": []
+            }
+          ],
+          "task_sequence": [
+            "line"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "explicit_curves",
+            "architecture": "polynomial",
+            "depth_position": 0.0,
+            "object_kind": "explicit",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "line",
+                "prompt": "Find the equation of the normal at P.",
+                "depends_on": []
+              }
+            ],
+            "task_sequence": [
+              "line"
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "generation_spec": {
+              "family": "explicit_curves",
+              "depth": 0.0,
+              "architecture": null,
+              "seed": null,
+              "pmt_primary_topic": "Tangents and Normals",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "structural_signature": "polynomial|factored_product_4|normal|line",
+            "exact_fingerprint": "e18b632f002f702092e5cdfba4799ee1d186ece42bf745dcfad5a4ab1dd8eeb4"
+          },
+          "emergent": {
+            "multipart": false,
+            "part_count": 1,
+            "curve_representation": "explicit",
+            "structural_variant": "factored_product_4",
+            "line_kind": "normal",
+            "requires_tangents_normals": true
+          },
+          "topic_metadata": {
+            "primary": "Tangents and Normals",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-16T07:07:31.762748+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit_changed",
+            "at": "2026-09-16T07:07:31.762797+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-16T07:07:31.762748+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "x + 63 y - 947 = 0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000002",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_38ce464e99d74108",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-16T07:02:50.077016+00:00",
+        "generation_selection": {
+          "family": "explicit_curves",
+          "requested_depth": 0.5,
+          "actual_depth": 0.5,
+          "architecture": "reciprocal",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "The curve C is given by $y = 4 x - 5 + \\frac{1}{x^{2}}$, with $x$ in $\\left(-\\infty, 0\\right) \\cup \\left(0, \\infty\\right)$. The point P on C has x-coordinate $-2$.\n\n(a) Find an expression for dy/dx wherever it is defined.\n\n(b) Find the equation of the normal at P.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The curve C is given by $y = 4 x - 5 + \\frac{1}{x^{2}}$, with $x$ in $\\left(-\\infty, 0\\right) \\cup \\left(0, \\infty\\right)$. The point P on C has x-coordinate $-2$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Find an expression for $\\frac{dy}{dx}$ wherever it is defined."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Find the equation of the normal at P."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "explicit_curves",
+        "architecture": "reciprocal",
+        "depth_position": 0.5,
+        "object_kind": "explicit",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "prompt": "Find an expression for dy/dx wherever it is defined.",
+            "depends_on": []
+          },
+          {
+            "part": "b",
+            "operation": "line",
+            "prompt": "Find the equation of the normal at P.",
+            "depends_on": [
+              "a"
+            ]
+          }
+        ],
+        "task_sequence": [
+          "differentiate",
+          "line"
+        ],
+        "part_count": 2,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "generation_spec": {
+          "family": "explicit_curves",
+          "depth": 0.5,
+          "architecture": null,
+          "seed": null,
+          "pmt_primary_topic": "Tangents and Normals",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "structural_signature": "reciprocal|inverse_power_2|normal|differentiate|line",
+        "exact_fingerprint": "933cf56e11af4e49e2ef6afd85c46a87321d1b8933cb1e255ec6b2686a35420d"
+      },
+      "emergent_structure": {
+        "multipart": true,
+        "part_count": 2,
+        "curve_representation": "explicit",
+        "structural_variant": "inverse_power_2",
+        "line_kind": "normal",
+        "requires_tangents_normals": true
+      },
+      "topic_metadata": {
+        "primary": "Tangents and Normals",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "parts": {
+          "a": {
+            "derivative": {
+              "__type__": "sympy",
+              "expression": "2*(2*x**3 - 1)/x**3",
+              "srepr": "Mul(Integer(2), Pow(Symbol('x', real=True), Integer(-3)), Add(Mul(Integer(2), Pow(Symbol('x', real=True), Integer(3))), Integer(-1)))"
+            },
+            "answer": [
+              "$$m = \\frac{2 \\left(2 x^{3} - 1\\right)}{x^{3}}$$"
+            ]
+          },
+          "b": {
+            "line": {
+              "__type__": "sympy",
+              "expression": "16*x + 68*y + 899",
+              "srepr": "Add(Mul(Integer(16), Symbol('x', real=True)), Mul(Integer(68), Symbol('y', real=True)), Integer(899))"
+            },
+            "answer": [
+              "$$16 x + 68 y + 899 = 0$$"
+            ]
+          }
+        },
+        "object": {
+          "function": {
+            "__type__": "sympy",
+            "expression": "4*x - 5 + x**(-2)",
+            "srepr": "Add(Mul(Integer(4), Symbol('x', real=True)), Integer(-5), Pow(Symbol('x', real=True), Integer(-2)))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "2*(2*x**3 - 1)/x**3",
+            "srepr": "Mul(Integer(2), Pow(Symbol('x', real=True), Integer(-3)), Add(Mul(Integer(2), Pow(Symbol('x', real=True), Integer(3))), Integer(-1)))"
+          },
+          "point": {
+            "__type__": "sympy",
+            "expression": "(-2, -51/4)",
+            "srepr": "Tuple(Integer(-2), Rational(-51, 4))"
+          },
+          "direction": {
+            "__type__": "sympy",
+            "expression": "(1, 17/4)",
+            "srepr": "Tuple(Integer(1), Rational(17, 4))"
+          },
+          "gradient": {
+            "__type__": "sympy",
+            "expression": "17/4",
+            "srepr": "Rational(17, 4)"
+          },
+          "tangent": {
+            "__type__": "sympy",
+            "expression": "17*x - 4*y - 17",
+            "srepr": "Add(Mul(Integer(17), Symbol('x', real=True)), Mul(Integer(-1), Integer(4), Symbol('y', real=True)), Integer(-17))"
+          },
+          "normal": {
+            "__type__": "sympy",
+            "expression": "16*x + 68*y + 899",
+            "srepr": "Add(Mul(Integer(16), Symbol('x', real=True)), Mul(Integer(68), Symbol('y', real=True)), Integer(899))"
+          },
+          "line": {
+            "__type__": "sympy",
+            "expression": "16*x + 68*y + 899",
+            "srepr": "Add(Mul(Integer(16), Symbol('x', real=True)), Mul(Integer(68), Symbol('y', real=True)), Integer(899))"
+          }
+        },
+        "source_key": "0e162036b5713a1b720fbd4138bded3d72e1caaa9359fc20374512c93eaa42b0"
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "marks_available": 1,
+            "steps": [
+              {
+                "description": "Differentiate the curve.",
+                "working": "$$\\frac{d}{d x} f{\\left(x \\right)} = \\frac{4 x^{3} - 2}{x^{3}}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct differentiation.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{d}{d x} f{\\left(x \\right)} = \\frac{4 x^{3} - 2}{x^{3}}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$m = \\frac{2 \\left(2 x^{3} - 1\\right)}{x^{3}}$$"
+            ]
+          },
+          {
+            "part": "b",
+            "operation": "line",
+            "marks_available": 4,
+            "steps": [
+              {
+                "description": "Evaluate the coordinates and tangent direction at P.",
+                "working": "$$\\left( -2, \\  - \\frac{51}{4}\\right)$$\n$$d_{x} = 1$$\n$$d_{y} = \\frac{17}{4}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct point and evaluated direction.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\left( -2, \\  - \\frac{51}{4}\\right)"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{x} = 1"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{y} = \\frac{17}{4}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "The normal gradient is the negative reciprocal.",
+                "working": "$$m_{T} = \\frac{17}{4}$$\n$$m_{N} = - \\frac{4}{17}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct normal gradient.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.2.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{T} = \\frac{17}{4}"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "m_{N} = - \\frac{4}{17}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Use the point-gradient equation.",
+                "working": "$$y + \\frac{51}{4} = - \\frac{4 x}{17} - \\frac{8}{17}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the correct point and slope.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.3.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 3,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "y + \\frac{51}{4} = - \\frac{4 x}{17} - \\frac{8}{17}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Hence the required normal is:",
+                "working": "$$16 x + 68 y + 899 = 0$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct line equation.",
+                    "depends_on": [
+                      "b.3.1"
+                    ],
+                    "follow_through": false,
+                    "id": "b.4.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 4,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "16 x + 68 y + 899 = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$16 x + 68 y + 899 = 0$$"
+            ]
+          }
+        ],
+        "total_marks": 5,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A"
+          ],
+          "note": "Marks assess mathematical achievements; inspect in Content Lab."
+        },
+        "learning_layer": {
+          "concepts": [],
+          "display_policy": "Optional conceptual hooks."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "independent_mathematics": {
+            "passed": true
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "kind": "explicit",
+          "function": {
+            "__type__": "sympy",
+            "expression": "4*x - 5 + x**(-2)",
+            "srepr": "Add(Mul(Integer(4), Symbol('x', real=True)), Integer(-5), Pow(Symbol('x', real=True), Integer(-2)))"
+          },
+          "variable": {
+            "__type__": "sympy",
+            "expression": "x",
+            "srepr": "Symbol('x', real=True)"
+          },
+          "domain": {
+            "__type__": "sympy",
+            "expression": "Union(Interval.open(-oo, 0), Interval.open(0, oo))",
+            "srepr": "Union(Interval(-oo, Integer(0), true, true), Interval(Integer(0), oo, true, true))"
+          },
+          "point_x": {
+            "__type__": "sympy",
+            "expression": "-2",
+            "srepr": "Integer(-2)"
+          },
+          "line_kind": "normal",
+          "family": "explicit_curves",
+          "architecture": "reciprocal",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "differentiate",
+              "prompt": "Find an expression for dy/dx wherever it is defined.",
+              "depends_on": []
+            },
+            {
+              "part": "b",
+              "operation": "line",
+              "prompt": "Find the equation of the normal at P.",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "task_sequence": [
+            "differentiate",
+            "line"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "explicit_curves",
+            "architecture": "reciprocal",
+            "depth_position": 0.5,
+            "object_kind": "explicit",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "differentiate",
+                "prompt": "Find an expression for dy/dx wherever it is defined.",
+                "depends_on": []
+              },
+              {
+                "part": "b",
+                "operation": "line",
+                "prompt": "Find the equation of the normal at P.",
+                "depends_on": [
+                  "a"
+                ]
+              }
+            ],
+            "task_sequence": [
+              "differentiate",
+              "line"
+            ],
+            "part_count": 2,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "generation_spec": {
+              "family": "explicit_curves",
+              "depth": 0.5,
+              "architecture": null,
+              "seed": null,
+              "pmt_primary_topic": "Tangents and Normals",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "structural_signature": "reciprocal|inverse_power_2|normal|differentiate|line",
+            "exact_fingerprint": "933cf56e11af4e49e2ef6afd85c46a87321d1b8933cb1e255ec6b2686a35420d"
+          },
+          "emergent": {
+            "multipart": true,
+            "part_count": 2,
+            "curve_representation": "explicit",
+            "structural_variant": "inverse_power_2",
+            "line_kind": "normal",
+            "requires_tangents_normals": true
+          },
+          "topic_metadata": {
+            "primary": "Tangents and Normals",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-16T07:07:31.763364+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit_changed",
+            "at": "2026-09-16T07:07:31.763380+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-16T07:07:31.763364+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "m = \\frac{2 \\left(2 x^{3} - 1\\right)}{x^{3}}"
+            }
+          ],
+          "b": [
+            {
+              "type": "latex",
+              "content": "16 x + 68 y + 899 = 0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000003",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_85117ad0cfca40d9",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-16T07:02:50.077409+00:00",
+        "generation_selection": {
+          "family": "explicit_curves",
+          "requested_depth": 1.0,
+          "actual_depth": 1.0,
+          "architecture": "radical",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "The curve C is given by $y = - 3 \\left(x - 3\\right)^{\\frac{3}{2}}$, with $x$ in $\\left(3, \\infty\\right)$. The point P on C has x-coordinate $7$.\n\n(a) Find an expression for dy/dx wherever it is defined.\n\n(b) Find the equation of the tangent at P.\n\n(c) Find the intersections of this line with the coordinate axes, explaining any exceptional case.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The curve C is given by $y = - 3 \\left(x - 3\\right)^{\\frac{3}{2}}$, with $x$ in $\\left(3, \\infty\\right)$. The point P on C has x-coordinate $7$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Find an expression for $\\frac{dy}{dx}$ wherever it is defined."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Find the equation of the tangent at P."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(c) Find the intersections of this line with the coordinate axes, explaining any exceptional case."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "explicit_curves",
+        "architecture": "radical",
+        "depth_position": 1.0,
+        "object_kind": "explicit",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "prompt": "Find an expression for dy/dx wherever it is defined.",
+            "depends_on": []
+          },
+          {
+            "part": "b",
+            "operation": "line",
+            "prompt": "Find the equation of the tangent at P.",
+            "depends_on": [
+              "a"
+            ]
+          },
+          {
+            "part": "c",
+            "operation": "axis_intercepts",
+            "prompt": "Find the intersections of this line with the coordinate axes, explaining any exceptional case.",
+            "depends_on": [
+              "b"
+            ]
+          }
+        ],
+        "task_sequence": [
+          "differentiate",
+          "line",
+          "axis_intercepts"
+        ],
+        "part_count": 3,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ],
+          "c": [
+            "b"
+          ]
+        },
+        "generation_spec": {
+          "family": "explicit_curves",
+          "depth": 1.0,
+          "architecture": null,
+          "seed": null,
+          "pmt_primary_topic": "Tangents and Normals",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "structural_signature": "radical|half_power_3|tangent|differentiate|line|axis_intercepts",
+        "exact_fingerprint": "3605ad49029c72f470cc58bf048a23a770a181cf50d4d6c1b80c0daa38a21390"
+      },
+      "emergent_structure": {
+        "multipart": true,
+        "part_count": 3,
+        "curve_representation": "explicit",
+        "structural_variant": "half_power_3",
+        "line_kind": "tangent",
+        "requires_tangents_normals": true
+      },
+      "topic_metadata": {
+        "primary": "Tangents and Normals",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "parts": {
+          "a": {
+            "derivative": {
+              "__type__": "sympy",
+              "expression": "-9*sqrt(x - 3)/2",
+              "srepr": "Mul(Integer(-1), Rational(9, 2), Pow(Add(Symbol('x', real=True), Integer(-3)), Rational(1, 2)))"
+            },
+            "answer": [
+              "$$m = - \\frac{9 \\sqrt{x - 3}}{2}$$"
+            ]
+          },
+          "b": {
+            "line": {
+              "__type__": "sympy",
+              "expression": "9*x + y - 39",
+              "srepr": "Add(Mul(Integer(9), Symbol('x', real=True)), Symbol('y', real=True), Integer(-39))"
+            },
+            "answer": [
+              "$$9 x + y - 39 = 0$$"
+            ]
+          },
+          "c": {
+            "sets": {
+              "x_axis": {
+                "__type__": "sympy",
+                "expression": "{13/3}",
+                "srepr": "FiniteSet(Rational(13, 3))"
+              },
+              "y_axis": {
+                "__type__": "sympy",
+                "expression": "{39}",
+                "srepr": "FiniteSet(Integer(39))"
+              }
+            },
+            "answer": [
+              "x axis coordinate values:\n$$\\left\\{\\frac{13}{3}\\right\\}$$",
+              "y axis coordinate values:\n$$\\left\\{39\\right\\}$$"
+            ]
+          }
+        },
+        "object": {
+          "function": {
+            "__type__": "sympy",
+            "expression": "-3*(x - 3)**(3/2)",
+            "srepr": "Mul(Integer(-1), Integer(3), Pow(Add(Symbol('x', real=True), Integer(-3)), Rational(3, 2)))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "-9*sqrt(x - 3)/2",
+            "srepr": "Mul(Integer(-1), Rational(9, 2), Pow(Add(Symbol('x', real=True), Integer(-3)), Rational(1, 2)))"
+          },
+          "point": {
+            "__type__": "sympy",
+            "expression": "(7, -24)",
+            "srepr": "Tuple(Integer(7), Integer(-24))"
+          },
+          "direction": {
+            "__type__": "sympy",
+            "expression": "(1, -9)",
+            "srepr": "Tuple(Integer(1), Integer(-9))"
+          },
+          "gradient": {
+            "__type__": "sympy",
+            "expression": "-9",
+            "srepr": "Integer(-9)"
+          },
+          "tangent": {
+            "__type__": "sympy",
+            "expression": "9*x + y - 39",
+            "srepr": "Add(Mul(Integer(9), Symbol('x', real=True)), Symbol('y', real=True), Integer(-39))"
+          },
+          "normal": {
+            "__type__": "sympy",
+            "expression": "x - 9*y - 223",
+            "srepr": "Add(Symbol('x', real=True), Mul(Integer(-1), Integer(9), Symbol('y', real=True)), Integer(-223))"
+          },
+          "line": {
+            "__type__": "sympy",
+            "expression": "9*x + y - 39",
+            "srepr": "Add(Mul(Integer(9), Symbol('x', real=True)), Symbol('y', real=True), Integer(-39))"
+          }
+        },
+        "source_key": "75c5925572f05e9b32a9033962bcfc6f6276543d9c1c3c17b7a0fd2266787e41"
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "marks_available": 1,
+            "steps": [
+              {
+                "description": "Differentiate the curve.",
+                "working": "$$\\frac{d}{d x} f{\\left(x \\right)} = - \\frac{9 \\sqrt{x - 3}}{2}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct differentiation.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{d}{d x} f{\\left(x \\right)} = - \\frac{9 \\sqrt{x - 3}}{2}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$m = - \\frac{9 \\sqrt{x - 3}}{2}$$"
+            ]
+          },
+          {
+            "part": "b",
+            "operation": "line",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Evaluate the coordinates and tangent direction at P.",
+                "working": "$$\\left( 7, \\  -24\\right)$$\n$$d_{x} = 1$$\n$$d_{y} = -9$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct point and evaluated direction.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\left( 7, \\  -24\\right)"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{x} = 1"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{y} = -9"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "The tangent gradient is dy/dx at P.",
+                "working": "$$m_{T} = -9$$",
+                "marks_available": 0,
+                "marks": [],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{T} = -9"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": null,
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Use the point-gradient equation.",
+                "working": "$$y + 24 = 63 - 9 x$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the correct point and slope.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.3.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 3,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "y + 24 = 63 - 9 x"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Hence the required tangent is:",
+                "working": "$$9 x + y - 39 = 0$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct line equation.",
+                    "depends_on": [
+                      "b.3.1"
+                    ],
+                    "follow_through": false,
+                    "id": "b.4.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 4,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "9 x + y - 39 = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$9 x + y - 39 = 0$$"
+            ]
+          },
+          {
+            "part": "c",
+            "operation": "axis_intercepts",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Put y=0 for the x-axis, and x=0 for the y-axis.",
+                "working": "$$9 x - 39 = 0$$\n$$y - 39 = 0$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the axis conditions.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "c.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "9 x - 39 = 0"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "y - 39 = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "The x axis intercept coordinate is:",
+                "working": "$$\\left\\{\\frac{13}{3}\\right\\}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct intercept conclusion.",
+                    "depends_on": [
+                      "c.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "c.2.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\left\\{\\frac{13}{3}\\right\\}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "The y axis intercept coordinate is:",
+                "working": "$$\\left\\{39\\right\\}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct intercept conclusion.",
+                    "depends_on": [
+                      "c.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "c.3.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 3,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\left\\{39\\right\\}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "x axis coordinate values:\n$$\\left\\{\\frac{13}{3}\\right\\}$$",
+              "y axis coordinate values:\n$$\\left\\{39\\right\\}$$"
+            ]
+          }
+        ],
+        "total_marks": 7,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A"
+          ],
+          "note": "Marks assess mathematical achievements; inspect in Content Lab."
+        },
+        "learning_layer": {
+          "concepts": [],
+          "display_policy": "Optional conceptual hooks."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "independent_mathematics": {
+            "passed": true
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "kind": "explicit",
+          "function": {
+            "__type__": "sympy",
+            "expression": "-3*(x - 3)**(3/2)",
+            "srepr": "Mul(Integer(-1), Integer(3), Pow(Add(Symbol('x', real=True), Integer(-3)), Rational(3, 2)))"
+          },
+          "variable": {
+            "__type__": "sympy",
+            "expression": "x",
+            "srepr": "Symbol('x', real=True)"
+          },
+          "domain": {
+            "__type__": "sympy",
+            "expression": "Interval.open(3, oo)",
+            "srepr": "Interval(Integer(3), oo, true, true)"
+          },
+          "point_x": {
+            "__type__": "sympy",
+            "expression": "7",
+            "srepr": "Integer(7)"
+          },
+          "line_kind": "tangent",
+          "family": "explicit_curves",
+          "architecture": "radical",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "differentiate",
+              "prompt": "Find an expression for dy/dx wherever it is defined.",
+              "depends_on": []
+            },
+            {
+              "part": "b",
+              "operation": "line",
+              "prompt": "Find the equation of the tangent at P.",
+              "depends_on": [
+                "a"
+              ]
+            },
+            {
+              "part": "c",
+              "operation": "axis_intercepts",
+              "prompt": "Find the intersections of this line with the coordinate axes, explaining any exceptional case.",
+              "depends_on": [
+                "b"
+              ]
+            }
+          ],
+          "task_sequence": [
+            "differentiate",
+            "line",
+            "axis_intercepts"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "explicit_curves",
+            "architecture": "radical",
+            "depth_position": 1.0,
+            "object_kind": "explicit",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "differentiate",
+                "prompt": "Find an expression for dy/dx wherever it is defined.",
+                "depends_on": []
+              },
+              {
+                "part": "b",
+                "operation": "line",
+                "prompt": "Find the equation of the tangent at P.",
+                "depends_on": [
+                  "a"
+                ]
+              },
+              {
+                "part": "c",
+                "operation": "axis_intercepts",
+                "prompt": "Find the intersections of this line with the coordinate axes, explaining any exceptional case.",
+                "depends_on": [
+                  "b"
+                ]
+              }
+            ],
+            "task_sequence": [
+              "differentiate",
+              "line",
+              "axis_intercepts"
+            ],
+            "part_count": 3,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ],
+              "c": [
+                "b"
+              ]
+            },
+            "generation_spec": {
+              "family": "explicit_curves",
+              "depth": 1.0,
+              "architecture": null,
+              "seed": null,
+              "pmt_primary_topic": "Tangents and Normals",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "structural_signature": "radical|half_power_3|tangent|differentiate|line|axis_intercepts",
+            "exact_fingerprint": "3605ad49029c72f470cc58bf048a23a770a181cf50d4d6c1b80c0daa38a21390"
+          },
+          "emergent": {
+            "multipart": true,
+            "part_count": 3,
+            "curve_representation": "explicit",
+            "structural_variant": "half_power_3",
+            "line_kind": "tangent",
+            "requires_tangents_normals": true
+          },
+          "topic_metadata": {
+            "primary": "Tangents and Normals",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-16T07:07:31.763811+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit_changed",
+            "at": "2026-09-16T07:07:31.763827+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-16T07:07:31.763811+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "m = - \\frac{9 \\sqrt{x - 3}}{2}"
+            }
+          ],
+          "b": [
+            {
+              "type": "latex",
+              "content": "9 x + y - 39 = 0"
+            }
+          ],
+          "c": [
+            {
+              "type": "markdown",
+              "content": "x axis coordinate values:"
+            },
+            {
+              "type": "latex",
+              "content": "\\left\\{\\frac{13}{3}\\right\\}"
+            },
+            {
+              "type": "markdown",
+              "content": "y axis coordinate values:"
+            },
+            {
+              "type": "latex",
+              "content": "\\left\\{39\\right\\}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000004",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_b125165fe5494a2a",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-16T07:04:28.869233+00:00",
+        "generation_selection": {
+          "family": "linked_geometry",
+          "requested_depth": 0.0,
+          "actual_depth": 0.0,
+          "architecture": "secant_limit",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "The curve C is given by $y = x \\left(x^{2} + 2\\right)$, with $x$ in $\\mathbb{R}$. The point P on C has x-coordinate $2$. A second point Q has x-coordinate $h + 2$, where h is non-zero.\n\n(a) Find the equation of the tangent at P.\n\n(b) Find the gradient of PQ in terms of h, then take its limit as h tends to zero and relate it to the tangent gradient.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The curve C is given by $y = x \\left(x^{2} + 2\\right)$, with $x$ in $\\mathbb{R}$. The point P on C has x-coordinate $2$. A second point Q has x-coordinate $h + 2$, where h is non-zero."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Find the equation of the tangent at P."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Find the gradient of PQ in terms of h, then take its limit as h tends to zero and relate it to the tangent gradient."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "linked_geometry",
+        "architecture": "secant_limit",
+        "depth_position": 0.0,
+        "object_kind": "explicit",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "line",
+            "prompt": "Find the equation of the tangent at P.",
+            "depends_on": []
+          },
+          {
+            "part": "b",
+            "operation": "secant",
+            "prompt": "Find the gradient of PQ in terms of h, then take its limit as h tends to zero and relate it to the tangent gradient.",
+            "depends_on": [
+              "a"
+            ]
+          }
+        ],
+        "task_sequence": [
+          "line",
+          "secant"
+        ],
+        "part_count": 2,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "generation_spec": {
+          "family": "linked_geometry",
+          "depth": 0.0,
+          "architecture": null,
+          "seed": null,
+          "pmt_primary_topic": "Tangents and Normals",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "structural_signature": "secant_limit|factored_product_2|tangent|line|secant",
+        "exact_fingerprint": "32487ffc3ed889154c44c6520f4bb3d7907d566d2fc4d3f12f48c914e4f22b8a"
+      },
+      "emergent_structure": {
+        "multipart": true,
+        "part_count": 2,
+        "curve_representation": "explicit",
+        "structural_variant": "factored_product_2",
+        "line_kind": "tangent",
+        "requires_tangents_normals": true
+      },
+      "topic_metadata": {
+        "primary": "Tangents and Normals",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "parts": {
+          "a": {
+            "line": {
+              "__type__": "sympy",
+              "expression": "14*x - y - 16",
+              "srepr": "Add(Mul(Integer(14), Symbol('x', real=True)), Mul(Integer(-1), Symbol('y', real=True)), Integer(-16))"
+            },
+            "answer": [
+              "$$14 x - y - 16 = 0$$"
+            ]
+          },
+          "b": {
+            "quotient": {
+              "__type__": "sympy",
+              "expression": "h**2 + 6*h + 14",
+              "srepr": "Add(Pow(Symbol('h', real=True), Integer(2)), Mul(Integer(6), Symbol('h', real=True)), Integer(14))"
+            },
+            "limit": {
+              "__type__": "sympy",
+              "expression": "14",
+              "srepr": "Integer(14)"
+            },
+            "answer": [
+              "$$h^{2} + 6 h + 14$$",
+              "$$\\lim_{h \\to 0^+}\\left(h^{2} + 6 h + 14\\right) = 14$$",
+              "The secant gradient tends to the tangent gradient."
+            ]
+          }
+        },
+        "object": {
+          "function": {
+            "__type__": "sympy",
+            "expression": "x*(x**2 + 2)",
+            "srepr": "Mul(Symbol('x', real=True), Add(Pow(Symbol('x', real=True), Integer(2)), Integer(2)))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "3*x**2 + 2",
+            "srepr": "Add(Mul(Integer(3), Pow(Symbol('x', real=True), Integer(2))), Integer(2))"
+          },
+          "point": {
+            "__type__": "sympy",
+            "expression": "(2, 12)",
+            "srepr": "Tuple(Integer(2), Integer(12))"
+          },
+          "direction": {
+            "__type__": "sympy",
+            "expression": "(1, 14)",
+            "srepr": "Tuple(Integer(1), Integer(14))"
+          },
+          "gradient": {
+            "__type__": "sympy",
+            "expression": "14",
+            "srepr": "Integer(14)"
+          },
+          "tangent": {
+            "__type__": "sympy",
+            "expression": "14*x - y - 16",
+            "srepr": "Add(Mul(Integer(14), Symbol('x', real=True)), Mul(Integer(-1), Symbol('y', real=True)), Integer(-16))"
+          },
+          "normal": {
+            "__type__": "sympy",
+            "expression": "x + 14*y - 170",
+            "srepr": "Add(Symbol('x', real=True), Mul(Integer(14), Symbol('y', real=True)), Integer(-170))"
+          },
+          "line": {
+            "__type__": "sympy",
+            "expression": "14*x - y - 16",
+            "srepr": "Add(Mul(Integer(14), Symbol('x', real=True)), Mul(Integer(-1), Symbol('y', real=True)), Integer(-16))"
+          }
+        },
+        "source_key": "5d693b0a9e2303a0af64a3a5930802d2f1c3cb60185841d9cfa8912f49b0a9af"
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "line",
+            "marks_available": 4,
+            "steps": [
+              {
+                "description": "Differentiate the curve.",
+                "working": "$$\\frac{d}{d x} f{\\left(x \\right)} = 3 x^{2} + 2$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct differentiation.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{d}{d x} f{\\left(x \\right)} = 3 x^{2} + 2"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Evaluate the coordinates and tangent direction at P.",
+                "working": "$$\\left( 2, \\  12\\right)$$\n$$d_{x} = 1$$\n$$d_{y} = 14$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct point and evaluated direction.",
+                    "depends_on": [
+                      "a.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "a.2.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\left( 2, \\  12\\right)"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{x} = 1"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{y} = 14"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "The tangent gradient is dy/dx at P.",
+                "working": "$$m_{T} = 14$$",
+                "marks_available": 0,
+                "marks": [],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 3,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{T} = 14"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": null,
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Use the point-gradient equation.",
+                "working": "$$y - 12 = 14 x - 28$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the correct point and slope.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.4.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 4,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "y - 12 = 14 x - 28"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Hence the required tangent is:",
+                "working": "$$14 x - y - 16 = 0$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct line equation.",
+                    "depends_on": [
+                      "a.4.1"
+                    ],
+                    "follow_through": false,
+                    "id": "a.5.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 5,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "14 x - y - 16 = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$14 x - y - 16 = 0$$"
+            ]
+          },
+          {
+            "part": "b",
+            "operation": "secant",
+            "marks_available": 2,
+            "steps": [
+              {
+                "description": "Use change in y divided by change in x, with h non-zero.",
+                "working": "$$m_{PQ} = \\frac{\\left(h + 2\\right) \\left(\\left(h + 2\\right)^{2} + 2\\right) - 12}{h}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Forms the difference quotient.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{PQ} = \\frac{\\left(h + 2\\right) \\left(\\left(h + 2\\right)^{2} + 2\\right) - 12}{h}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Simplify and then take the limit.",
+                "working": "$$m_{PQ} = h^{2} + 6 h + 14$$\n$$\\lim_{h \\to 0^+}\\left(h^{2} + 6 h + 14\\right) = 14$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct quotient and limit.",
+                    "depends_on": [
+                      "b.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "b.2.1"
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "secant_2",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "As Q approaches P, the secant gradient tends to the tangent gradient."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{PQ} = h^{2} + 6 h + 14"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\lim_{h \\to 0^+}\\left(h^{2} + 6 h + 14\\right) = 14"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "As Q approaches P, the secant gradient tends to the tangent gradient."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$h^{2} + 6 h + 14$$",
+              "$$\\lim_{h \\to 0^+}\\left(h^{2} + 6 h + 14\\right) = 14$$",
+              "The secant gradient tends to the tangent gradient."
+            ]
+          }
+        ],
+        "total_marks": 6,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A"
+          ],
+          "note": "Marks assess mathematical achievements; inspect in Content Lab."
+        },
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "b",
+              "step": 2,
+              "concept_id": "secant_2",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "As Q approaches P, the secant gradient tends to the tangent gradient."
+            }
+          ],
+          "display_policy": "Optional conceptual hooks."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "independent_mathematics": {
+            "passed": true
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "kind": "explicit",
+          "function": {
+            "__type__": "sympy",
+            "expression": "x*(x**2 + 2)",
+            "srepr": "Mul(Symbol('x', real=True), Add(Pow(Symbol('x', real=True), Integer(2)), Integer(2)))"
+          },
+          "variable": {
+            "__type__": "sympy",
+            "expression": "x",
+            "srepr": "Symbol('x', real=True)"
+          },
+          "domain": {
+            "__type__": "sympy",
+            "expression": "Reals",
+            "srepr": "Reals"
+          },
+          "point_x": {
+            "__type__": "sympy",
+            "expression": "2",
+            "srepr": "Integer(2)"
+          },
+          "line_kind": "tangent",
+          "family": "linked_geometry",
+          "architecture": "secant_limit",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "line",
+              "prompt": "Find the equation of the tangent at P.",
+              "depends_on": []
+            },
+            {
+              "part": "b",
+              "operation": "secant",
+              "prompt": "Find the gradient of PQ in terms of h, then take its limit as h tends to zero and relate it to the tangent gradient.",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "task_sequence": [
+            "line",
+            "secant"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "linked_geometry",
+            "architecture": "secant_limit",
+            "depth_position": 0.0,
+            "object_kind": "explicit",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "line",
+                "prompt": "Find the equation of the tangent at P.",
+                "depends_on": []
+              },
+              {
+                "part": "b",
+                "operation": "secant",
+                "prompt": "Find the gradient of PQ in terms of h, then take its limit as h tends to zero and relate it to the tangent gradient.",
+                "depends_on": [
+                  "a"
+                ]
+              }
+            ],
+            "task_sequence": [
+              "line",
+              "secant"
+            ],
+            "part_count": 2,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "generation_spec": {
+              "family": "linked_geometry",
+              "depth": 0.0,
+              "architecture": null,
+              "seed": null,
+              "pmt_primary_topic": "Tangents and Normals",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "structural_signature": "secant_limit|factored_product_2|tangent|line|secant",
+            "exact_fingerprint": "32487ffc3ed889154c44c6520f4bb3d7907d566d2fc4d3f12f48c914e4f22b8a"
+          },
+          "emergent": {
+            "multipart": true,
+            "part_count": 2,
+            "curve_representation": "explicit",
+            "structural_variant": "factored_product_2",
+            "line_kind": "tangent",
+            "requires_tangents_normals": true
+          },
+          "topic_metadata": {
+            "primary": "Tangents and Normals",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-16T07:07:31.764233+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit_changed",
+            "at": "2026-09-16T07:07:31.764245+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-16T07:07:31.764233+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "14 x - y - 16 = 0"
+            }
+          ],
+          "b": [
+            {
+              "type": "latex",
+              "content": "h^{2} + 6 h + 14"
+            },
+            {
+              "type": "latex",
+              "content": "\\lim_{h \\to 0^+}\\left(h^{2} + 6 h + 14\\right) = 14"
+            },
+            {
+              "type": "markdown",
+              "content": "The secant gradient tends to the tangent gradient."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000005",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_8be6a95af17a43ff",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-16T07:04:28.869613+00:00",
+        "generation_selection": {
+          "family": "linked_geometry",
+          "requested_depth": 0.5,
+          "actual_depth": 0.5,
+          "architecture": "secant_limit",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "The curve C is given by $y = 4 - 3 \\left(x - 3\\right)^{2}$, with $x$ in $\\mathbb{R}$. The point P on C has x-coordinate $-2$. A second point Q has x-coordinate $h - 2$, where h is non-zero.\n\n(a) Find the equation of the tangent at P.\n\n(b) Find the gradient of PQ in terms of h, then take its limit as h tends to zero and relate it to the tangent gradient.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The curve C is given by $y = 4 - 3 \\left(x - 3\\right)^{2}$, with $x$ in $\\mathbb{R}$. The point P on C has x-coordinate $-2$. A second point Q has x-coordinate $h - 2$, where h is non-zero."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Find the equation of the tangent at P."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Find the gradient of PQ in terms of h, then take its limit as h tends to zero and relate it to the tangent gradient."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "linked_geometry",
+        "architecture": "secant_limit",
+        "depth_position": 0.5,
+        "object_kind": "explicit",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "line",
+            "prompt": "Find the equation of the tangent at P.",
+            "depends_on": []
+          },
+          {
+            "part": "b",
+            "operation": "secant",
+            "prompt": "Find the gradient of PQ in terms of h, then take its limit as h tends to zero and relate it to the tangent gradient.",
+            "depends_on": [
+              "a"
+            ]
+          }
+        ],
+        "task_sequence": [
+          "line",
+          "secant"
+        ],
+        "part_count": 2,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "generation_spec": {
+          "family": "linked_geometry",
+          "depth": 0.5,
+          "architecture": null,
+          "seed": null,
+          "pmt_primary_topic": "Tangents and Normals",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "structural_signature": "secant_limit|shifted_power_2|tangent|line|secant",
+        "exact_fingerprint": "75fb2cf4d06cd17ce622f09c12bdb867c05f109ebd5652e272f5fb1dea7e5d2b"
+      },
+      "emergent_structure": {
+        "multipart": true,
+        "part_count": 2,
+        "curve_representation": "explicit",
+        "structural_variant": "shifted_power_2",
+        "line_kind": "tangent",
+        "requires_tangents_normals": true
+      },
+      "topic_metadata": {
+        "primary": "Tangents and Normals",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "parts": {
+          "a": {
+            "line": {
+              "__type__": "sympy",
+              "expression": "30*x - y - 11",
+              "srepr": "Add(Mul(Integer(30), Symbol('x', real=True)), Mul(Integer(-1), Symbol('y', real=True)), Integer(-11))"
+            },
+            "answer": [
+              "$$30 x - y - 11 = 0$$"
+            ]
+          },
+          "b": {
+            "quotient": {
+              "__type__": "sympy",
+              "expression": "30 - 3*h",
+              "srepr": "Add(Integer(30), Mul(Integer(-1), Integer(3), Symbol('h', real=True)))"
+            },
+            "limit": {
+              "__type__": "sympy",
+              "expression": "30",
+              "srepr": "Integer(30)"
+            },
+            "answer": [
+              "$$30 - 3 h$$",
+              "$$\\lim_{h \\to 0^+}\\left(30 - 3 h\\right) = 30$$",
+              "The secant gradient tends to the tangent gradient."
+            ]
+          }
+        },
+        "object": {
+          "function": {
+            "__type__": "sympy",
+            "expression": "4 - 3*(x - 3)**2",
+            "srepr": "Add(Integer(4), Mul(Integer(-1), Integer(3), Pow(Add(Symbol('x', real=True), Integer(-3)), Integer(2))))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "-6*(x - 3)",
+            "srepr": "Mul(Integer(-1), Integer(6), Add(Symbol('x', real=True), Integer(-3)))"
+          },
+          "point": {
+            "__type__": "sympy",
+            "expression": "(-2, -71)",
+            "srepr": "Tuple(Integer(-2), Integer(-71))"
+          },
+          "direction": {
+            "__type__": "sympy",
+            "expression": "(1, 30)",
+            "srepr": "Tuple(Integer(1), Integer(30))"
+          },
+          "gradient": {
+            "__type__": "sympy",
+            "expression": "30",
+            "srepr": "Integer(30)"
+          },
+          "tangent": {
+            "__type__": "sympy",
+            "expression": "30*x - y - 11",
+            "srepr": "Add(Mul(Integer(30), Symbol('x', real=True)), Mul(Integer(-1), Symbol('y', real=True)), Integer(-11))"
+          },
+          "normal": {
+            "__type__": "sympy",
+            "expression": "x + 30*y + 2132",
+            "srepr": "Add(Symbol('x', real=True), Mul(Integer(30), Symbol('y', real=True)), Integer(2132))"
+          },
+          "line": {
+            "__type__": "sympy",
+            "expression": "30*x - y - 11",
+            "srepr": "Add(Mul(Integer(30), Symbol('x', real=True)), Mul(Integer(-1), Symbol('y', real=True)), Integer(-11))"
+          }
+        },
+        "source_key": "223b97b7ef76b9b7b5e79722393cdc4324f3f46fe3aa7803c33c3ae972c8d9c2"
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "line",
+            "marks_available": 4,
+            "steps": [
+              {
+                "description": "Differentiate the curve.",
+                "working": "$$\\frac{d}{d x} f{\\left(x \\right)} = 18 - 6 x$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct differentiation.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{d}{d x} f{\\left(x \\right)} = 18 - 6 x"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Evaluate the coordinates and tangent direction at P.",
+                "working": "$$\\left( -2, \\  -71\\right)$$\n$$d_{x} = 1$$\n$$d_{y} = 30$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct point and evaluated direction.",
+                    "depends_on": [
+                      "a.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "a.2.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\left( -2, \\  -71\\right)"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{x} = 1"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{y} = 30"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "The tangent gradient is dy/dx at P.",
+                "working": "$$m_{T} = 30$$",
+                "marks_available": 0,
+                "marks": [],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 3,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{T} = 30"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": null,
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Use the point-gradient equation.",
+                "working": "$$y + 71 = 30 x + 60$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the correct point and slope.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.4.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 4,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "y + 71 = 30 x + 60"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Hence the required tangent is:",
+                "working": "$$30 x - y - 11 = 0$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct line equation.",
+                    "depends_on": [
+                      "a.4.1"
+                    ],
+                    "follow_through": false,
+                    "id": "a.5.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 5,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "30 x - y - 11 = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$30 x - y - 11 = 0$$"
+            ]
+          },
+          {
+            "part": "b",
+            "operation": "secant",
+            "marks_available": 2,
+            "steps": [
+              {
+                "description": "Use change in y divided by change in x, with h non-zero.",
+                "working": "$$m_{PQ} = \\frac{75 - 3 \\left(h - 5\\right)^{2}}{h}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Forms the difference quotient.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{PQ} = \\frac{75 - 3 \\left(h - 5\\right)^{2}}{h}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Simplify and then take the limit.",
+                "working": "$$m_{PQ} = 30 - 3 h$$\n$$\\lim_{h \\to 0^+}\\left(30 - 3 h\\right) = 30$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct quotient and limit.",
+                    "depends_on": [
+                      "b.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "b.2.1"
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "secant_2",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "As Q approaches P, the secant gradient tends to the tangent gradient."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{PQ} = 30 - 3 h"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\lim_{h \\to 0^+}\\left(30 - 3 h\\right) = 30"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "As Q approaches P, the secant gradient tends to the tangent gradient."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$30 - 3 h$$",
+              "$$\\lim_{h \\to 0^+}\\left(30 - 3 h\\right) = 30$$",
+              "The secant gradient tends to the tangent gradient."
+            ]
+          }
+        ],
+        "total_marks": 6,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A"
+          ],
+          "note": "Marks assess mathematical achievements; inspect in Content Lab."
+        },
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "b",
+              "step": 2,
+              "concept_id": "secant_2",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "As Q approaches P, the secant gradient tends to the tangent gradient."
+            }
+          ],
+          "display_policy": "Optional conceptual hooks."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "independent_mathematics": {
+            "passed": true
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "kind": "explicit",
+          "function": {
+            "__type__": "sympy",
+            "expression": "4 - 3*(x - 3)**2",
+            "srepr": "Add(Integer(4), Mul(Integer(-1), Integer(3), Pow(Add(Symbol('x', real=True), Integer(-3)), Integer(2))))"
+          },
+          "variable": {
+            "__type__": "sympy",
+            "expression": "x",
+            "srepr": "Symbol('x', real=True)"
+          },
+          "domain": {
+            "__type__": "sympy",
+            "expression": "Reals",
+            "srepr": "Reals"
+          },
+          "point_x": {
+            "__type__": "sympy",
+            "expression": "-2",
+            "srepr": "Integer(-2)"
+          },
+          "line_kind": "tangent",
+          "family": "linked_geometry",
+          "architecture": "secant_limit",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "line",
+              "prompt": "Find the equation of the tangent at P.",
+              "depends_on": []
+            },
+            {
+              "part": "b",
+              "operation": "secant",
+              "prompt": "Find the gradient of PQ in terms of h, then take its limit as h tends to zero and relate it to the tangent gradient.",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "task_sequence": [
+            "line",
+            "secant"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "linked_geometry",
+            "architecture": "secant_limit",
+            "depth_position": 0.5,
+            "object_kind": "explicit",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "line",
+                "prompt": "Find the equation of the tangent at P.",
+                "depends_on": []
+              },
+              {
+                "part": "b",
+                "operation": "secant",
+                "prompt": "Find the gradient of PQ in terms of h, then take its limit as h tends to zero and relate it to the tangent gradient.",
+                "depends_on": [
+                  "a"
+                ]
+              }
+            ],
+            "task_sequence": [
+              "line",
+              "secant"
+            ],
+            "part_count": 2,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "generation_spec": {
+              "family": "linked_geometry",
+              "depth": 0.5,
+              "architecture": null,
+              "seed": null,
+              "pmt_primary_topic": "Tangents and Normals",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "structural_signature": "secant_limit|shifted_power_2|tangent|line|secant",
+            "exact_fingerprint": "75fb2cf4d06cd17ce622f09c12bdb867c05f109ebd5652e272f5fb1dea7e5d2b"
+          },
+          "emergent": {
+            "multipart": true,
+            "part_count": 2,
+            "curve_representation": "explicit",
+            "structural_variant": "shifted_power_2",
+            "line_kind": "tangent",
+            "requires_tangents_normals": true
+          },
+          "topic_metadata": {
+            "primary": "Tangents and Normals",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-16T07:07:31.764649+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit_changed",
+            "at": "2026-09-16T07:07:31.764661+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-16T07:07:31.764649+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "30 x - y - 11 = 0"
+            }
+          ],
+          "b": [
+            {
+              "type": "latex",
+              "content": "30 - 3 h"
+            },
+            {
+              "type": "latex",
+              "content": "\\lim_{h \\to 0^+}\\left(30 - 3 h\\right) = 30"
+            },
+            {
+              "type": "markdown",
+              "content": "The secant gradient tends to the tangent gradient."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000006",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_d1c806eac4b14781",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-16T07:06:05.607270+00:00",
+        "generation_selection": {
+          "family": "implicit_and_parametric",
+          "requested_depth": 0.0,
+          "actual_depth": 0.0,
+          "architecture": "parametric_trigonometric",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "The curve C has parametric equations $x = 2 \\cos{\\left(t \\right)}$ and $y = 2 \\sin{\\left(t \\right)}$, with $t$ in $\\left(0, \\frac{\\pi}{2}\\right)$. Let P be the point where $t = \\frac{\\pi}{6}$.\n\n(a) Find an expression for dy/dx wherever it is defined.\n\n(b) Find the equation of the normal at P.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The curve C has parametric equations $x = 2 \\cos{\\left(t \\right)}$ and $y = 2 \\sin{\\left(t \\right)}$, with $t$ in $\\left(0, \\frac{\\pi}{2}\\right)$. Let P be the point where $t = \\frac{\\pi}{6}$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Find an expression for $\\frac{dy}{dx}$ wherever it is defined."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Find the equation of the normal at P."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "implicit_and_parametric",
+        "architecture": "parametric_trigonometric",
+        "depth_position": 0.0,
+        "object_kind": "parametric",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "prompt": "Find an expression for dy/dx wherever it is defined.",
+            "depends_on": []
+          },
+          {
+            "part": "b",
+            "operation": "line",
+            "prompt": "Find the equation of the normal at P.",
+            "depends_on": [
+              "a"
+            ]
+          }
+        ],
+        "task_sequence": [
+          "differentiate",
+          "line"
+        ],
+        "part_count": 2,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "generation_spec": {
+          "family": "implicit_and_parametric",
+          "depth": 0.0,
+          "architecture": null,
+          "seed": null,
+          "pmt_primary_topic": "Tangents and Normals",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "structural_signature": "parametric_trigonometric|ellipse|normal|differentiate|line",
+        "exact_fingerprint": "4759dacfb75927a4858361b4646d927cec0d4bbcc49a5e8d69a4d19b25e93dc3"
+      },
+      "emergent_structure": {
+        "multipart": true,
+        "part_count": 2,
+        "curve_representation": "parametric",
+        "structural_variant": "ellipse",
+        "line_kind": "normal",
+        "requires_tangents_normals": true
+      },
+      "topic_metadata": {
+        "primary": "Tangents and Normals",
+        "overlaps": [
+          "Parametric Differentiation"
+        ],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "parts": {
+          "a": {
+            "derivative": {
+              "__type__": "sympy",
+              "expression": "-1/tan(t)",
+              "srepr": "Mul(Integer(-1), Pow(tan(Symbol('t', real=True)), Integer(-1)))"
+            },
+            "answer": [
+              "$$m = - \\frac{1}{\\tan{\\left(t \\right)}}$$",
+              "Valid where dx/dt is non-zero."
+            ]
+          },
+          "b": {
+            "line": {
+              "__type__": "sympy",
+              "expression": "-x + sqrt(3)*y",
+              "srepr": "Add(Mul(Integer(-1), Symbol('x', real=True)), Mul(Pow(Integer(3), Rational(1, 2)), Symbol('y', real=True)))"
+            },
+            "answer": [
+              "$$- x + \\sqrt{3} y = 0$$"
+            ]
+          }
+        },
+        "object": {
+          "x_of_t": {
+            "__type__": "sympy",
+            "expression": "2*cos(t)",
+            "srepr": "Mul(Integer(2), cos(Symbol('t', real=True)))"
+          },
+          "y_of_t": {
+            "__type__": "sympy",
+            "expression": "2*sin(t)",
+            "srepr": "Mul(Integer(2), sin(Symbol('t', real=True)))"
+          },
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "-2*sin(t)",
+            "srepr": "Mul(Integer(-1), Integer(2), sin(Symbol('t', real=True)))"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "2*cos(t)",
+            "srepr": "Mul(Integer(2), cos(Symbol('t', real=True)))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "-1/tan(t)",
+            "srepr": "Mul(Integer(-1), Pow(tan(Symbol('t', real=True)), Integer(-1)))"
+          },
+          "parameter_value": {
+            "__type__": "sympy",
+            "expression": "pi/6",
+            "srepr": "Mul(Rational(1, 6), pi)"
+          },
+          "point": {
+            "__type__": "sympy",
+            "expression": "(sqrt(3), 1)",
+            "srepr": "Tuple(Pow(Integer(3), Rational(1, 2)), Integer(1))"
+          },
+          "direction": {
+            "__type__": "sympy",
+            "expression": "(-1, sqrt(3))",
+            "srepr": "Tuple(Integer(-1), Pow(Integer(3), Rational(1, 2)))"
+          },
+          "gradient": {
+            "__type__": "sympy",
+            "expression": "-sqrt(3)",
+            "srepr": "Mul(Integer(-1), Pow(Integer(3), Rational(1, 2)))"
+          },
+          "tangent": {
+            "__type__": "sympy",
+            "expression": "sqrt(3)*x + y - 4",
+            "srepr": "Add(Mul(Pow(Integer(3), Rational(1, 2)), Symbol('x', real=True)), Symbol('y', real=True), Integer(-4))"
+          },
+          "normal": {
+            "__type__": "sympy",
+            "expression": "-x + sqrt(3)*y",
+            "srepr": "Add(Mul(Integer(-1), Symbol('x', real=True)), Mul(Pow(Integer(3), Rational(1, 2)), Symbol('y', real=True)))"
+          },
+          "line": {
+            "__type__": "sympy",
+            "expression": "-x + sqrt(3)*y",
+            "srepr": "Add(Mul(Integer(-1), Symbol('x', real=True)), Mul(Pow(Integer(3), Rational(1, 2)), Symbol('y', real=True)))"
+          }
+        },
+        "source_key": "f8ea4b4ef7545c0a8caa76b54f45212abaf16e9a649787ef8028f71e119bf591"
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "marks_available": 2,
+            "steps": [
+              {
+                "description": "Differentiate both coordinates with respect to t.",
+                "working": "$$\\frac{d}{d t} x = - 2 \\sin{\\left(t \\right)}$$\n$$\\frac{d}{d t} y = 2 \\cos{\\left(t \\right)}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct coordinate derivatives.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{d}{d t} x = - 2 \\sin{\\left(t \\right)}"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{d}{d t} y = 2 \\cos{\\left(t \\right)}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Divide dy/dt by dx/dt.",
+                "working": "$$m = - \\frac{1}{\\tan{\\left(t \\right)}}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct parametric gradient.",
+                    "depends_on": [
+                      "a.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "a.2.1"
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "differentiate_2",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "The quotient gives a finite gradient only when dx/dt is non-zero."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m = - \\frac{1}{\\tan{\\left(t \\right)}}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The quotient gives a finite gradient only when $\\frac{dx}{dt}$ is non-zero."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$m = - \\frac{1}{\\tan{\\left(t \\right)}}$$",
+              "Valid where dx/dt is non-zero."
+            ]
+          },
+          {
+            "part": "b",
+            "operation": "line",
+            "marks_available": 4,
+            "steps": [
+              {
+                "description": "Evaluate the coordinates and tangent direction at P.",
+                "working": "$$\\left( \\sqrt{3}, \\  1\\right)$$\n$$d_{x} = -1$$\n$$d_{y} = \\sqrt{3}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct point and evaluated direction.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\left( \\sqrt{3}, \\  1\\right)"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{x} = -1"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{y} = \\sqrt{3}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "The normal gradient is the negative reciprocal.",
+                "working": "$$m_{T} = - \\sqrt{3}$$\n$$m_{N} = \\frac{\\sqrt{3}}{3}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct normal gradient.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.2.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{T} = - \\sqrt{3}"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "m_{N} = \\frac{\\sqrt{3}}{3}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Use the point-gradient equation.",
+                "working": "$$y - 1 = \\frac{\\sqrt{3} \\left(x - \\sqrt{3}\\right)}{3}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the correct point and slope.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.3.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 3,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "y - 1 = \\frac{\\sqrt{3} \\left(x - \\sqrt{3}\\right)}{3}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Hence the required normal is:",
+                "working": "$$- x + \\sqrt{3} y = 0$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct line equation.",
+                    "depends_on": [
+                      "b.3.1"
+                    ],
+                    "follow_through": false,
+                    "id": "b.4.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 4,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "- x + \\sqrt{3} y = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$- x + \\sqrt{3} y = 0$$"
+            ]
+          }
+        ],
+        "total_marks": 6,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A"
+          ],
+          "note": "Marks assess mathematical achievements; inspect in Content Lab."
+        },
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "differentiate_2",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "The quotient gives a finite gradient only when dx/dt is non-zero."
+            }
+          ],
+          "display_policy": "Optional conceptual hooks."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "independent_mathematics": {
+            "passed": true
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "kind": "parametric",
+          "x_of_t": {
+            "__type__": "sympy",
+            "expression": "2*cos(t)",
+            "srepr": "Mul(Integer(2), cos(Symbol('t', real=True)))"
+          },
+          "y_of_t": {
+            "__type__": "sympy",
+            "expression": "2*sin(t)",
+            "srepr": "Mul(Integer(2), sin(Symbol('t', real=True)))"
+          },
+          "parameter": {
+            "__type__": "sympy",
+            "expression": "t",
+            "srepr": "Symbol('t', real=True)"
+          },
+          "parameter_domain": {
+            "__type__": "sympy",
+            "expression": "Interval.open(0, pi/2)",
+            "srepr": "Interval(Integer(0), Mul(Rational(1, 2), pi), true, true)"
+          },
+          "parameter_value": {
+            "__type__": "sympy",
+            "expression": "pi/6",
+            "srepr": "Mul(Rational(1, 6), pi)"
+          },
+          "line_kind": "normal",
+          "family": "implicit_and_parametric",
+          "architecture": "parametric_trigonometric",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "differentiate",
+              "prompt": "Find an expression for dy/dx wherever it is defined.",
+              "depends_on": []
+            },
+            {
+              "part": "b",
+              "operation": "line",
+              "prompt": "Find the equation of the normal at P.",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "task_sequence": [
+            "differentiate",
+            "line"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "implicit_and_parametric",
+            "architecture": "parametric_trigonometric",
+            "depth_position": 0.0,
+            "object_kind": "parametric",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "differentiate",
+                "prompt": "Find an expression for dy/dx wherever it is defined.",
+                "depends_on": []
+              },
+              {
+                "part": "b",
+                "operation": "line",
+                "prompt": "Find the equation of the normal at P.",
+                "depends_on": [
+                  "a"
+                ]
+              }
+            ],
+            "task_sequence": [
+              "differentiate",
+              "line"
+            ],
+            "part_count": 2,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "generation_spec": {
+              "family": "implicit_and_parametric",
+              "depth": 0.0,
+              "architecture": null,
+              "seed": null,
+              "pmt_primary_topic": "Tangents and Normals",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "structural_signature": "parametric_trigonometric|ellipse|normal|differentiate|line",
+            "exact_fingerprint": "4759dacfb75927a4858361b4646d927cec0d4bbcc49a5e8d69a4d19b25e93dc3"
+          },
+          "emergent": {
+            "multipart": true,
+            "part_count": 2,
+            "curve_representation": "parametric",
+            "structural_variant": "ellipse",
+            "line_kind": "normal",
+            "requires_tangents_normals": true
+          },
+          "topic_metadata": {
+            "primary": "Tangents and Normals",
+            "overlaps": [
+              "Parametric Differentiation"
+            ],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-16T07:07:31.765052+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit_changed",
+            "at": "2026-09-16T07:07:31.765064+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-16T07:07:31.765052+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "m = - \\frac{1}{\\tan{\\left(t \\right)}}"
+            },
+            {
+              "type": "markdown",
+              "content": "Valid where $\\frac{dx}{dt}$ is non-zero."
+            }
+          ],
+          "b": [
+            {
+              "type": "latex",
+              "content": "- x + \\sqrt{3} y = 0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000007",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_6440640c1ef9401b",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-16T07:06:05.607670+00:00",
+        "generation_selection": {
+          "family": "implicit_and_parametric",
+          "requested_depth": 0.5,
+          "actual_depth": 0.5,
+          "architecture": "parametric_trigonometric",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "The curve C has parametric equations $x = \\sin{\\left(2 t \\right)}$ and $y = \\frac{1}{\\sin^{3}{\\left(t \\right)}}$, with $t$ in $\\left(0, \\frac{\\pi}{2}\\right)$. Find the tangent gradient at the point where $y = \\frac{8 \\sqrt{3}}{9}$.\n\n(a) Find an expression for dy/dx wherever it is defined.\n\n(b) Find the exact tangent gradient at the specified coordinate.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The curve C has parametric equations $x = \\sin{\\left(2 t \\right)}$ and $y = \\frac{1}{\\sin^{3}{\\left(t \\right)}}$, with $t$ in $\\left(0, \\frac{\\pi}{2}\\right)$. Find the tangent gradient at the point where $y = \\frac{8 \\sqrt{3}}{9}$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Find an expression for $\\frac{dy}{dx}$ wherever it is defined."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Find the exact tangent gradient at the specified coordinate."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "implicit_and_parametric",
+        "architecture": "parametric_trigonometric",
+        "depth_position": 0.5,
+        "object_kind": "parametric",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "prompt": "Find an expression for dy/dx wherever it is defined.",
+            "depends_on": []
+          },
+          {
+            "part": "b",
+            "operation": "coordinate_gradient",
+            "prompt": "Find the exact tangent gradient at the specified coordinate.",
+            "depends_on": [
+              "a"
+            ]
+          }
+        ],
+        "task_sequence": [
+          "differentiate",
+          "coordinate_gradient"
+        ],
+        "part_count": 2,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "generation_spec": {
+          "family": "implicit_and_parametric",
+          "depth": 0.5,
+          "architecture": null,
+          "seed": null,
+          "pmt_primary_topic": "Tangents and Normals",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "structural_signature": "parametric_trigonometric|cosecant_coordinate|tangent|differentiate|coordinate_gradient",
+        "exact_fingerprint": "3bf66cc6c9fbad5ef1fa95ef851d33fe264bcb2777398f192bbad656c9b0f480"
+      },
+      "emergent_structure": {
+        "multipart": true,
+        "part_count": 2,
+        "curve_representation": "parametric",
+        "structural_variant": "cosecant_coordinate",
+        "line_kind": "tangent",
+        "requires_tangents_normals": true
+      },
+      "topic_metadata": {
+        "primary": "Tangents and Normals",
+        "overlaps": [
+          "Parametric Differentiation"
+        ],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "parts": {
+          "a": {
+            "derivative": {
+              "__type__": "sympy",
+              "expression": "-3*cos(t)/(2*sin(t)**4*cos(2*t))",
+              "srepr": "Mul(Integer(-1), Rational(3, 2), Pow(sin(Symbol('t', real=True)), Integer(-4)), cos(Symbol('t', real=True)), Pow(cos(Mul(Integer(2), Symbol('t', real=True))), Integer(-1)))"
+            },
+            "answer": [
+              "$$m = - \\frac{3 \\cos{\\left(t \\right)}}{2 \\sin^{4}{\\left(t \\right)} \\cos{\\left(2 t \\right)}}$$",
+              "Valid where dx/dt is non-zero."
+            ]
+          },
+          "b": {
+            "parameter_value": {
+              "__type__": "sympy",
+              "expression": "pi/3",
+              "srepr": "Mul(Rational(1, 3), pi)"
+            },
+            "gradient": {
+              "__type__": "sympy",
+              "expression": "8/3",
+              "srepr": "Rational(8, 3)"
+            },
+            "answer": [
+              "$$t = \\frac{\\pi}{3}$$",
+              "$$m = \\frac{8}{3}$$"
+            ]
+          }
+        },
+        "object": {
+          "x_of_t": {
+            "__type__": "sympy",
+            "expression": "sin(2*t)",
+            "srepr": "sin(Mul(Integer(2), Symbol('t', real=True)))"
+          },
+          "y_of_t": {
+            "__type__": "sympy",
+            "expression": "sin(t)**(-3)",
+            "srepr": "Pow(sin(Symbol('t', real=True)), Integer(-3))"
+          },
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "2*cos(2*t)",
+            "srepr": "Mul(Integer(2), cos(Mul(Integer(2), Symbol('t', real=True))))"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "-3*cos(t)/sin(t)**4",
+            "srepr": "Mul(Integer(-1), Integer(3), Pow(sin(Symbol('t', real=True)), Integer(-4)), cos(Symbol('t', real=True)))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "-3*cos(t)/(2*sin(t)**4*cos(2*t))",
+            "srepr": "Mul(Integer(-1), Rational(3, 2), Pow(sin(Symbol('t', real=True)), Integer(-4)), cos(Symbol('t', real=True)), Pow(cos(Mul(Integer(2), Symbol('t', real=True))), Integer(-1)))"
+          },
+          "parameter_value": {
+            "__type__": "sympy",
+            "expression": "pi/3",
+            "srepr": "Mul(Rational(1, 3), pi)"
+          },
+          "point": {
+            "__type__": "sympy",
+            "expression": "(sqrt(3)/2, 8*sqrt(3)/9)",
+            "srepr": "Tuple(Mul(Rational(1, 2), Pow(Integer(3), Rational(1, 2))), Mul(Rational(8, 9), Pow(Integer(3), Rational(1, 2))))"
+          },
+          "direction": {
+            "__type__": "sympy",
+            "expression": "(-1, -8/3)",
+            "srepr": "Tuple(Integer(-1), Rational(-8, 3))"
+          },
+          "gradient": {
+            "__type__": "sympy",
+            "expression": "8/3",
+            "srepr": "Rational(8, 3)"
+          },
+          "tangent": {
+            "__type__": "sympy",
+            "expression": "-8*x/3 + y + 4*sqrt(3)/9",
+            "srepr": "Add(Mul(Integer(-1), Rational(8, 3), Symbol('x', real=True)), Symbol('y', real=True), Mul(Rational(4, 9), Pow(Integer(3), Rational(1, 2))))"
+          },
+          "normal": {
+            "__type__": "sympy",
+            "expression": "-x - 8*y/3 + 155*sqrt(3)/54",
+            "srepr": "Add(Mul(Integer(-1), Symbol('x', real=True)), Mul(Integer(-1), Rational(8, 3), Symbol('y', real=True)), Mul(Rational(155, 54), Pow(Integer(3), Rational(1, 2))))"
+          },
+          "line": {
+            "__type__": "sympy",
+            "expression": "-8*x/3 + y + 4*sqrt(3)/9",
+            "srepr": "Add(Mul(Integer(-1), Rational(8, 3), Symbol('x', real=True)), Symbol('y', real=True), Mul(Rational(4, 9), Pow(Integer(3), Rational(1, 2))))"
+          }
+        },
+        "source_key": "bbe2c91c7d376035fb381f2b24977376ab963000374d533976129c8cc381ca76"
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "marks_available": 2,
+            "steps": [
+              {
+                "description": "Differentiate both coordinates with respect to t.",
+                "working": "$$\\frac{d}{d t} x = 2 \\cos{\\left(2 t \\right)}$$\n$$\\frac{d}{d t} y = - \\frac{3 \\cos{\\left(t \\right)}}{\\sin^{4}{\\left(t \\right)}}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct coordinate derivatives.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{d}{d t} x = 2 \\cos{\\left(2 t \\right)}"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{d}{d t} y = - \\frac{3 \\cos{\\left(t \\right)}}{\\sin^{4}{\\left(t \\right)}}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Divide dy/dt by dx/dt.",
+                "working": "$$m = - \\frac{3 \\cos{\\left(t \\right)}}{2 \\sin^{4}{\\left(t \\right)} \\cos{\\left(2 t \\right)}}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct parametric gradient.",
+                    "depends_on": [
+                      "a.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "a.2.1"
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "differentiate_2",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "The quotient gives a finite gradient only when dx/dt is non-zero."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m = - \\frac{3 \\cos{\\left(t \\right)}}{2 \\sin^{4}{\\left(t \\right)} \\cos{\\left(2 t \\right)}}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The quotient gives a finite gradient only when $\\frac{dx}{dt}$ is non-zero."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$m = - \\frac{3 \\cos{\\left(t \\right)}}{2 \\sin^{4}{\\left(t \\right)} \\cos{\\left(2 t \\right)}}$$",
+              "Valid where dx/dt is non-zero."
+            ]
+          },
+          {
+            "part": "b",
+            "operation": "coordinate_gradient",
+            "marks_available": 2,
+            "steps": [
+              {
+                "description": "Use the given y-coordinate and the parameter interval.",
+                "working": "$$\\frac{1}{\\sin^{3}{\\left(t \\right)}} = \\frac{8 \\sqrt{3}}{9}$$\n$$t = \\frac{\\pi}{3}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Finds the admissible parameter.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.1.1"
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "coordinate_gradient_1",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "The stated interval is needed to select all and only admissible parameter values."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{1}{\\sin^{3}{\\left(t \\right)}} = \\frac{8 \\sqrt{3}}{9}"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "t = \\frac{\\pi}{3}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The stated interval is needed to select all and only admissible parameter values."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Substitute into the derivative.",
+                "working": "$$m_{T} = \\frac{8}{3}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct exact gradient.",
+                    "depends_on": [
+                      "b.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "b.2.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{T} = \\frac{8}{3}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$t = \\frac{\\pi}{3}$$",
+              "$$m = \\frac{8}{3}$$"
+            ]
+          }
+        ],
+        "total_marks": 4,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A"
+          ],
+          "note": "Marks assess mathematical achievements; inspect in Content Lab."
+        },
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "differentiate_2",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "The quotient gives a finite gradient only when dx/dt is non-zero."
+            },
+            {
+              "part": "b",
+              "step": 1,
+              "concept_id": "coordinate_gradient_1",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "The stated interval is needed to select all and only admissible parameter values."
+            }
+          ],
+          "display_policy": "Optional conceptual hooks."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "independent_mathematics": {
+            "passed": true
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "kind": "parametric",
+          "x_of_t": {
+            "__type__": "sympy",
+            "expression": "sin(2*t)",
+            "srepr": "sin(Mul(Integer(2), Symbol('t', real=True)))"
+          },
+          "y_of_t": {
+            "__type__": "sympy",
+            "expression": "sin(t)**(-3)",
+            "srepr": "Pow(sin(Symbol('t', real=True)), Integer(-3))"
+          },
+          "parameter": {
+            "__type__": "sympy",
+            "expression": "t",
+            "srepr": "Symbol('t', real=True)"
+          },
+          "parameter_domain": {
+            "__type__": "sympy",
+            "expression": "Interval.open(0, pi/2)",
+            "srepr": "Interval(Integer(0), Mul(Rational(1, 2), pi), true, true)"
+          },
+          "parameter_value": {
+            "__type__": "sympy",
+            "expression": "pi/3",
+            "srepr": "Mul(Rational(1, 3), pi)"
+          },
+          "line_kind": "tangent",
+          "coordinate_value": {
+            "__type__": "sympy",
+            "expression": "8*sqrt(3)/9",
+            "srepr": "Mul(Rational(8, 9), Pow(Integer(3), Rational(1, 2)))"
+          },
+          "coordinate": "y",
+          "family": "implicit_and_parametric",
+          "architecture": "parametric_trigonometric",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "differentiate",
+              "prompt": "Find an expression for dy/dx wherever it is defined.",
+              "depends_on": []
+            },
+            {
+              "part": "b",
+              "operation": "coordinate_gradient",
+              "prompt": "Find the exact tangent gradient at the specified coordinate.",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "task_sequence": [
+            "differentiate",
+            "coordinate_gradient"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "implicit_and_parametric",
+            "architecture": "parametric_trigonometric",
+            "depth_position": 0.5,
+            "object_kind": "parametric",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "differentiate",
+                "prompt": "Find an expression for dy/dx wherever it is defined.",
+                "depends_on": []
+              },
+              {
+                "part": "b",
+                "operation": "coordinate_gradient",
+                "prompt": "Find the exact tangent gradient at the specified coordinate.",
+                "depends_on": [
+                  "a"
+                ]
+              }
+            ],
+            "task_sequence": [
+              "differentiate",
+              "coordinate_gradient"
+            ],
+            "part_count": 2,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "generation_spec": {
+              "family": "implicit_and_parametric",
+              "depth": 0.5,
+              "architecture": null,
+              "seed": null,
+              "pmt_primary_topic": "Tangents and Normals",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "structural_signature": "parametric_trigonometric|cosecant_coordinate|tangent|differentiate|coordinate_gradient",
+            "exact_fingerprint": "3bf66cc6c9fbad5ef1fa95ef851d33fe264bcb2777398f192bbad656c9b0f480"
+          },
+          "emergent": {
+            "multipart": true,
+            "part_count": 2,
+            "curve_representation": "parametric",
+            "structural_variant": "cosecant_coordinate",
+            "line_kind": "tangent",
+            "requires_tangents_normals": true
+          },
+          "topic_metadata": {
+            "primary": "Tangents and Normals",
+            "overlaps": [
+              "Parametric Differentiation"
+            ],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-16T07:07:31.765467+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit_changed",
+            "at": "2026-09-16T07:07:31.765479+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-16T07:07:31.765467+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "m = - \\frac{3 \\cos{\\left(t \\right)}}{2 \\sin^{4}{\\left(t \\right)} \\cos{\\left(2 t \\right)}}"
+            },
+            {
+              "type": "markdown",
+              "content": "Valid where $\\frac{dx}{dt}$ is non-zero."
+            }
+          ],
+          "b": [
+            {
+              "type": "latex",
+              "content": "t = \\frac{\\pi}{3}"
+            },
+            {
+              "type": "latex",
+              "content": "m = \\frac{8}{3}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000008",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_54f2ba5678bf43d3",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-16T07:06:05.608073+00:00",
+        "generation_selection": {
+          "family": "implicit_and_parametric",
+          "requested_depth": 1.0,
+          "actual_depth": 1.0,
+          "architecture": "parametric_trigonometric",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "The curve C has parametric equations $x = 2 \\cos{\\left(t \\right)}$ and $y = 2 \\sin{\\left(t \\right)}$, with $t$ in $\\left(0, \\frac{\\pi}{2}\\right)$. Let P be the point where $t = \\frac{\\pi}{6}$.\n\n(a) Find an expression for dy/dx wherever it is defined.\n\n(b) Find the equation of the tangent at P.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The curve C has parametric equations $x = 2 \\cos{\\left(t \\right)}$ and $y = 2 \\sin{\\left(t \\right)}$, with $t$ in $\\left(0, \\frac{\\pi}{2}\\right)$. Let P be the point where $t = \\frac{\\pi}{6}$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Find an expression for $\\frac{dy}{dx}$ wherever it is defined."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Find the equation of the tangent at P."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "implicit_and_parametric",
+        "architecture": "parametric_trigonometric",
+        "depth_position": 1.0,
+        "object_kind": "parametric",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "prompt": "Find an expression for dy/dx wherever it is defined.",
+            "depends_on": []
+          },
+          {
+            "part": "b",
+            "operation": "line",
+            "prompt": "Find the equation of the tangent at P.",
+            "depends_on": [
+              "a"
+            ]
+          }
+        ],
+        "task_sequence": [
+          "differentiate",
+          "line"
+        ],
+        "part_count": 2,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "generation_spec": {
+          "family": "implicit_and_parametric",
+          "depth": 1.0,
+          "architecture": null,
+          "seed": null,
+          "pmt_primary_topic": "Tangents and Normals",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "structural_signature": "parametric_trigonometric|ellipse|tangent|differentiate|line",
+        "exact_fingerprint": "ef66370836ca2a924a379454cc5364df4fc2891819b7176723c572ade8eb1a4b"
+      },
+      "emergent_structure": {
+        "multipart": true,
+        "part_count": 2,
+        "curve_representation": "parametric",
+        "structural_variant": "ellipse",
+        "line_kind": "tangent",
+        "requires_tangents_normals": true
+      },
+      "topic_metadata": {
+        "primary": "Tangents and Normals",
+        "overlaps": [
+          "Parametric Differentiation"
+        ],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "parts": {
+          "a": {
+            "derivative": {
+              "__type__": "sympy",
+              "expression": "-1/tan(t)",
+              "srepr": "Mul(Integer(-1), Pow(tan(Symbol('t', real=True)), Integer(-1)))"
+            },
+            "answer": [
+              "$$m = - \\frac{1}{\\tan{\\left(t \\right)}}$$",
+              "Valid where dx/dt is non-zero."
+            ]
+          },
+          "b": {
+            "line": {
+              "__type__": "sympy",
+              "expression": "sqrt(3)*x + y - 4",
+              "srepr": "Add(Mul(Pow(Integer(3), Rational(1, 2)), Symbol('x', real=True)), Symbol('y', real=True), Integer(-4))"
+            },
+            "answer": [
+              "$$\\sqrt{3} x + y - 4 = 0$$"
+            ]
+          }
+        },
+        "object": {
+          "x_of_t": {
+            "__type__": "sympy",
+            "expression": "2*cos(t)",
+            "srepr": "Mul(Integer(2), cos(Symbol('t', real=True)))"
+          },
+          "y_of_t": {
+            "__type__": "sympy",
+            "expression": "2*sin(t)",
+            "srepr": "Mul(Integer(2), sin(Symbol('t', real=True)))"
+          },
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "-2*sin(t)",
+            "srepr": "Mul(Integer(-1), Integer(2), sin(Symbol('t', real=True)))"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "2*cos(t)",
+            "srepr": "Mul(Integer(2), cos(Symbol('t', real=True)))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "-1/tan(t)",
+            "srepr": "Mul(Integer(-1), Pow(tan(Symbol('t', real=True)), Integer(-1)))"
+          },
+          "parameter_value": {
+            "__type__": "sympy",
+            "expression": "pi/6",
+            "srepr": "Mul(Rational(1, 6), pi)"
+          },
+          "point": {
+            "__type__": "sympy",
+            "expression": "(sqrt(3), 1)",
+            "srepr": "Tuple(Pow(Integer(3), Rational(1, 2)), Integer(1))"
+          },
+          "direction": {
+            "__type__": "sympy",
+            "expression": "(-1, sqrt(3))",
+            "srepr": "Tuple(Integer(-1), Pow(Integer(3), Rational(1, 2)))"
+          },
+          "gradient": {
+            "__type__": "sympy",
+            "expression": "-sqrt(3)",
+            "srepr": "Mul(Integer(-1), Pow(Integer(3), Rational(1, 2)))"
+          },
+          "tangent": {
+            "__type__": "sympy",
+            "expression": "sqrt(3)*x + y - 4",
+            "srepr": "Add(Mul(Pow(Integer(3), Rational(1, 2)), Symbol('x', real=True)), Symbol('y', real=True), Integer(-4))"
+          },
+          "normal": {
+            "__type__": "sympy",
+            "expression": "-x + sqrt(3)*y",
+            "srepr": "Add(Mul(Integer(-1), Symbol('x', real=True)), Mul(Pow(Integer(3), Rational(1, 2)), Symbol('y', real=True)))"
+          },
+          "line": {
+            "__type__": "sympy",
+            "expression": "sqrt(3)*x + y - 4",
+            "srepr": "Add(Mul(Pow(Integer(3), Rational(1, 2)), Symbol('x', real=True)), Symbol('y', real=True), Integer(-4))"
+          }
+        },
+        "source_key": "ed01ad8baed8532519eb6c290694549f2684fcd72c58a21fd534559156fe425f"
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "marks_available": 2,
+            "steps": [
+              {
+                "description": "Differentiate both coordinates with respect to t.",
+                "working": "$$\\frac{d}{d t} x = - 2 \\sin{\\left(t \\right)}$$\n$$\\frac{d}{d t} y = 2 \\cos{\\left(t \\right)}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct coordinate derivatives.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{d}{d t} x = - 2 \\sin{\\left(t \\right)}"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{d}{d t} y = 2 \\cos{\\left(t \\right)}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Divide dy/dt by dx/dt.",
+                "working": "$$m = - \\frac{1}{\\tan{\\left(t \\right)}}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct parametric gradient.",
+                    "depends_on": [
+                      "a.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "a.2.1"
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "differentiate_2",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "The quotient gives a finite gradient only when dx/dt is non-zero."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m = - \\frac{1}{\\tan{\\left(t \\right)}}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The quotient gives a finite gradient only when $\\frac{dx}{dt}$ is non-zero."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$m = - \\frac{1}{\\tan{\\left(t \\right)}}$$",
+              "Valid where dx/dt is non-zero."
+            ]
+          },
+          {
+            "part": "b",
+            "operation": "line",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Evaluate the coordinates and tangent direction at P.",
+                "working": "$$\\left( \\sqrt{3}, \\  1\\right)$$\n$$d_{x} = -1$$\n$$d_{y} = \\sqrt{3}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct point and evaluated direction.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.1.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\left( \\sqrt{3}, \\  1\\right)"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{x} = -1"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "d_{y} = \\sqrt{3}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "The tangent gradient is dy/dx at P.",
+                "working": "$$m_{T} = - \\sqrt{3}$$",
+                "marks_available": 0,
+                "marks": [],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m_{T} = - \\sqrt{3}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": null,
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Use the point-gradient equation.",
+                "working": "$$y - 1 = - \\sqrt{3} \\left(x - \\sqrt{3}\\right)$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the correct point and slope.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.3.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 3,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "y - 1 = - \\sqrt{3} \\left(x - \\sqrt{3}\\right)"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Hence the required tangent is:",
+                "working": "$$\\sqrt{3} x + y - 4 = 0$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct line equation.",
+                    "depends_on": [
+                      "b.3.1"
+                    ],
+                    "follow_through": false,
+                    "id": "b.4.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 4,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\sqrt{3} x + y - 4 = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$\\sqrt{3} x + y - 4 = 0$$"
+            ]
+          }
+        ],
+        "total_marks": 5,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A"
+          ],
+          "note": "Marks assess mathematical achievements; inspect in Content Lab."
+        },
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "differentiate_2",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "The quotient gives a finite gradient only when dx/dt is non-zero."
+            }
+          ],
+          "display_policy": "Optional conceptual hooks."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "independent_mathematics": {
+            "passed": true
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "kind": "parametric",
+          "x_of_t": {
+            "__type__": "sympy",
+            "expression": "2*cos(t)",
+            "srepr": "Mul(Integer(2), cos(Symbol('t', real=True)))"
+          },
+          "y_of_t": {
+            "__type__": "sympy",
+            "expression": "2*sin(t)",
+            "srepr": "Mul(Integer(2), sin(Symbol('t', real=True)))"
+          },
+          "parameter": {
+            "__type__": "sympy",
+            "expression": "t",
+            "srepr": "Symbol('t', real=True)"
+          },
+          "parameter_domain": {
+            "__type__": "sympy",
+            "expression": "Interval.open(0, pi/2)",
+            "srepr": "Interval(Integer(0), Mul(Rational(1, 2), pi), true, true)"
+          },
+          "parameter_value": {
+            "__type__": "sympy",
+            "expression": "pi/6",
+            "srepr": "Mul(Rational(1, 6), pi)"
+          },
+          "line_kind": "tangent",
+          "family": "implicit_and_parametric",
+          "architecture": "parametric_trigonometric",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "differentiate",
+              "prompt": "Find an expression for dy/dx wherever it is defined.",
+              "depends_on": []
+            },
+            {
+              "part": "b",
+              "operation": "line",
+              "prompt": "Find the equation of the tangent at P.",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "task_sequence": [
+            "differentiate",
+            "line"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "implicit_and_parametric",
+            "architecture": "parametric_trigonometric",
+            "depth_position": 1.0,
+            "object_kind": "parametric",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "differentiate",
+                "prompt": "Find an expression for dy/dx wherever it is defined.",
+                "depends_on": []
+              },
+              {
+                "part": "b",
+                "operation": "line",
+                "prompt": "Find the equation of the tangent at P.",
+                "depends_on": [
+                  "a"
+                ]
+              }
+            ],
+            "task_sequence": [
+              "differentiate",
+              "line"
+            ],
+            "part_count": 2,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "generation_spec": {
+              "family": "implicit_and_parametric",
+              "depth": 1.0,
+              "architecture": null,
+              "seed": null,
+              "pmt_primary_topic": "Tangents and Normals",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "structural_signature": "parametric_trigonometric|ellipse|tangent|differentiate|line",
+            "exact_fingerprint": "ef66370836ca2a924a379454cc5364df4fc2891819b7176723c572ade8eb1a4b"
+          },
+          "emergent": {
+            "multipart": true,
+            "part_count": 2,
+            "curve_representation": "parametric",
+            "structural_variant": "ellipse",
+            "line_kind": "tangent",
+            "requires_tangents_normals": true
+          },
+          "topic_metadata": {
+            "primary": "Tangents and Normals",
+            "overlaps": [
+              "Parametric Differentiation"
+            ],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-16T07:07:31.765865+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit_changed",
+            "at": "2026-09-16T07:07:31.765877+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-16T07:07:31.765865+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "m = - \\frac{1}{\\tan{\\left(t \\right)}}"
+            },
+            {
+              "type": "markdown",
+              "content": "Valid where $\\frac{dx}{dt}$ is non-zero."
+            }
+          ],
+          "b": [
+            {
+              "type": "latex",
+              "content": "\\sqrt{3} x + y - 4 = 0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000009",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_8bc47f7d14364a45",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-16T07:07:06.152271+00:00",
+        "generation_selection": {
+          "family": "reverse_reasoning",
+          "requested_depth": 0.0,
+          "actual_depth": 0.0,
+          "architecture": "implicit_constants",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "The curve $p x^{3} + q x y + 3 y^{2} - 22 = 0$ contains $\\left( 1, \\  -3\\right)$. Its normal there is $- 16 x + 3 y + 25 = 0$. The constants p and q are unknown.\n\n(a) Find an expression for dy/dx wherever it is defined.\n\n(b) Determine p and q using the point and its normal.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The curve $p x^{3} + q x y + 3 y^{2} - 22 = 0$ contains $\\left( 1, \\  -3\\right)$. Its normal there is $- 16 x + 3 y + 25 = 0$. The constants p and q are unknown."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Find an expression for $\\frac{dy}{dx}$ wherever it is defined."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Determine p and q using the point and its normal."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "reverse_reasoning",
+        "architecture": "implicit_constants",
+        "depth_position": 0.0,
+        "object_kind": "inverse_implicit",
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "prompt": "Find an expression for dy/dx wherever it is defined.",
+            "depends_on": []
+          },
+          {
+            "part": "b",
+            "operation": "recover_constants",
+            "prompt": "Determine p and q using the point and its normal.",
+            "depends_on": [
+              "a"
+            ]
+          }
+        ],
+        "task_sequence": [
+          "differentiate",
+          "recover_constants"
+        ],
+        "part_count": 2,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "generation_spec": {
+          "family": "reverse_reasoning",
+          "depth": 0.0,
+          "architecture": null,
+          "seed": null,
+          "pmt_primary_topic": "Tangents and Normals",
+          "pmt_overlaps": [],
+          "tags": {}
+        },
+        "structural_signature": "implicit_constants|mixed_power_3||differentiate|recover_constants",
+        "exact_fingerprint": "52cf088d9e4392d54eec1fdb5188604e0dd30aead49eea3f9d113d5ed20c4312"
+      },
+      "emergent_structure": {
+        "multipart": true,
+        "part_count": 2,
+        "curve_representation": "inverse_implicit",
+        "structural_variant": "mixed_power_3",
+        "line_kind": null,
+        "requires_tangents_normals": true
+      },
+      "topic_metadata": {
+        "primary": "Tangents and Normals",
+        "overlaps": [
+          "Implicit Differentiation"
+        ],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "parts": {
+          "a": {
+            "derivative": {
+              "__type__": "sympy",
+              "expression": "-(3*p*x**2 + q*y)/(q*x + 6*y)",
+              "srepr": "Mul(Integer(-1), Add(Mul(Integer(3), Symbol('p', real=True), Pow(Symbol('x', real=True), Integer(2))), Mul(Symbol('q', real=True), Symbol('y', real=True))), Pow(Add(Mul(Symbol('q', real=True), Symbol('x', real=True)), Mul(Integer(6), Symbol('y', real=True))), Integer(-1)))"
+            },
+            "answer": [
+              "$$m = - \\frac{3 p x^{2} + q y}{q x + 6 y}$$",
+              "Valid where the coefficient of dy/dx is non-zero."
+            ]
+          },
+          "b": {
+            "constants": {
+              "p": {
+                "__type__": "sympy",
+                "expression": "1",
+                "srepr": "Integer(1)"
+              },
+              "q": {
+                "__type__": "sympy",
+                "expression": "2",
+                "srepr": "Integer(2)"
+              }
+            },
+            "answer": [
+              "$$p = 1$$",
+              "$$q = 2$$"
+            ]
+          }
+        },
+        "object": {
+          "implicit": {
+            "__type__": "sympy",
+            "expression": "p*x**3 + q*x*y + 3*y**2 - 22",
+            "srepr": "Add(Mul(Symbol('p', real=True), Pow(Symbol('x', real=True), Integer(3))), Mul(Symbol('q', real=True), Symbol('x', real=True), Symbol('y', real=True)), Mul(Integer(3), Pow(Symbol('y', real=True), Integer(2))), Integer(-22))"
+          },
+          "fx": {
+            "__type__": "sympy",
+            "expression": "3*p*x**2 + q*y",
+            "srepr": "Add(Mul(Integer(3), Symbol('p', real=True), Pow(Symbol('x', real=True), Integer(2))), Mul(Symbol('q', real=True), Symbol('y', real=True)))"
+          },
+          "fy": {
+            "__type__": "sympy",
+            "expression": "q*x + 6*y",
+            "srepr": "Add(Mul(Symbol('q', real=True), Symbol('x', real=True)), Mul(Integer(6), Symbol('y', real=True)))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "-(3*p*x**2 + q*y)/(q*x + 6*y)",
+            "srepr": "Mul(Integer(-1), Add(Mul(Integer(3), Symbol('p', real=True), Pow(Symbol('x', real=True), Integer(2))), Mul(Symbol('q', real=True), Symbol('y', real=True))), Pow(Add(Mul(Symbol('q', real=True), Symbol('x', real=True)), Mul(Integer(6), Symbol('y', real=True))), Integer(-1)))"
+          },
+          "equations": [
+            {
+              "__type__": "sympy",
+              "expression": "p - 3*q + 5",
+              "srepr": "Add(Symbol('p', real=True), Mul(Integer(-1), Integer(3), Symbol('q', real=True)), Integer(5))"
+            },
+            {
+              "__type__": "sympy",
+              "expression": "-48*p + 51*q - 54",
+              "srepr": "Add(Mul(Integer(-1), Integer(48), Symbol('p', real=True)), Mul(Integer(51), Symbol('q', real=True)), Integer(-54))"
+            }
+          ],
+          "constants": {
+            "p": {
+              "__type__": "sympy",
+              "expression": "1",
+              "srepr": "Integer(1)"
+            },
+            "q": {
+              "__type__": "sympy",
+              "expression": "2",
+              "srepr": "Integer(2)"
+            }
+          },
+          "point": {
+            "__type__": "sympy",
+            "expression": "(1, -3)",
+            "srepr": "Tuple(Integer(1), Integer(-3))"
+          }
+        },
+        "source_key": "86fbd80b2c3ef69a6436d648df6f56653b1e47895ba021538d311baefbdd1887"
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "marks_available": 2,
+            "steps": [
+              {
+                "description": "Differentiate implicitly, treating y as a function of x.",
+                "working": "$$m \\left(q x + 6 y\\right) + 3 p x^{2} + q y = 0$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Correct implicit differentiation.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "a.1.1"
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "differentiate_1",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "Here m denotes dy/dx. Differentiating a term involving y requires the chain rule."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m \\left(q x + 6 y\\right) + 3 p x^{2} + q y = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "Here m denotes $\\frac{dy}{dx}$. Differentiating a term involving y requires the chain rule."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Collect the gradient terms and rearrange.",
+                "working": "$$m = \\frac{- 3 p x^{2} - q y}{q x + 6 y}$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct rearrangement.",
+                    "depends_on": [
+                      "a.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "a.2.1"
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "differentiate_2",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "This quotient applies where its denominator is non-zero. A regular vertical tangent is handled using the original differential relation."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "m = \\frac{- 3 p x^{2} - q y}{q x + 6 y}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "This quotient applies where its denominator is non-zero. A regular vertical tangent is handled using the original differential relation."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$m = - \\frac{3 p x^{2} + q y}{q x + 6 y}$$",
+              "Valid where the coefficient of dy/dx is non-zero."
+            ]
+          },
+          {
+            "part": "b",
+            "operation": "recover_constants",
+            "marks_available": 2,
+            "steps": [
+              {
+                "description": "Use incidence and perpendicularity between the tangent and given normal.",
+                "working": "$$p - 3 q + 5 = 0$$\n$$- 48 p + 51 q - 54 = 0$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Forms the two independent parameter equations.",
+                    "depends_on": [],
+                    "follow_through": false,
+                    "id": "b.1.1"
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "recover_constants_1",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "The gradient vector of the implicit equation points along the normal. This avoids division when a line is vertical."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "p - 3 q + 5 = 0"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "- 48 p + 51 q - 54 = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The gradient vector of the implicit equation points along the normal. This avoids division when a line is vertical."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Solve simultaneously and check the point is regular.",
+                "working": "$$p = 1$$\n$$q = 2$$",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Correct unique constants.",
+                    "depends_on": [
+                      "b.1.1"
+                    ],
+                    "follow_through": false,
+                    "id": "b.2.1"
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "p = 1"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "q = 2"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": [
+              "$$p = 1$$",
+              "$$q = 2$$"
+            ]
+          }
+        ],
+        "total_marks": 4,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A"
+          ],
+          "note": "Marks assess mathematical achievements; inspect in Content Lab."
+        },
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 1,
+              "concept_id": "differentiate_1",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "Here m denotes dy/dx. Differentiating a term involving y requires the chain rule."
+            },
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "differentiate_2",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "This quotient applies where its denominator is non-zero. A regular vertical tangent is handled using the original differential relation."
+            },
+            {
+              "part": "b",
+              "step": 1,
+              "concept_id": "recover_constants_1",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "The gradient vector of the implicit equation points along the normal. This avoids division when a line is vertical."
+            }
+          ],
+          "display_policy": "Optional conceptual hooks."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "independent_mathematics": {
+            "passed": true
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "kind": "inverse_implicit",
+          "implicit": {
+            "__type__": "sympy",
+            "expression": "p*x**3 + q*x*y + 3*y**2 - 22",
+            "srepr": "Add(Mul(Symbol('p', real=True), Pow(Symbol('x', real=True), Integer(3))), Mul(Symbol('q', real=True), Symbol('x', real=True), Symbol('y', real=True)), Mul(Integer(3), Pow(Symbol('y', real=True), Integer(2))), Integer(-22))"
+          },
+          "point": {
+            "__type__": "sympy",
+            "expression": "(1, -3)",
+            "srepr": "Tuple(Integer(1), Integer(-3))"
+          },
+          "given_line": {
+            "__type__": "sympy",
+            "expression": "-16*x + 3*y + 25",
+            "srepr": "Add(Mul(Integer(-1), Integer(16), Symbol('x', real=True)), Mul(Integer(3), Symbol('y', real=True)), Integer(25))"
+          },
+          "unknowns": [
+            {
+              "__type__": "sympy",
+              "expression": "p",
+              "srepr": "Symbol('p', real=True)"
+            },
+            {
+              "__type__": "sympy",
+              "expression": "q",
+              "srepr": "Symbol('q', real=True)"
+            }
+          ],
+          "family": "reverse_reasoning",
+          "architecture": "implicit_constants",
+          "parts": [
+            {
+              "part": "a",
+              "operation": "differentiate",
+              "prompt": "Find an expression for dy/dx wherever it is defined.",
+              "depends_on": []
+            },
+            {
+              "part": "b",
+              "operation": "recover_constants",
+              "prompt": "Determine p and q using the point and its normal.",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "task_sequence": [
+            "differentiate",
+            "recover_constants"
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "reverse_reasoning",
+            "architecture": "implicit_constants",
+            "depth_position": 0.0,
+            "object_kind": "inverse_implicit",
+            "parts": [
+              {
+                "part": "a",
+                "operation": "differentiate",
+                "prompt": "Find an expression for dy/dx wherever it is defined.",
+                "depends_on": []
+              },
+              {
+                "part": "b",
+                "operation": "recover_constants",
+                "prompt": "Determine p and q using the point and its normal.",
+                "depends_on": [
+                  "a"
+                ]
+              }
+            ],
+            "task_sequence": [
+              "differentiate",
+              "recover_constants"
+            ],
+            "part_count": 2,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "generation_spec": {
+              "family": "reverse_reasoning",
+              "depth": 0.0,
+              "architecture": null,
+              "seed": null,
+              "pmt_primary_topic": "Tangents and Normals",
+              "pmt_overlaps": [],
+              "tags": {}
+            },
+            "structural_signature": "implicit_constants|mixed_power_3||differentiate|recover_constants",
+            "exact_fingerprint": "52cf088d9e4392d54eec1fdb5188604e0dd30aead49eea3f9d113d5ed20c4312"
+          },
+          "emergent": {
+            "multipart": true,
+            "part_count": 2,
+            "curve_representation": "inverse_implicit",
+            "structural_variant": "mixed_power_3",
+            "line_kind": null,
+            "requires_tangents_normals": true
+          },
+          "topic_metadata": {
+            "primary": "Tangents and Normals",
+            "overlaps": [
+              "Implicit Differentiation"
+            ],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-16T07:07:31.766327+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit_changed",
+            "at": "2026-09-16T07:07:31.766340+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-16T07:07:31.766327+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "m = - \\frac{3 p x^{2} + q y}{q x + 6 y}"
+            },
+            {
+              "type": "markdown",
+              "content": "Valid where the coefficient of $\\frac{dy}{dx}$ is non-zero."
+            }
+          ],
+          "b": [
+            {
+              "type": "latex",
+              "content": "p = 1"
+            },
+            {
+              "type": "latex",
+              "content": "q = 2"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

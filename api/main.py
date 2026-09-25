@@ -35,14 +35,22 @@ TOPIC_NAMES={
     'hypothesis_testing':'Hypothesis Testing','kinematics':'Kinematics','moments':'Moments',
 }
 
-def root()->Path:
+def content_root()->Path:
     env=os.getenv('DOJO_PROJECT_ROOT')
     candidates=[Path(env)] if env else []
     here=Path(__file__).resolve()
     candidates += [here.parent,*here.parents,Path.home()/'Documents'/'PrjDojo',Path.home()/'OneDrive'/'Documents'/'PrjDojo']
     for p in candidates:
-        if p and (p/'topics').is_dir(): return p
-    raise RuntimeError('Set DOJO_PROJECT_ROOT to your PrjDojo folder.')
+        if p and (p/'topics').is_dir():
+            return p/'topics'
+
+    # Production: published question banks live inside this repository.
+    for p in [here.parent,*here.parents]:
+        published=p/'content'/'question_banks'
+        if published.is_dir():
+            return published
+
+    raise RuntimeError('Could not find DOJO question banks. Set DOJO_PROJECT_ROOT locally or publish content/question_banks.')
 
 def _items(payload:Any)->list[dict]:
     if isinstance(payload,list): return [x for x in payload if isinstance(x,dict)]
@@ -52,7 +60,7 @@ def _items(payload:Any)->list[dict]:
     return []
 
 def _bank_files()->list[Path]:
-    content=root()/'topics'
+    content=content_root()
     rendered=sorted(content.rglob('rendered_question_bank*.json'))
     # A data directory may contain an older bank whose published file is still named question_bank*.json.
     rendered_dirs={p.parent.resolve() for p in rendered}
@@ -63,7 +71,7 @@ def _bank_files()->list[Path]:
     return rendered+fallback
 
 def _canonical_topic(path:Path)->str:
-    rel=path.relative_to(root()/'topics')
+    rel=path.relative_to(content_root())
     top=rel.parts[0]
     key=top.lower().replace('-','_')
     if key in TOPIC_NAMES: return TOPIC_NAMES[key]
@@ -100,7 +108,7 @@ def catalogue()->list[dict]:
         except Exception as exc:
             print(f'DOJO: skipped unreadable bank {file}: {exc}')
             continue
-        rel=file.relative_to(root()/'topics').as_posix()
+        rel=file.relative_to(content_root()).as_posix()
         topic=_canonical_topic(file)
         for index,q in enumerate(_items(payload)):
             meta=q.get('topic_metadata') or {}

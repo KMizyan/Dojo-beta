@@ -1,0 +1,5287 @@
+{
+  "schema_version": 2,
+  "updated_at": "2026-09-15T10:05:41.897146+00:00",
+  "questions": [
+    {
+      "question_id": "Q000001",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_cfd5f69217ce47f1",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-14T10:15:02.367609+00:00",
+        "generation_selection": {
+          "family": "parametric_derivative_core",
+          "requested_depth": 0.0,
+          "actual_depth": 0.08,
+          "architecture": "direct_polynomial",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = 4*t^2 - 5,    y = -2*t*(2*t^3 + 1).\n\nFind an expression for dy/dx in terms of t.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "latex",
+            "content": "x = 4 t^{2} - 5,\\qquad y = - 2 t \\left(2 t^{3} + 1\\right)"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Find an expression for $\\frac{dy}{dx}$ in terms of t."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parametric_derivative_core",
+        "architecture": "direct_polynomial",
+        "depth_position": 0.08,
+        "object_kind": "parametric_curve",
+        "object_grammar": "polynomial",
+        "task_sequence": [
+          "derive_parametric_dy_dx"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "prompt": "Find an expression for dy/dx in terms of t.",
+            "depends_on": [],
+            "data": {
+              "show_target": null
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parametric_derivative_core",
+          "depth": 0.0,
+          "architecture": null,
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parametric_derivative_core",
+        "required_rules": [
+          "power_rule"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": false
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "8*t"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "-16*t**3 - 2"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "(-16*t**3 - 2)/(8*t)"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "(-8*t**3 - 1)/(4*t)"
+          },
+          "parameter_domain": {},
+          "undefined_parameter_values": [
+            {
+              "__type__": "sympy",
+              "expression": "0"
+            }
+          ]
+        },
+        "parts": {
+          "a": {
+            "dx_dt": {
+              "__type__": "sympy",
+              "expression": "8*t"
+            },
+            "dy_dt": {
+              "__type__": "sympy",
+              "expression": "-16*t**3 - 2"
+            },
+            "dy_dx_unsimplified": {
+              "__type__": "sympy",
+              "expression": "(-16*t**3 - 2)/(8*t)"
+            },
+            "dy_dx": {
+              "__type__": "sympy",
+              "expression": "(-8*t**3 - 1)/(4*t)"
+            },
+            "undefined_parameter_values": [
+              {
+                "__type__": "sympy",
+                "expression": "0"
+              }
+            ]
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 3,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Differentiate the parametric equations.",
+                "working": "Differentiate both parametric equations.\ndx/dt = 8*t\ndy/dt = -2*(2*t + 1)*(4*t^2 - 2*t + 1)",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Obtains both parameter derivatives correctly.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Differentiate both parametric equations."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dx}{dt} = 8 t"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dt} = - 2 \\left(2 t + 1\\right) \\left(4 t^{2} - 2 t + 1\\right)"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the parametric derivative and simplify.",
+                "working": "dy/dx = (dy/dt)/(dx/dt) = (-2*(2*t + 1)*(4*t^2 - 2*t + 1))/(8*t)\nTherefore dy/dx = -(2*t + 1)*(4*t^2 - 2*t + 1)/(4*t).",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses dy/dx = (dy/dt)/(dx/dt).",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct simplified derivative.",
+                    "depends_on": [
+                      "parametric_ratio"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "parametric_rate_ratio",
+                    "type": "foundation",
+                    "level": "intermediate",
+                    "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                  }
+                ],
+                "depends_on_steps": [
+                  1
+                ],
+                "answer_notes": [
+                  "Cancelling a factor simplifies the formula but does not restore parameter values where dx/dt was zero."
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx}$ = $\\frac{\\frac{dy}{dt}}{\\frac{dx}{dt}} = - \\frac{2 \\left(2 t + 1\\right) \\left(4 t^{2} - 2 t + 1\\right)}{8 t}$"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\frac{\\left(-1 - 2 t\\right) \\left(4 t^{2} - 2 t + 1\\right)}{4 t}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "Cancelling a factor simplifies the formula but does not restore parameter values where $\\frac{dx}{dt}$ was zero."
+                      }
+                    ]
+                  ],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "dx_dt": {
+                "__type__": "sympy",
+                "expression": "8*t"
+              },
+              "dy_dt": {
+                "__type__": "sympy",
+                "expression": "-16*t**3 - 2"
+              },
+              "dy_dx_unsimplified": {
+                "__type__": "sympy",
+                "expression": "(-16*t**3 - 2)/(8*t)"
+              },
+              "dy_dx": {
+                "__type__": "sympy",
+                "expression": "(-8*t**3 - 1)/(4*t)"
+              },
+              "undefined_parameter_values": [
+                {
+                  "__type__": "sympy",
+                  "expression": "0"
+                }
+              ]
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "parametric_rate_ratio",
+              "type": "foundation",
+              "level": "intermediate",
+              "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "4*t**2 - 5"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "-4*t**4 - 2*t"
+          },
+          "domain": {},
+          "object_kind": "parametric_curve",
+          "object_grammar": "polynomial",
+          "family": "parametric_derivative_core",
+          "architecture": "direct_polynomial",
+          "task_sequence": [
+            "derive_parametric_dy_dx"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "derive_parametric_dy_dx",
+              "prompt": "Find an expression for dy/dx in terms of t.",
+              "depends_on": [],
+              "data": {
+                "show_target": null
+              }
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parametric_derivative_core",
+            "architecture": "direct_polynomial",
+            "depth_position": 0.08,
+            "object_kind": "parametric_curve",
+            "object_grammar": "polynomial",
+            "task_sequence": [
+              "derive_parametric_dy_dx"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "derive_parametric_dy_dx",
+                "prompt": "Find an expression for dy/dx in terms of t.",
+                "depends_on": [],
+                "data": {
+                  "show_target": null
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parametric_derivative_core",
+              "depth": 0.0,
+              "architecture": null,
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parametric_derivative_core",
+            "required_rules": [
+              "power_rule"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": false
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-15T10:05:41.892764+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit",
+            "at": "2026-09-15T08:59:23.423991+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T08:59:23.423971+00:00"
+            }
+          },
+          {
+            "event": "audit",
+            "at": "2026-09-15T09:21:30.588751+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T09:21:30.588732+00:00"
+            }
+          },
+          {
+            "event": "audit_changed",
+            "at": "2026-09-15T10:05:41.892818+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-15T10:05:41.892764+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Dx Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "8 t"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "- 16 t^{3} - 2"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx Unsimplified**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{- 16 t^{3} - 2}{8 t}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{- 8 t^{3} - 1}{4 t}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Undefined Parameter Values**"
+            },
+            {
+              "type": "latex",
+              "content": "0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000002",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_121d2711930e433e",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-14T10:15:02.368208+00:00",
+        "generation_selection": {
+          "family": "parametric_derivative_core",
+          "requested_depth": 1.0,
+          "actual_depth": 1.0,
+          "architecture": "show_trig_half_angle",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = 3*t + 3*sin(t) + 1,    y = 4 - 3*cos(t), where 0 < t < pi.\n\nShow that dy/dx = tan(t/2) wherever the derivative is defined.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "$x = 3 t + 3 \\sin{\\left(t \\right)} + 1,\\qquad y = 4 - 3 \\cos{\\left(t \\right)}$, where $0 < t < \\pi$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Show that $\\frac{dy}{dx} = \\tan{\\left(\\frac{t}{2} \\right)}$ wherever the derivative is defined."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parametric_derivative_core",
+        "architecture": "show_trig_half_angle",
+        "depth_position": 1.0,
+        "object_kind": "parametric_curve",
+        "object_grammar": "trig_half_angle",
+        "task_sequence": [
+          "derive_parametric_dy_dx"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "prompt": "Show that dy/dx = tan(t/2) wherever the derivative is defined.",
+            "depends_on": [],
+            "data": {
+              "show_target": {
+                "__type__": "sympy",
+                "expression": "tan(t/2)"
+              }
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {
+          "show_that": true
+        },
+        "generation_spec": {
+          "family": "parametric_derivative_core",
+          "depth": 1.0,
+          "architecture": null,
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parametric_derivative_core",
+        "required_rules": [
+          "trig_differentiation",
+          "half_angle_identity"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": true
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "3*cos(t) + 3"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "3*sin(t)"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "3*sin(t)/(3*cos(t) + 3)"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "sin(t)/(cos(t) + 1)"
+          },
+          "parameter_domain": {
+            "lower": {
+              "__type__": "sympy",
+              "expression": "0"
+            },
+            "upper": {
+              "__type__": "sympy",
+              "expression": "pi"
+            }
+          },
+          "undefined_parameter_values": []
+        },
+        "parts": {
+          "a": {
+            "dx_dt": {
+              "__type__": "sympy",
+              "expression": "3*cos(t) + 3"
+            },
+            "dy_dt": {
+              "__type__": "sympy",
+              "expression": "3*sin(t)"
+            },
+            "dy_dx_unsimplified": {
+              "__type__": "sympy",
+              "expression": "3*sin(t)/(3*cos(t) + 3)"
+            },
+            "dy_dx": {
+              "__type__": "sympy",
+              "expression": "sin(t)/(cos(t) + 1)"
+            },
+            "undefined_parameter_values": [],
+            "show_target": {
+              "__type__": "sympy",
+              "expression": "tan(t/2)"
+            }
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 4,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "marks_available": 4,
+            "steps": [
+              {
+                "description": "Differentiate the parametric equations.",
+                "working": "Differentiate both parametric equations.\ndx/dt = 3*(cos(t) + 1)\ndy/dt = 3*sin(t)",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Obtains both parameter derivatives correctly.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Differentiate both parametric equations."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dx}{dt} = 3 \\left(\\cos{\\left(t \\right)} + 1\\right)"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dt} = 3 \\sin{\\left(t \\right)}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the parametric derivative and simplify.",
+                "working": "dy/dx = (dy/dt)/(dx/dt) = (3*sin(t))/(3*(cos(t) + 1))\nTherefore dy/dx = sin(t)/(cos(t) + 1).",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses dy/dx = (dy/dt)/(dx/dt).",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct simplified derivative.",
+                    "depends_on": [
+                      "parametric_ratio"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "parametric_rate_ratio",
+                    "type": "foundation",
+                    "level": "intermediate",
+                    "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                  }
+                ],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx}$ = $\\frac{\\frac{dy}{dt}}{\\frac{dx}{dt}} = \\frac{3 \\sin{\\left(t \\right)}}{3 \\left(\\cos{\\left(t \\right)} + 1\\right)}$"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\frac{\\sin{\\left(t \\right)}}{\\cos{\\left(t \\right)} + 1}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Use the relevant identity to reach the required form.",
+                "working": "Using sin(t)/(1 + cos(t)) = tan(t/2),\ndy/dx = tan(t/2).",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Uses the half-angle identity to obtain the stated form.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "half_angle_ratio",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "The ratio sin(t)/(1 + cos(t)) is the half-angle form tan(t/2)."
+                  }
+                ],
+                "depends_on_steps": [
+                  2
+                ],
+                "step": 3,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Using $\\frac{\\sin{\\left(t \\right)}}{1 + \\cos{\\left(t \\right)}} = \\tan{\\left(\\frac{t}{2} \\right)}$,"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\tan{\\left(\\frac{t}{2} \\right)}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The ratio $\\frac{\\sin{\\left(t \\right)}}{1 + \\cos{\\left(t \\right)}}$ is the half-angle form $\\tan{\\left(\\frac{t}{2} \\right)}$."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "dx_dt": {
+                "__type__": "sympy",
+                "expression": "3*cos(t) + 3"
+              },
+              "dy_dt": {
+                "__type__": "sympy",
+                "expression": "3*sin(t)"
+              },
+              "dy_dx_unsimplified": {
+                "__type__": "sympy",
+                "expression": "3*sin(t)/(3*cos(t) + 3)"
+              },
+              "dy_dx": {
+                "__type__": "sympy",
+                "expression": "sin(t)/(cos(t) + 1)"
+              },
+              "undefined_parameter_values": [],
+              "show_target": {
+                "__type__": "sympy",
+                "expression": "tan(t/2)"
+              }
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "parametric_rate_ratio",
+              "type": "foundation",
+              "level": "intermediate",
+              "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+            },
+            {
+              "part": "a",
+              "step": 3,
+              "concept_id": "half_angle_ratio",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "The ratio sin(t)/(1 + cos(t)) is the half-angle form tan(t/2)."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          },
+          "show_target_part_a": {
+            "passed": true,
+            "detail": {
+              "__type__": "sympy",
+              "expression": "tan(t/2)"
+            }
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "3*t + 3*sin(t) + 1"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "4 - 3*cos(t)"
+          },
+          "domain": {
+            "lower": {
+              "__type__": "sympy",
+              "expression": "0"
+            },
+            "upper": {
+              "__type__": "sympy",
+              "expression": "pi"
+            }
+          },
+          "object_kind": "parametric_curve",
+          "object_grammar": "trig_half_angle",
+          "family": "parametric_derivative_core",
+          "architecture": "show_trig_half_angle",
+          "task_sequence": [
+            "derive_parametric_dy_dx"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "derive_parametric_dy_dx",
+              "prompt": "Show that dy/dx = tan(t/2) wherever the derivative is defined.",
+              "depends_on": [],
+              "data": {
+                "show_target": {
+                  "__type__": "sympy",
+                  "expression": "tan(t/2)"
+                }
+              }
+            }
+          ],
+          "show_target": {
+            "__type__": "sympy",
+            "expression": "tan(t/2)"
+          }
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parametric_derivative_core",
+            "architecture": "show_trig_half_angle",
+            "depth_position": 1.0,
+            "object_kind": "parametric_curve",
+            "object_grammar": "trig_half_angle",
+            "task_sequence": [
+              "derive_parametric_dy_dx"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "derive_parametric_dy_dx",
+                "prompt": "Show that dy/dx = tan(t/2) wherever the derivative is defined.",
+                "depends_on": [],
+                "data": {
+                  "show_target": {
+                    "__type__": "sympy",
+                    "expression": "tan(t/2)"
+                  }
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {
+              "show_that": true
+            },
+            "generation_spec": {
+              "family": "parametric_derivative_core",
+              "depth": 1.0,
+              "architecture": null,
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parametric_derivative_core",
+            "required_rules": [
+              "trig_differentiation",
+              "half_angle_identity"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": true
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-15T10:05:41.893563+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit",
+            "at": "2026-09-15T08:59:23.424424+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T08:59:23.424408+00:00"
+            }
+          },
+          {
+            "event": "audit",
+            "at": "2026-09-15T09:21:30.589113+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T09:21:30.589106+00:00"
+            }
+          },
+          {
+            "event": "audit_changed",
+            "at": "2026-09-15T10:05:41.893588+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-15T10:05:41.893563+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Dx Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "3 \\cos{\\left(t \\right)} + 3"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "3 \\sin{\\left(t \\right)}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx Unsimplified**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{3 \\sin{\\left(t \\right)}}{3 \\cos{\\left(t \\right)} + 3}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{\\sin{\\left(t \\right)}}{\\cos{\\left(t \\right)} + 1}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Undefined Parameter Values**"
+            },
+            {
+              "type": "markdown",
+              "content": "**Show Target**"
+            },
+            {
+              "type": "latex",
+              "content": "\\tan{\\left(\\frac{t}{2} \\right)}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000003",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_1abede459fe34977",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-14T10:15:47.856082+00:00",
+        "generation_selection": {
+          "family": "parameter_condition_reasoning",
+          "requested_depth": 0.0,
+          "actual_depth": 0.1,
+          "architecture": "gradient_at_given_parameter",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = -4*(t^2 + 1),    y = -t*(5*t^2 + 2).\n\n(a) Find an expression for dy/dx in terms of t.\n\n(b) Find the gradient of C when t = -1.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "latex",
+            "content": "x = - 4 \\left(t^{2} + 1\\right),\\qquad y = - t \\left(5 t^{2} + 2\\right)"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Find an expression for $\\frac{dy}{dx}$ in terms of t."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Find the gradient of C when $t = -1$."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parameter_condition_reasoning",
+        "architecture": "gradient_at_given_parameter",
+        "depth_position": 0.1,
+        "object_kind": "parametric_curve",
+        "object_grammar": "polynomial",
+        "task_sequence": [
+          "derive_parametric_dy_dx",
+          "evaluate_gradient_at_parameter"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "prompt": "Find an expression for dy/dx in terms of t.",
+            "depends_on": []
+          },
+          {
+            "part": "b",
+            "operation": "evaluate_gradient_at_parameter",
+            "prompt": "Find the gradient of C when t = -1.",
+            "depends_on": [
+              "a"
+            ],
+            "data": {
+              "parameter_value": {
+                "__type__": "sympy",
+                "expression": "-1"
+              }
+            }
+          }
+        ],
+        "part_count": 2,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parameter_condition_reasoning",
+          "depth": 0.0,
+          "architecture": null,
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parameter_condition_reasoning",
+        "required_rules": [
+          "power_rule"
+        ],
+        "multipart": true,
+        "part_count": 2,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": false
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "-8*t"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "-15*t**2 - 2"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "-(-15*t**2 - 2)/(8*t)"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "(15*t**2 + 2)/(8*t)"
+          },
+          "parameter_domain": {},
+          "undefined_parameter_values": [
+            {
+              "__type__": "sympy",
+              "expression": "0"
+            }
+          ]
+        },
+        "parts": {
+          "a": {
+            "dx_dt": {
+              "__type__": "sympy",
+              "expression": "-8*t"
+            },
+            "dy_dt": {
+              "__type__": "sympy",
+              "expression": "-15*t**2 - 2"
+            },
+            "dy_dx_unsimplified": {
+              "__type__": "sympy",
+              "expression": "-(-15*t**2 - 2)/(8*t)"
+            },
+            "dy_dx": {
+              "__type__": "sympy",
+              "expression": "(15*t**2 + 2)/(8*t)"
+            },
+            "undefined_parameter_values": [
+              {
+                "__type__": "sympy",
+                "expression": "0"
+              }
+            ]
+          },
+          "b": {
+            "parameter_value": {
+              "__type__": "sympy",
+              "expression": "-1"
+            },
+            "point": {
+              "__type__": "tuple",
+              "items": [
+                {
+                  "__type__": "sympy",
+                  "expression": "-8"
+                },
+                {
+                  "__type__": "sympy",
+                  "expression": "7"
+                }
+              ]
+            },
+            "gradient": {
+              "__type__": "sympy",
+              "expression": "-17/8"
+            }
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 5,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Differentiate the parametric equations.",
+                "working": "Differentiate both parametric equations.\ndx/dt = -8*t\ndy/dt = -15*t^2 - 2",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Obtains both parameter derivatives correctly.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Differentiate both parametric equations."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dx}{dt} = - 8 t"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dt} = - 15 t^{2} - 2"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the parametric derivative and simplify.",
+                "working": "dy/dx = (dy/dt)/(dx/dt) = (-15*t^2 - 2)/(-8*t)\nTherefore dy/dx = (15*t^2 + 2)/(8*t).",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses dy/dx = (dy/dt)/(dx/dt).",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct simplified derivative.",
+                    "depends_on": [
+                      "parametric_ratio"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "parametric_rate_ratio",
+                    "type": "foundation",
+                    "level": "intermediate",
+                    "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                  }
+                ],
+                "depends_on_steps": [
+                  1
+                ],
+                "answer_notes": [
+                  "Cancelling a factor simplifies the formula but does not restore parameter values where dx/dt was zero."
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx}$ = $\\frac{\\frac{dy}{dt}}{\\frac{dx}{dt}} = \\frac{- 15 t^{2} - 2}{\\left(-8\\right) t}$"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\frac{15 t^{2} + 2}{8 t}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "Cancelling a factor simplifies the formula but does not restore parameter values where $\\frac{dx}{dt}$ was zero."
+                      }
+                    ]
+                  ],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "dx_dt": {
+                "__type__": "sympy",
+                "expression": "-8*t"
+              },
+              "dy_dt": {
+                "__type__": "sympy",
+                "expression": "-15*t**2 - 2"
+              },
+              "dy_dx_unsimplified": {
+                "__type__": "sympy",
+                "expression": "(15*t**2 + 2)/(8*t)"
+              },
+              "dy_dx": {
+                "__type__": "sympy",
+                "expression": "(15*t**2 + 2)/(8*t)"
+              },
+              "undefined_parameter_values": [
+                {
+                  "__type__": "sympy",
+                  "expression": "0"
+                }
+              ]
+            }
+          },
+          {
+            "part": "b",
+            "operation": "evaluate_gradient_at_parameter",
+            "marks_available": 2,
+            "steps": [
+              {
+                "description": "Identify the point and substitute the parameter value.",
+                "working": "When t = -1, the point is (-8, 7).\ndy/dx = (15*t^2 + 2)/(8*t), so the gradient is -17/8.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Substitutes the correct parameter value into the derivative.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the exact gradient.",
+                    "depends_on": [],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "When $t = -1$, the point is $\\left( -8, \\  7\\right)$."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx} = \\frac{15 t^{2} + 2}{8 t}$, so the gradient is $- \\frac{17}{8}$."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "parameter_value": {
+                "__type__": "sympy",
+                "expression": "-1"
+              },
+              "point": {
+                "__type__": "tuple",
+                "items": [
+                  {
+                    "__type__": "sympy",
+                    "expression": "-8"
+                  },
+                  {
+                    "__type__": "sympy",
+                    "expression": "7"
+                  }
+                ]
+              },
+              "gradient": {
+                "__type__": "sympy",
+                "expression": "-17/8"
+              }
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "parametric_rate_ratio",
+              "type": "foundation",
+              "level": "intermediate",
+              "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "-4*t**2 - 4"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "-5*t**3 - 2*t"
+          },
+          "domain": {},
+          "object_kind": "parametric_curve",
+          "object_grammar": "polynomial",
+          "family": "parameter_condition_reasoning",
+          "architecture": "gradient_at_given_parameter",
+          "task_sequence": [
+            "derive_parametric_dy_dx",
+            "evaluate_gradient_at_parameter"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "derive_parametric_dy_dx",
+              "prompt": "Find an expression for dy/dx in terms of t.",
+              "depends_on": []
+            },
+            {
+              "part": "b",
+              "operation": "evaluate_gradient_at_parameter",
+              "prompt": "Find the gradient of C when t = -1.",
+              "depends_on": [
+                "a"
+              ],
+              "data": {
+                "parameter_value": {
+                  "__type__": "sympy",
+                  "expression": "-1"
+                }
+              }
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parameter_condition_reasoning",
+            "architecture": "gradient_at_given_parameter",
+            "depth_position": 0.1,
+            "object_kind": "parametric_curve",
+            "object_grammar": "polynomial",
+            "task_sequence": [
+              "derive_parametric_dy_dx",
+              "evaluate_gradient_at_parameter"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "derive_parametric_dy_dx",
+                "prompt": "Find an expression for dy/dx in terms of t.",
+                "depends_on": []
+              },
+              {
+                "part": "b",
+                "operation": "evaluate_gradient_at_parameter",
+                "prompt": "Find the gradient of C when t = -1.",
+                "depends_on": [
+                  "a"
+                ],
+                "data": {
+                  "parameter_value": {
+                    "__type__": "sympy",
+                    "expression": "-1"
+                  }
+                }
+              }
+            ],
+            "part_count": 2,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parameter_condition_reasoning",
+              "depth": 0.0,
+              "architecture": null,
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parameter_condition_reasoning",
+            "required_rules": [
+              "power_rule"
+            ],
+            "multipart": true,
+            "part_count": 2,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": false
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-15T10:05:41.894068+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit",
+            "at": "2026-09-15T08:59:23.424797+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T08:59:23.424791+00:00"
+            }
+          },
+          {
+            "event": "audit",
+            "at": "2026-09-15T09:21:30.589495+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T09:21:30.589490+00:00"
+            }
+          },
+          {
+            "event": "audit_changed",
+            "at": "2026-09-15T10:05:41.894084+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-15T10:05:41.894068+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Dx Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "- 8 t"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "- 15 t^{2} - 2"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx Unsimplified**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{2 + 15 t^{2}}{8 t}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{15 t^{2} + 2}{8 t}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Undefined Parameter Values**"
+            },
+            {
+              "type": "latex",
+              "content": "0"
+            }
+          ],
+          "b": [
+            {
+              "type": "latex",
+              "content": "-1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000004",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_3b35cb7bd1654f62",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-14T10:15:47.856613+00:00",
+        "generation_selection": {
+          "family": "parameter_condition_reasoning",
+          "requested_depth": 0.5,
+          "actual_depth": 0.48,
+          "architecture": "two_points_same_coordinate",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = 5*t^2 + 20*t + 17,    y = 5*t*(t^2 + 1).\n\nThere are two parameter values for which x = 2. Find the exact gradient of C at each corresponding point.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "latex",
+            "content": "x = 5 t^{2} + 20 t + 17,\\qquad y = 5 t \\left(t^{2} + 1\\right)"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "There are two parameter values for which $x = 2$. Find the exact gradient of C at each corresponding point."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parameter_condition_reasoning",
+        "architecture": "two_points_same_coordinate",
+        "depth_position": 0.48,
+        "object_kind": "parametric_curve",
+        "object_grammar": "two_coordinate_witnesses",
+        "task_sequence": [
+          "derive_parametric_dy_dx",
+          "gradients_at_coordinate"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "gradients_at_coordinate",
+            "prompt": "There are two parameter values for which x = 2. Find the exact gradient of C at each corresponding point.",
+            "depends_on": [],
+            "data": {
+              "axis": "x",
+              "coordinate_value": {
+                "__type__": "sympy",
+                "expression": "2"
+              }
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parameter_condition_reasoning",
+          "depth": 0.5,
+          "architecture": null,
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parameter_condition_reasoning",
+        "required_rules": [
+          "power_rule",
+          "solving_quadratics"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": false
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "10*t + 20"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "15*t**2 + 5"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "(15*t**2 + 5)/(10*t + 20)"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "(3*t**2 + 1)/(2*t + 4)"
+          },
+          "parameter_domain": {},
+          "undefined_parameter_values": [
+            {
+              "__type__": "sympy",
+              "expression": "-2"
+            }
+          ]
+        },
+        "parts": {
+          "a": {
+            "axis": "x",
+            "coordinate_value": {
+              "__type__": "sympy",
+              "expression": "2"
+            },
+            "solutions": [
+              {
+                "parameter_value": {
+                  "__type__": "sympy",
+                  "expression": "-3"
+                },
+                "point": {
+                  "__type__": "tuple",
+                  "items": [
+                    {
+                      "__type__": "sympy",
+                      "expression": "2"
+                    },
+                    {
+                      "__type__": "sympy",
+                      "expression": "-150"
+                    }
+                  ]
+                },
+                "gradient": {
+                  "__type__": "sympy",
+                  "expression": "-14"
+                }
+              },
+              {
+                "parameter_value": {
+                  "__type__": "sympy",
+                  "expression": "-1"
+                },
+                "point": {
+                  "__type__": "tuple",
+                  "items": [
+                    {
+                      "__type__": "sympy",
+                      "expression": "2"
+                    },
+                    {
+                      "__type__": "sympy",
+                      "expression": "-10"
+                    }
+                  ]
+                },
+                "gradient": {
+                  "__type__": "sympy",
+                  "expression": "2"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 4,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "gradients_at_coordinate",
+            "marks_available": 4,
+            "steps": [
+              {
+                "description": "Solve the coordinate condition for the parameter.",
+                "working": "Set 5*t^2 + 20*t + 17 = 2.\nHence t = -3, -1.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Forms and solves the coordinate equation.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains both parameter values.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "repeated_coordinate_parameter",
+                    "type": "interpretation",
+                    "level": "intermediate",
+                    "explanation": "The same x-coordinate can correspond to more than one parameter value, so each valid value must be checked."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Set $5 t^{2} + 20 t + 17 = 2$."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Hence"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "t = \\left( -3, \\  -1\\right)"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The same x-coordinate can correspond to more than one parameter value, so each valid value must be checked."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Evaluate the gradient at each parameter value.",
+                "working": "dy/dx = (3*t^2 + 1)/(2*(t + 2))\nAt t = -3, point = (2, -150) and dy/dx = -14.\nAt t = -1, point = (2, -10) and dy/dx = 2.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Evaluates the parametric derivative at both values.",
+                    "depends_on": [],
+                    "follow_through": true
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Gives both exact gradients at their corresponding points.",
+                    "depends_on": [],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\frac{3 t^{2} + 1}{2 \\left(t + 2\\right)}"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "At $t = -3$, point = $\\left( 2, \\  -150\\right)$ and $\\frac{dy}{dx} = -14$."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "At $t = -1$, point = $\\left( 2, \\  -10\\right)$ and $\\frac{dy}{dx} = 2$."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "axis": "x",
+              "coordinate_value": {
+                "__type__": "sympy",
+                "expression": "2"
+              },
+              "solutions": [
+                {
+                  "parameter_value": {
+                    "__type__": "sympy",
+                    "expression": "-3"
+                  },
+                  "point": {
+                    "__type__": "tuple",
+                    "items": [
+                      {
+                        "__type__": "sympy",
+                        "expression": "2"
+                      },
+                      {
+                        "__type__": "sympy",
+                        "expression": "-150"
+                      }
+                    ]
+                  },
+                  "gradient": {
+                    "__type__": "sympy",
+                    "expression": "-14"
+                  }
+                },
+                {
+                  "parameter_value": {
+                    "__type__": "sympy",
+                    "expression": "-1"
+                  },
+                  "point": {
+                    "__type__": "tuple",
+                    "items": [
+                      {
+                        "__type__": "sympy",
+                        "expression": "2"
+                      },
+                      {
+                        "__type__": "sympy",
+                        "expression": "-10"
+                      }
+                    ]
+                  },
+                  "gradient": {
+                    "__type__": "sympy",
+                    "expression": "2"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 1,
+              "concept_id": "repeated_coordinate_parameter",
+              "type": "interpretation",
+              "level": "intermediate",
+              "explanation": "The same x-coordinate can correspond to more than one parameter value, so each valid value must be checked."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "5*t**2 + 20*t + 17"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "5*t**3 + 5*t"
+          },
+          "domain": {},
+          "object_kind": "parametric_curve",
+          "object_grammar": "two_coordinate_witnesses",
+          "family": "parameter_condition_reasoning",
+          "architecture": "two_points_same_coordinate",
+          "task_sequence": [
+            "derive_parametric_dy_dx",
+            "gradients_at_coordinate"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "gradients_at_coordinate",
+              "prompt": "There are two parameter values for which x = 2. Find the exact gradient of C at each corresponding point.",
+              "depends_on": [],
+              "data": {
+                "axis": "x",
+                "coordinate_value": {
+                  "__type__": "sympy",
+                  "expression": "2"
+                }
+              }
+            }
+          ],
+          "coordinate_axis": "x",
+          "coordinate_value": {
+            "__type__": "sympy",
+            "expression": "2"
+          },
+          "witness_parameters": [
+            {
+              "__type__": "sympy",
+              "expression": "-3"
+            },
+            {
+              "__type__": "sympy",
+              "expression": "-1"
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parameter_condition_reasoning",
+            "architecture": "two_points_same_coordinate",
+            "depth_position": 0.48,
+            "object_kind": "parametric_curve",
+            "object_grammar": "two_coordinate_witnesses",
+            "task_sequence": [
+              "derive_parametric_dy_dx",
+              "gradients_at_coordinate"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "gradients_at_coordinate",
+                "prompt": "There are two parameter values for which x = 2. Find the exact gradient of C at each corresponding point.",
+                "depends_on": [],
+                "data": {
+                  "axis": "x",
+                  "coordinate_value": {
+                    "__type__": "sympy",
+                    "expression": "2"
+                  }
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parameter_condition_reasoning",
+              "depth": 0.5,
+              "architecture": null,
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parameter_condition_reasoning",
+            "required_rules": [
+              "power_rule",
+              "solving_quadratics"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": false
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-15T10:05:41.894578+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit",
+            "at": "2026-09-15T08:59:23.425133+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T08:59:23.425128+00:00"
+            }
+          },
+          {
+            "event": "audit",
+            "at": "2026-09-15T09:21:30.589869+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T09:21:30.589864+00:00"
+            }
+          },
+          {
+            "event": "audit_changed",
+            "at": "2026-09-15T10:05:41.894596+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-15T10:05:41.894578+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Axis**"
+            },
+            {
+              "type": "markdown",
+              "content": "x"
+            },
+            {
+              "type": "markdown",
+              "content": "**Coordinate Value**"
+            },
+            {
+              "type": "latex",
+              "content": "2"
+            },
+            {
+              "type": "markdown",
+              "content": "**Solutions**"
+            },
+            {
+              "type": "markdown",
+              "content": "**Parameter Value**"
+            },
+            {
+              "type": "latex",
+              "content": "-3"
+            },
+            {
+              "type": "markdown",
+              "content": "**Point**"
+            },
+            {
+              "type": "latex",
+              "content": "\\left( 2, \\  -150\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Gradient**"
+            },
+            {
+              "type": "latex",
+              "content": "-14"
+            },
+            {
+              "type": "markdown",
+              "content": "**Parameter Value**"
+            },
+            {
+              "type": "latex",
+              "content": "-1"
+            },
+            {
+              "type": "markdown",
+              "content": "**Point**"
+            },
+            {
+              "type": "latex",
+              "content": "\\left( 2, \\  -10\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Gradient**"
+            },
+            {
+              "type": "latex",
+              "content": "2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000005",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_5c6a24302b614492",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-14T10:15:47.856987+00:00",
+        "generation_selection": {
+          "family": "parameter_condition_reasoning",
+          "requested_depth": 1.0,
+          "actual_depth": 1.0,
+          "architecture": "solve_gradient_condition",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = t^2,    y = t*(t^2 - 2), where t != 0.\n\nFind the exact values of t for which dy/dx = -1/2.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "$x = t^{2},\\qquad y = t \\left(t^{2} - 2\\right)$, where t != 0."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Find the exact values of t for which $\\frac{dy}{dx} = - \\frac{1}{2}$."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parameter_condition_reasoning",
+        "architecture": "solve_gradient_condition",
+        "depth_position": 1.0,
+        "object_kind": "parametric_curve",
+        "object_grammar": "gradient_condition",
+        "task_sequence": [
+          "derive_parametric_dy_dx",
+          "solve_gradient_condition"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "solve_gradient_condition",
+            "prompt": "Find the exact values of t for which dy/dx = -1/2.",
+            "depends_on": [],
+            "data": {
+              "gradient_value": {
+                "__type__": "sympy",
+                "expression": "-1/2"
+              }
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parameter_condition_reasoning",
+          "depth": 1.0,
+          "architecture": null,
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parameter_condition_reasoning",
+        "required_rules": [
+          "power_rule",
+          "solving_quadratics"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": true
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "2*t"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "3*t**2 - 2"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "(3*t**2 - 2)/(2*t)"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "(3*t**2 - 2)/(2*t)"
+          },
+          "parameter_domain": {
+            "excluded": [
+              {
+                "__type__": "sympy",
+                "expression": "0"
+              }
+            ]
+          },
+          "undefined_parameter_values": []
+        },
+        "parts": {
+          "a": {
+            "gradient_value": {
+              "__type__": "sympy",
+              "expression": "-1/2"
+            },
+            "parameter_values": [
+              {
+                "__type__": "sympy",
+                "expression": "-1"
+              },
+              {
+                "__type__": "sympy",
+                "expression": "2/3"
+              }
+            ]
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 3,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "solve_gradient_condition",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Form the parametric derivative.",
+                "working": "dx/dt = 2*t,    dy/dt = 3*t^2 - 2\ndy/dx = (3*t^2 - 2)/(2*t).",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Forms dy/dx from the two parameter derivatives.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "parametric_rate_ratio",
+                    "type": "foundation",
+                    "level": "intermediate",
+                    "explanation": "Use dy/dx = (dy/dt)/(dx/dt), not dy/dt alone."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dx}{dt} = 2 t,\\qquad \\frac{dy}{dt} = 3 t^{2} - 2"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\frac{3 t^{2} - 2}{2 t}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "Use $\\frac{dy}{dx} = \\frac{\\frac{dy}{dt}}{\\frac{dx}{dt}}$, not $\\frac{dy}{dt}$ alone."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Apply the gradient condition and solve.",
+                "working": "Set (3*t^2 - 2)/(2*t) = -1/2.\nSolving gives t = -1, 2/3.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Equates dy/dx to the stated gradient and solves.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the complete exact solution set.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "answer_notes": [
+                  "Values for which dx/dt = 0 are excluded because dy/dx is not defined there."
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Set $\\frac{3 t^{2} - 2}{2 t} = - \\frac{1}{2}$."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Solving gives $t = \\left( -1, \\  \\frac{2}{3}\\right)$."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "Values for which $\\frac{dx}{dt} = 0$ are excluded because $\\frac{dy}{dx}$ is not defined there."
+                      }
+                    ]
+                  ],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "gradient_value": {
+                "__type__": "sympy",
+                "expression": "-1/2"
+              },
+              "parameter_values": [
+                {
+                  "__type__": "sympy",
+                  "expression": "-1"
+                },
+                {
+                  "__type__": "sympy",
+                  "expression": "2/3"
+                }
+              ]
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 1,
+              "concept_id": "parametric_rate_ratio",
+              "type": "foundation",
+              "level": "intermediate",
+              "explanation": "Use dy/dx = (dy/dt)/(dx/dt), not dy/dt alone."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "t**2"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "t**3 - 2*t"
+          },
+          "domain": {
+            "excluded": [
+              {
+                "__type__": "sympy",
+                "expression": "0"
+              }
+            ]
+          },
+          "object_kind": "parametric_curve",
+          "object_grammar": "gradient_condition",
+          "family": "parameter_condition_reasoning",
+          "architecture": "solve_gradient_condition",
+          "task_sequence": [
+            "derive_parametric_dy_dx",
+            "solve_gradient_condition"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "solve_gradient_condition",
+              "prompt": "Find the exact values of t for which dy/dx = -1/2.",
+              "depends_on": [],
+              "data": {
+                "gradient_value": {
+                  "__type__": "sympy",
+                  "expression": "-1/2"
+                }
+              }
+            }
+          ],
+          "gradient_value": {
+            "__type__": "sympy",
+            "expression": "-1/2"
+          },
+          "witness_parameter": {
+            "__type__": "sympy",
+            "expression": "-1"
+          }
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parameter_condition_reasoning",
+            "architecture": "solve_gradient_condition",
+            "depth_position": 1.0,
+            "object_kind": "parametric_curve",
+            "object_grammar": "gradient_condition",
+            "task_sequence": [
+              "derive_parametric_dy_dx",
+              "solve_gradient_condition"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "solve_gradient_condition",
+                "prompt": "Find the exact values of t for which dy/dx = -1/2.",
+                "depends_on": [],
+                "data": {
+                  "gradient_value": {
+                    "__type__": "sympy",
+                    "expression": "-1/2"
+                  }
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parameter_condition_reasoning",
+              "depth": 1.0,
+              "architecture": null,
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parameter_condition_reasoning",
+            "required_rules": [
+              "power_rule",
+              "solving_quadratics"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": true
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-15T10:05:41.895011+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit",
+            "at": "2026-09-15T08:59:23.425418+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T08:59:23.425413+00:00"
+            }
+          },
+          {
+            "event": "audit",
+            "at": "2026-09-15T09:21:30.590182+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T09:21:30.590178+00:00"
+            }
+          },
+          {
+            "event": "audit_changed",
+            "at": "2026-09-15T10:05:41.895026+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-15T10:05:41.895011+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Gradient Value**"
+            },
+            {
+              "type": "latex",
+              "content": "- \\frac{1}{2}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Parameter Values**"
+            },
+            {
+              "type": "latex",
+              "content": "-1"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{2}{3}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000006",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_e52b62f1fdc94831",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-14T10:16:20.338925+00:00",
+        "generation_selection": {
+          "family": "parametric_line_geometry",
+          "requested_depth": 0.0,
+          "actual_depth": 0.25,
+          "architecture": "tangent_at_parameter",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = -(2*t - 1)*(2*t + 1),    y = 5*t*(t - 1)*(t^2 + t + 1).\n\nFind an equation of the tangent to C at the point where t = -1.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "latex",
+            "content": "x = \\left(1 - 2 t\\right) \\left(2 t + 1\\right),\\qquad y = 5 t \\left(t - 1\\right) \\left(t^{2} + t + 1\\right)"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Find an equation of the tangent to C at the point where $t = -1$."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parametric_line_geometry",
+        "architecture": "tangent_at_parameter",
+        "depth_position": 0.25,
+        "object_kind": "parametric_curve",
+        "object_grammar": "polynomial",
+        "task_sequence": [
+          "derive_parametric_dy_dx",
+          "tangent_equation"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "tangent_equation",
+            "prompt": "Find an equation of the tangent to C at the point where t = -1.",
+            "depends_on": [],
+            "data": {
+              "parameter_value": {
+                "__type__": "sympy",
+                "expression": "-1"
+              },
+              "line_type": "tangent"
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parametric_line_geometry",
+          "depth": 0.0,
+          "architecture": null,
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parametric_line_geometry",
+        "required_rules": [
+          "power_rule"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": false
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "-8*t"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "20*t**3 - 5"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "-(20*t**3 - 5)/(8*t)"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "(5 - 20*t**3)/(8*t)"
+          },
+          "parameter_domain": {},
+          "undefined_parameter_values": [
+            {
+              "__type__": "sympy",
+              "expression": "0"
+            }
+          ]
+        },
+        "parts": {
+          "a": {
+            "parameter_value": {
+              "__type__": "sympy",
+              "expression": "-1"
+            },
+            "point": {
+              "__type__": "tuple",
+              "items": [
+                {
+                  "__type__": "sympy",
+                  "expression": "-3"
+                },
+                {
+                  "__type__": "sympy",
+                  "expression": "10"
+                }
+              ]
+            },
+            "tangent_gradient": {
+              "__type__": "sympy",
+              "expression": "-25/8"
+            },
+            "line_gradient": {
+              "__type__": "sympy",
+              "expression": "-25/8"
+            },
+            "line_type": "tangent",
+            "line": {
+              "__type__": "sympy",
+              "expression": "5/8 - 25*x/8"
+            }
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 4,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "tangent_equation",
+            "marks_available": 4,
+            "steps": [
+              {
+                "description": "Find the point and tangent gradient.",
+                "working": "At t = -1, the point is (-3, 10).\ndy/dx = -5*(4*t^3 - 1)/(8*t), so the tangent gradient is -25/8.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Finds the point and evaluates the tangent gradient.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct point and tangent gradient.",
+                    "depends_on": [],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "At $t = -1$, the point is $\\left( -3, \\  10\\right)$."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx} = - \\frac{5 \\left(4 t^{3} - 1\\right)}{8 t}$, so the tangent gradient is $- \\frac{25}{8}$."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the tangent equation.",
+                "working": "y - 10 = -25/8(x - -3)\nTherefore y = -5*(5*x - 1)/8.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the correct tangent gradient in point-gradient form.",
+                    "depends_on": [],
+                    "follow_through": true
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct line equation.",
+                    "depends_on": [],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "y - 10 = - \\frac{25 \\left(x - -3\\right)}{8}"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "y = - \\frac{5 \\left(5 x - 1\\right)}{8}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "parameter_value": {
+                "__type__": "sympy",
+                "expression": "-1"
+              },
+              "point": {
+                "__type__": "tuple",
+                "items": [
+                  {
+                    "__type__": "sympy",
+                    "expression": "-3"
+                  },
+                  {
+                    "__type__": "sympy",
+                    "expression": "10"
+                  }
+                ]
+              },
+              "tangent_gradient": {
+                "__type__": "sympy",
+                "expression": "-25/8"
+              },
+              "line_gradient": {
+                "__type__": "sympy",
+                "expression": "-25/8"
+              },
+              "line_type": "tangent",
+              "line": {
+                "__type__": "sympy",
+                "expression": "5/8 - 25*x/8"
+              }
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "1 - 4*t**2"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "5*t**4 - 5*t"
+          },
+          "domain": {},
+          "object_kind": "parametric_curve",
+          "object_grammar": "polynomial",
+          "family": "parametric_line_geometry",
+          "architecture": "tangent_at_parameter",
+          "task_sequence": [
+            "derive_parametric_dy_dx",
+            "tangent_equation"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "tangent_equation",
+              "prompt": "Find an equation of the tangent to C at the point where t = -1.",
+              "depends_on": [],
+              "data": {
+                "parameter_value": {
+                  "__type__": "sympy",
+                  "expression": "-1"
+                },
+                "line_type": "tangent"
+              }
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parametric_line_geometry",
+            "architecture": "tangent_at_parameter",
+            "depth_position": 0.25,
+            "object_kind": "parametric_curve",
+            "object_grammar": "polynomial",
+            "task_sequence": [
+              "derive_parametric_dy_dx",
+              "tangent_equation"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "tangent_equation",
+                "prompt": "Find an equation of the tangent to C at the point where t = -1.",
+                "depends_on": [],
+                "data": {
+                  "parameter_value": {
+                    "__type__": "sympy",
+                    "expression": "-1"
+                  },
+                  "line_type": "tangent"
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parametric_line_geometry",
+              "depth": 0.0,
+              "architecture": null,
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parametric_line_geometry",
+            "required_rules": [
+              "power_rule"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": false
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-15T10:05:41.895458+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit",
+            "at": "2026-09-15T08:59:23.425705+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T08:59:23.425700+00:00"
+            }
+          },
+          {
+            "event": "audit",
+            "at": "2026-09-15T09:21:30.590494+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T09:21:30.590490+00:00"
+            }
+          },
+          {
+            "event": "audit_changed",
+            "at": "2026-09-15T10:05:41.895472+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-15T10:05:41.895458+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "\\frac{5}{8} - \\frac{25 x}{8}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000007",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_dcc60f5d1bcc4ae8",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-14T10:16:20.339359+00:00",
+        "generation_selection": {
+          "family": "parametric_line_geometry",
+          "requested_depth": 0.5,
+          "actual_depth": 0.6,
+          "architecture": "normal_at_parameter",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = -2*t^2,    y = -2*t*(t^2 + 2).\n\nFind an equation of the normal to C at the point where t = 2.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "latex",
+            "content": "x = - 2 t^{2},\\qquad y = - 2 t \\left(t^{2} + 2\\right)"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Find an equation of the normal to C at the point where $t = 2$."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parametric_line_geometry",
+        "architecture": "normal_at_parameter",
+        "depth_position": 0.6,
+        "object_kind": "parametric_curve",
+        "object_grammar": "polynomial",
+        "task_sequence": [
+          "derive_parametric_dy_dx",
+          "normal_equation"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "normal_equation",
+            "prompt": "Find an equation of the normal to C at the point where t = 2.",
+            "depends_on": [],
+            "data": {
+              "parameter_value": {
+                "__type__": "sympy",
+                "expression": "2"
+              },
+              "line_type": "normal"
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parametric_line_geometry",
+          "depth": 0.5,
+          "architecture": null,
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parametric_line_geometry",
+        "required_rules": [
+          "power_rule"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": false
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "-4*t"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "-6*t**2 - 4"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "-(-6*t**2 - 4)/(4*t)"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "(3*t**2 + 2)/(2*t)"
+          },
+          "parameter_domain": {},
+          "undefined_parameter_values": [
+            {
+              "__type__": "sympy",
+              "expression": "0"
+            }
+          ]
+        },
+        "parts": {
+          "a": {
+            "parameter_value": {
+              "__type__": "sympy",
+              "expression": "2"
+            },
+            "point": {
+              "__type__": "tuple",
+              "items": [
+                {
+                  "__type__": "sympy",
+                  "expression": "-8"
+                },
+                {
+                  "__type__": "sympy",
+                  "expression": "-24"
+                }
+              ]
+            },
+            "tangent_gradient": {
+              "__type__": "sympy",
+              "expression": "7/2"
+            },
+            "line_gradient": {
+              "__type__": "sympy",
+              "expression": "-2/7"
+            },
+            "line_type": "normal",
+            "line": {
+              "__type__": "sympy",
+              "expression": "-2*x/7 - 184/7"
+            }
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 4,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "normal_equation",
+            "marks_available": 4,
+            "steps": [
+              {
+                "description": "Find the point and tangent gradient.",
+                "working": "At t = 2, the point is (-8, -24).\ndy/dx = (3*t^2 + 2)/(2*t), so the tangent gradient is 7/2.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Finds the point and evaluates the tangent gradient.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct point and tangent gradient.",
+                    "depends_on": [],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "At $t = 2$, the point is $\\left( -8, \\  -24\\right)$."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx} = \\frac{3 t^{2} + 2}{2 t}$, so the tangent gradient is $\\frac{7}{2}$."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the normal equation.",
+                "working": "The normal gradient is -1/(7/2) = -2/7.\ny - -24 = -2/7(x - -8)\nTherefore y = -2*(x + 92)/7.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the correct normal gradient in point-gradient form.",
+                    "depends_on": [],
+                    "follow_through": true
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct line equation.",
+                    "depends_on": [],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "normal_negative_reciprocal",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "A finite normal gradient is the negative reciprocal of the tangent gradient."
+                  }
+                ],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "The normal gradient is $- \\frac{1}{7 \\cdot \\frac{1}{2}} = - \\frac{2}{7}$."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "y - -24 = - \\frac{2 \\left(x - -8\\right)}{7}"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "y = - \\frac{2 \\left(x + 92\\right)}{7}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "A finite normal gradient is the negative reciprocal of the tangent gradient."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "parameter_value": {
+                "__type__": "sympy",
+                "expression": "2"
+              },
+              "point": {
+                "__type__": "tuple",
+                "items": [
+                  {
+                    "__type__": "sympy",
+                    "expression": "-8"
+                  },
+                  {
+                    "__type__": "sympy",
+                    "expression": "-24"
+                  }
+                ]
+              },
+              "tangent_gradient": {
+                "__type__": "sympy",
+                "expression": "7/2"
+              },
+              "line_gradient": {
+                "__type__": "sympy",
+                "expression": "-2/7"
+              },
+              "line_type": "normal",
+              "line": {
+                "__type__": "sympy",
+                "expression": "-2*x/7 - 184/7"
+              }
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "normal_negative_reciprocal",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "A finite normal gradient is the negative reciprocal of the tangent gradient."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "-2*t**2"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "-2*t**3 - 4*t"
+          },
+          "domain": {},
+          "object_kind": "parametric_curve",
+          "object_grammar": "polynomial",
+          "family": "parametric_line_geometry",
+          "architecture": "normal_at_parameter",
+          "task_sequence": [
+            "derive_parametric_dy_dx",
+            "normal_equation"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "normal_equation",
+              "prompt": "Find an equation of the normal to C at the point where t = 2.",
+              "depends_on": [],
+              "data": {
+                "parameter_value": {
+                  "__type__": "sympy",
+                  "expression": "2"
+                },
+                "line_type": "normal"
+              }
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parametric_line_geometry",
+            "architecture": "normal_at_parameter",
+            "depth_position": 0.6,
+            "object_kind": "parametric_curve",
+            "object_grammar": "polynomial",
+            "task_sequence": [
+              "derive_parametric_dy_dx",
+              "normal_equation"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "normal_equation",
+                "prompt": "Find an equation of the normal to C at the point where t = 2.",
+                "depends_on": [],
+                "data": {
+                  "parameter_value": {
+                    "__type__": "sympy",
+                    "expression": "2"
+                  },
+                  "line_type": "normal"
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parametric_line_geometry",
+              "depth": 0.5,
+              "architecture": null,
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parametric_line_geometry",
+            "required_rules": [
+              "power_rule"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": false
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-15T10:05:41.896062+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit",
+            "at": "2026-09-15T08:59:23.426014+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T08:59:23.426009+00:00"
+            }
+          },
+          {
+            "event": "audit",
+            "at": "2026-09-15T09:21:30.590896+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T09:21:30.590891+00:00"
+            }
+          },
+          {
+            "event": "audit_changed",
+            "at": "2026-09-15T10:05:41.896077+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-15T10:05:41.896062+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "- \\frac{2 x}{7} - \\frac{184}{7}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000008",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_fa0c21e5481d45e9",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-14T10:16:20.339766+00:00",
+        "generation_selection": {
+          "family": "parametric_line_geometry",
+          "requested_depth": 1.0,
+          "actual_depth": 1.0,
+          "architecture": "show_normal_line",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = 3*t^2 + 5,    y = 5*t*(t - 1).\n\nShow that the normal to C at the point where t = 2 has equation y = -2*(2*x - 59)/5.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "latex",
+            "content": "x = 3 t^{2} + 5,\\qquad y = 5 t \\left(t - 1\\right)"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Show that the normal to C at the point where $t = 2$ has equation $y = - \\frac{2 \\left(2 x - 59\\right)}{5}$."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parametric_line_geometry",
+        "architecture": "show_normal_line",
+        "depth_position": 1.0,
+        "object_kind": "parametric_curve",
+        "object_grammar": "normal_show_that",
+        "task_sequence": [
+          "derive_parametric_dy_dx",
+          "normal_equation"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "normal_equation",
+            "prompt": "Show that the normal to C at the point where t = 2 has equation y = -2*(2*x - 59)/5.",
+            "depends_on": [],
+            "data": {
+              "parameter_value": {
+                "__type__": "sympy",
+                "expression": "2"
+              },
+              "line_type": "normal",
+              "show_line": {
+                "__type__": "sympy",
+                "expression": "118/5 - 4*x/5"
+              }
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {
+          "show_that": true
+        },
+        "generation_spec": {
+          "family": "parametric_line_geometry",
+          "depth": 1.0,
+          "architecture": null,
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parametric_line_geometry",
+        "required_rules": [
+          "power_rule"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": false
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "6*t"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "10*t - 5"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "(10*t - 5)/(6*t)"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "(10*t - 5)/(6*t)"
+          },
+          "parameter_domain": {},
+          "undefined_parameter_values": [
+            {
+              "__type__": "sympy",
+              "expression": "0"
+            }
+          ]
+        },
+        "parts": {
+          "a": {
+            "parameter_value": {
+              "__type__": "sympy",
+              "expression": "2"
+            },
+            "point": {
+              "__type__": "tuple",
+              "items": [
+                {
+                  "__type__": "sympy",
+                  "expression": "17"
+                },
+                {
+                  "__type__": "sympy",
+                  "expression": "10"
+                }
+              ]
+            },
+            "tangent_gradient": {
+              "__type__": "sympy",
+              "expression": "5/4"
+            },
+            "line_gradient": {
+              "__type__": "sympy",
+              "expression": "-4/5"
+            },
+            "line_type": "normal",
+            "line": {
+              "__type__": "sympy",
+              "expression": "118/5 - 4*x/5"
+            }
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 4,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "normal_equation",
+            "marks_available": 4,
+            "steps": [
+              {
+                "description": "Find the point and tangent gradient.",
+                "working": "At t = 2, the point is (17, 10).\ndy/dx = 5*(2*t - 1)/(6*t), so the tangent gradient is 5/4.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Finds the point and evaluates the tangent gradient.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct point and tangent gradient.",
+                    "depends_on": [],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "At $t = 2$, the point is $\\left( 17, \\  10\\right)$."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx} = \\frac{5 \\left(2 t - 1\\right)}{6 t}$, so the tangent gradient is $\\frac{5}{4}$."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the normal equation.",
+                "working": "The normal gradient is -1/(5/4) = -4/5.\ny - 10 = -4/5(x - 17)\nTherefore y = -2*(2*x - 59)/5.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the correct normal gradient in point-gradient form.",
+                    "depends_on": [],
+                    "follow_through": true
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct line equation.",
+                    "depends_on": [],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "normal_negative_reciprocal",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "A finite normal gradient is the negative reciprocal of the tangent gradient."
+                  }
+                ],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "The normal gradient is $- \\frac{1}{5 \\cdot \\frac{1}{4}} = - \\frac{4}{5}$."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "y - 10 = - \\frac{4 \\left(x - 17\\right)}{5}"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "y = - \\frac{2 \\left(2 x - 59\\right)}{5}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "A finite normal gradient is the negative reciprocal of the tangent gradient."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "parameter_value": {
+                "__type__": "sympy",
+                "expression": "2"
+              },
+              "point": {
+                "__type__": "tuple",
+                "items": [
+                  {
+                    "__type__": "sympy",
+                    "expression": "17"
+                  },
+                  {
+                    "__type__": "sympy",
+                    "expression": "10"
+                  }
+                ]
+              },
+              "tangent_gradient": {
+                "__type__": "sympy",
+                "expression": "5/4"
+              },
+              "line_gradient": {
+                "__type__": "sympy",
+                "expression": "-4/5"
+              },
+              "line_type": "normal",
+              "line": {
+                "__type__": "sympy",
+                "expression": "118/5 - 4*x/5"
+              }
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "normal_negative_reciprocal",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "A finite normal gradient is the negative reciprocal of the tangent gradient."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "3*t**2 + 5"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "5*t**2 - 5*t"
+          },
+          "domain": {},
+          "object_kind": "parametric_curve",
+          "object_grammar": "normal_show_that",
+          "family": "parametric_line_geometry",
+          "architecture": "show_normal_line",
+          "task_sequence": [
+            "derive_parametric_dy_dx",
+            "normal_equation"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "normal_equation",
+              "prompt": "Show that the normal to C at the point where t = 2 has equation y = -2*(2*x - 59)/5.",
+              "depends_on": [],
+              "data": {
+                "parameter_value": {
+                  "__type__": "sympy",
+                  "expression": "2"
+                },
+                "line_type": "normal",
+                "show_line": {
+                  "__type__": "sympy",
+                  "expression": "118/5 - 4*x/5"
+                }
+              }
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parametric_line_geometry",
+            "architecture": "show_normal_line",
+            "depth_position": 1.0,
+            "object_kind": "parametric_curve",
+            "object_grammar": "normal_show_that",
+            "task_sequence": [
+              "derive_parametric_dy_dx",
+              "normal_equation"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "normal_equation",
+                "prompt": "Show that the normal to C at the point where t = 2 has equation y = -2*(2*x - 59)/5.",
+                "depends_on": [],
+                "data": {
+                  "parameter_value": {
+                    "__type__": "sympy",
+                    "expression": "2"
+                  },
+                  "line_type": "normal",
+                  "show_line": {
+                    "__type__": "sympy",
+                    "expression": "118/5 - 4*x/5"
+                  }
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {
+              "show_that": true
+            },
+            "generation_spec": {
+              "family": "parametric_line_geometry",
+              "depth": 1.0,
+              "architecture": null,
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parametric_line_geometry",
+            "required_rules": [
+              "power_rule"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": false
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-15T10:05:41.896521+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit",
+            "at": "2026-09-15T08:59:23.426464+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T08:59:23.426458+00:00"
+            }
+          },
+          {
+            "event": "audit",
+            "at": "2026-09-15T09:21:30.591227+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T09:21:30.591222+00:00"
+            }
+          },
+          {
+            "event": "audit_changed",
+            "at": "2026-09-15T10:05:41.896535+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-15T10:05:41.896521+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "latex",
+              "content": "\\frac{118}{5} - \\frac{4 x}{5}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000009",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_0e6d179dc80847bd",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-09-14T10:17:34.989509+00:00",
+        "generation_selection": {
+          "family": "reverse_parameter_reasoning",
+          "requested_depth": 0.0,
+          "actual_depth": 1.0,
+          "architecture": "point_gradient_determine_constants",
+          "validation_attempt": 1
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = a + t^2,    y = t*(b*t^2 + 1), where t > 0.\n\nThe curve passes through P(12, 30) and the gradient at P is 14/3. Find the value of t corresponding to P, and hence find a and b.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "$x = a + t^{2},\\qquad y = t \\left(b t^{2} + 1\\right)$, where $t > 0$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "The curve passes through P$\\left( 12, \\  30\\right)$ and the gradient at P is $\\frac{14}{3}$. Find the value of t corresponding to P, and hence find a and b."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "reverse_parameter_reasoning",
+        "architecture": "point_gradient_determine_constants",
+        "depth_position": 1.0,
+        "object_kind": "parametric_curve",
+        "object_grammar": "reverse_constants",
+        "task_sequence": [
+          "derive_parametric_dy_dx",
+          "solve_parameters"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "solve_parameters",
+            "prompt": "The curve passes through P(12, 30) and the gradient at P is 14/3. Find the value of t corresponding to P, and hence find a and b.",
+            "depends_on": [],
+            "data": {
+              "point": {
+                "__type__": "tuple",
+                "items": [
+                  {
+                    "__type__": "sympy",
+                    "expression": "12"
+                  },
+                  {
+                    "__type__": "sympy",
+                    "expression": "30"
+                  }
+                ]
+              },
+              "gradient_value": {
+                "__type__": "sympy",
+                "expression": "14/3"
+              }
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {
+          "show_that_derivative": true
+        },
+        "generation_spec": {
+          "family": "reverse_parameter_reasoning",
+          "depth": 0.0,
+          "architecture": null,
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "reverse_parameter_reasoning",
+        "required_rules": [
+          "power_rule",
+          "simultaneous_equations"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": true
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "2*t"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "3*b*t**2 + 1"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "(3*b*t**2 + 1)/(2*t)"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "(3*b*t**2 + 1)/(2*t)"
+          },
+          "parameter_domain": {
+            "lower": {
+              "__type__": "sympy",
+              "expression": "0"
+            }
+          },
+          "undefined_parameter_values": []
+        },
+        "parts": {
+          "a": {
+            "point": {
+              "__type__": "tuple",
+              "items": [
+                {
+                  "__type__": "sympy",
+                  "expression": "12"
+                },
+                {
+                  "__type__": "sympy",
+                  "expression": "30"
+                }
+              ]
+            },
+            "gradient_value": {
+              "__type__": "sympy",
+              "expression": "14/3"
+            },
+            "solution": {
+              "a": {
+                "__type__": "sympy",
+                "expression": "3"
+              },
+              "b": {
+                "__type__": "sympy",
+                "expression": "1"
+              },
+              "t": {
+                "__type__": "sympy",
+                "expression": "3"
+              }
+            }
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 6,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "solve_parameters",
+            "marks_available": 6,
+            "steps": [
+              {
+                "description": "Differentiate the parametric equations.",
+                "working": "dx/dt = 2*t\ndy/dt = 3*b*t^2 + 1\nHence dy/dx = (3*b*t^2 + 1)/(2*t).",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Forms the parameter-dependent expression for dy/dx.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct derivative expression.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "parametric_rate_ratio",
+                    "type": "foundation",
+                    "level": "intermediate",
+                    "explanation": "Both rates are evaluated at the same parameter value before their ratio is taken."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dx}{dt} = 2 t"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dt} = 3 b t^{2} + 1"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Hence"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\frac{3 b t^{2} + 1}{2 t}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "Both rates are evaluated at the same parameter value before their ratio is taken."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Use the point and gradient information to find t.",
+                "working": "At P(12, 30), x = 12, y = 30 and dy/dx = 14/3.\nSubstituting these conditions and eliminating a and b gives t = 3.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses both coordinate equations and the gradient condition.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the unique parameter value in the stated domain.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "At P$\\left( \\left( 12, \\  30\\right), \\  x\\right) = \\left( 12, \\  y\\right)$ = 30 and $\\frac{dy}{dx} = \\frac{14}{3}$."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Substituting these conditions and eliminating a and b gives $t = 3$."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Recover the constants.",
+                "working": "Substitute t = 3 into the coordinate equations.\nTherefore a = 3, b = 1.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Substitutes the recovered parameter into the point conditions.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains both constants.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  2
+                ],
+                "step": 3,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Substitute $t = 3$ into the coordinate equations."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "a = 3,\\qquad b = 1"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "point": {
+                "__type__": "tuple",
+                "items": [
+                  {
+                    "__type__": "sympy",
+                    "expression": "12"
+                  },
+                  {
+                    "__type__": "sympy",
+                    "expression": "30"
+                  }
+                ]
+              },
+              "gradient_value": {
+                "__type__": "sympy",
+                "expression": "14/3"
+              },
+              "solution": {
+                "a": {
+                  "__type__": "sympy",
+                  "expression": "3"
+                },
+                "b": {
+                  "__type__": "sympy",
+                  "expression": "1"
+                },
+                "t": {
+                  "__type__": "sympy",
+                  "expression": "3"
+                }
+              }
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 1,
+              "concept_id": "parametric_rate_ratio",
+              "type": "foundation",
+              "level": "intermediate",
+              "explanation": "Both rates are evaluated at the same parameter value before their ratio is taken."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "a + t**2"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "b*t**3 + t"
+          },
+          "domain": {
+            "lower": {
+              "__type__": "sympy",
+              "expression": "0"
+            }
+          },
+          "object_kind": "parametric_curve",
+          "object_grammar": "reverse_constants",
+          "family": "reverse_parameter_reasoning",
+          "architecture": "point_gradient_determine_constants",
+          "task_sequence": [
+            "derive_parametric_dy_dx",
+            "solve_parameters"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "solve_parameters",
+              "prompt": "The curve passes through P(12, 30) and the gradient at P is 14/3. Find the value of t corresponding to P, and hence find a and b.",
+              "depends_on": [],
+              "data": {
+                "point": {
+                  "__type__": "tuple",
+                  "items": [
+                    {
+                      "__type__": "sympy",
+                      "expression": "12"
+                    },
+                    {
+                      "__type__": "sympy",
+                      "expression": "30"
+                    }
+                  ]
+                },
+                "gradient_value": {
+                  "__type__": "sympy",
+                  "expression": "14/3"
+                }
+              }
+            }
+          ],
+          "unknown_parameters": [
+            {
+              "__type__": "sympy",
+              "expression": "a"
+            },
+            {
+              "__type__": "sympy",
+              "expression": "b"
+            }
+          ],
+          "witness_parameter": {
+            "__type__": "sympy",
+            "expression": "3"
+          },
+          "parameter_values": {
+            "a": {
+              "__type__": "sympy",
+              "expression": "3"
+            },
+            "b": {
+              "__type__": "sympy",
+              "expression": "1"
+            }
+          },
+          "point": {
+            "__type__": "tuple",
+            "items": [
+              {
+                "__type__": "sympy",
+                "expression": "12"
+              },
+              {
+                "__type__": "sympy",
+                "expression": "30"
+              }
+            ]
+          },
+          "gradient_value": {
+            "__type__": "sympy",
+            "expression": "14/3"
+          }
+        },
+        "full_structure": {
+          "generative": {
+            "family": "reverse_parameter_reasoning",
+            "architecture": "point_gradient_determine_constants",
+            "depth_position": 1.0,
+            "object_kind": "parametric_curve",
+            "object_grammar": "reverse_constants",
+            "task_sequence": [
+              "derive_parametric_dy_dx",
+              "solve_parameters"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "solve_parameters",
+                "prompt": "The curve passes through P(12, 30) and the gradient at P is 14/3. Find the value of t corresponding to P, and hence find a and b.",
+                "depends_on": [],
+                "data": {
+                  "point": {
+                    "__type__": "tuple",
+                    "items": [
+                      {
+                        "__type__": "sympy",
+                        "expression": "12"
+                      },
+                      {
+                        "__type__": "sympy",
+                        "expression": "30"
+                      }
+                    ]
+                  },
+                  "gradient_value": {
+                    "__type__": "sympy",
+                    "expression": "14/3"
+                  }
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {
+              "show_that_derivative": true
+            },
+            "generation_spec": {
+              "family": "reverse_parameter_reasoning",
+              "depth": 0.0,
+              "architecture": null,
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "reverse_parameter_reasoning",
+            "required_rules": [
+              "power_rule",
+              "simultaneous_equations"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": true
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "figure": {
+        "schema_version": 2,
+        "engine_version": "figure_system_v5_specialists",
+        "need": {
+          "level": "none",
+          "figure_type": null,
+          "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+          "confidence": "medium",
+          "source": "specialist_classifier_v2",
+          "updated_at": "2026-09-15T10:05:41.897032+00:00"
+        },
+        "spec": null,
+        "render": {
+          "status": "not_attempted",
+          "renderer": null,
+          "relative_path": null,
+          "generated_at": null,
+          "error": null,
+          "svg": null,
+          "signature": null
+        },
+        "review": {
+          "status": "unreviewed",
+          "notes": [],
+          "updated_at": null,
+          "render_signature": null
+        },
+        "history": [
+          {
+            "event": "audit",
+            "at": "2026-09-15T08:59:23.426843+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T08:59:23.426838+00:00"
+            }
+          },
+          {
+            "event": "audit",
+            "at": "2026-09-15T09:21:30.591626+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected in this conservative first-pass audit.",
+              "confidence": "medium",
+              "source": "heuristic_v1",
+              "updated_at": "2026-09-15T09:21:30.591621+00:00"
+            }
+          },
+          {
+            "event": "audit_changed",
+            "at": "2026-09-15T10:05:41.897045+00:00",
+            "need": {
+              "level": "none",
+              "figure_type": null,
+              "reason": "No clear figure requirement was detected by the conservative specialist classifier.",
+              "confidence": "medium",
+              "source": "specialist_classifier_v2",
+              "updated_at": "2026-09-15T10:05:41.897032+00:00"
+            }
+          }
+        ]
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Point**"
+            },
+            {
+              "type": "latex",
+              "content": "\\left( 12, \\  30\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Gradient Value**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{14}{3}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Solution**"
+            },
+            {
+              "type": "markdown",
+              "content": "**A**"
+            },
+            {
+              "type": "latex",
+              "content": "3"
+            },
+            {
+              "type": "markdown",
+              "content": "**B**"
+            },
+            {
+              "type": "latex",
+              "content": "1"
+            },
+            {
+              "type": "markdown",
+              "content": "**T**"
+            },
+            {
+              "type": "latex",
+              "content": "3"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
