@@ -165,7 +165,6 @@ function FullSolutionView({q}:{q:any}) {
 }
 
 function AskDojo({q}:{q:any}) {
-  const [open,setOpen]=useState(false);
   const [messages,setMessages]=useState<Message[]>([]);
   const [input,setInput]=useState('');
   const [busy,setBusy]=useState(false);
@@ -183,7 +182,10 @@ function AskDojo({q}:{q:any}) {
     const prompt=input.trim();
     if(!prompt||busy) return;
 
-    const next=[...messages,{role:'user' as const,content:prompt}];
+    const next=[
+      ...messages,
+      {role:'user' as const,content:prompt}
+    ];
 
     setMessages(next);
     setInput('');
@@ -195,7 +197,9 @@ function AskDojo({q}:{q:any}) {
         (process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:8000') + '/ask-dojo',
         {
           method:'POST',
-          headers:{'Content-Type':'application/json'},
+          headers:{
+            'Content-Type':'application/json'
+          },
           body:JSON.stringify({
             question_id:q.id,
             messages:next
@@ -206,59 +210,79 @@ function AskDojo({q}:{q:any}) {
       const data=await r.json();
 
       if(!r.ok) {
-        throw new Error(data.detail||'Ask DOJO could not respond.');
+        throw new Error(
+          data.detail || 'Ask DOJO could not respond.'
+        );
       }
 
       setMessages([
         ...next,
-        {role:'assistant',content:data.text}
+        {
+          role:'assistant',
+          content:data.text
+        }
       ]);
+
     } catch(err:any) {
-      setError(err.message||'Ask DOJO could not respond.');
+      setError(
+        err.message || 'Ask DOJO could not respond.'
+      );
     } finally {
       setBusy(false);
     }
   }
 
   return (
-    <div className={'dojoChat '+(open?'open':'')}>
-      <button className="dojoChatToggle" onClick={()=>setOpen(!open)}>
-        <span>
-          <b>Ask DOJO</b>
-          <small>Ask about this question</small>
-        </span>
-        <span>{open?'×':'↑'}</span>
-      </button>
+    <div className="dojoChat open">
+      <div className="dojoChatBody">
 
-      {open && (
-        <div className="dojoChatBody">
-          <div className="dojoMessages">
-            {!messages.length && (
-              <p>
-                Ask for a hint, an explanation of a step, or why something works.
-              </p>
-            )}
+        <div className="dojoMessages">
 
-            {messages.map((m,i)=>
-              <div className={'dojoMessage '+m.role} key={i}>
-                <MathText text={m.content}/>
-              </div>
-            )}
+          {!messages.length && (
+            <p>
+              Ask for a hint, an explanation of a step,
+              or anything about this question.
+            </p>
+          )}
 
-            {busy && <div className="dojoMessage assistant">Thinking…</div>}
-            {error && <div className="dojoChatError">{error}</div>}
-          </div>
+          {messages.map((m,i)=>(
+            <div
+              className={'dojoMessage '+m.role}
+              key={i}
+            >
+              <MathText text={m.content}/>
+            </div>
+          ))}
 
-          <form onSubmit={send}>
-            <input
-              value={input}
-              onChange={e=>setInput(e.target.value)}
-              placeholder="Ask DOJO about this question…"
-            />
-            <button disabled={busy||!input.trim()}>Send</button>
-          </form>
+          {busy && (
+            <div className="dojoMessage assistant">
+              Thinking…
+            </div>
+          )}
+
+          {error && (
+            <div className="dojoChatError">
+              {error}
+            </div>
+          )}
+
         </div>
-      )}
+
+        <form onSubmit={send}>
+          <input
+            value={input}
+            onChange={e=>setInput(e.target.value)}
+            placeholder="Ask DOJO about this question…"
+          />
+
+          <button
+            disabled={busy||!input.trim()}
+          >
+            Send
+          </button>
+        </form>
+
+      </div>
     </div>
   );
 }
