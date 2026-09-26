@@ -1,5 +1,6 @@
 'use client';
 
+
 import CoverageSnapshot from './CoverageSnapshot';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
@@ -8,25 +9,74 @@ import { supabase } from '../lib/supabase';
 type Tab = 'recent' | 'exams' | 'practice';
 type Area = 'All' | 'Pure' | 'Statistics' | 'Mechanics';
 
+type WorkQuestion = {
+  question_id: string;
+  position: number;
+  marks_awarded: number | null;
+  marks_available: number | null;
+  marked_at: string | null;
+};
+
 type WorkItem = {
   id: string;
   title: string;
   kind: string;
   status: 'in_progress' | 'completed' | 'marking' | 'marked';
   created_at: string;
-  work_questions?: { question_id: string }[];
+  completed_at: string | null;
+  marked_at: string | null;
+  work_questions?: WorkQuestion[];
 };
 
 const exams = [
-  { title: 'DOJO A-level Pure', area: 'Pure', date: '21 Sep', score: 68, total: 80, source: 'DOJO generated' },
-  { title: 'Edexcel 2022 Paper 1', area: 'Pure', date: '18 Sep', score: 61, total: 100, source: 'Past paper' },
-  { title: 'Edexcel 2021 Paper 2', area: 'Pure', date: '12 Sep', score: 72, total: 100, source: 'Past paper' },
+  {
+    title: 'DOJO A-level Pure',
+    area: 'Pure',
+    date: '21 Sep',
+    score: 68,
+    total: 80,
+    source: 'DOJO generated',
+  },
+  {
+    title: 'Edexcel 2022 Paper 1',
+    area: 'Pure',
+    date: '18 Sep',
+    score: 61,
+    total: 100,
+    source: 'Past paper',
+  },
+  {
+    title: 'Edexcel 2021 Paper 2',
+    area: 'Pure',
+    date: '12 Sep',
+    score: 72,
+    total: 100,
+    source: 'Past paper',
+  },
 ];
 
 const practice = [
-  { topic: 'Integration', area: 'Pure', last: 'Yesterday', sessions: 8, wrong: 7 },
-  { topic: 'Trigonometry', area: 'Pure', last: '17 Sep', sessions: 5, wrong: 4 },
-  { topic: 'Differentiation', area: 'Pure', last: '14 Sep', sessions: 4, wrong: 2 },
+  {
+    topic: 'Integration',
+    area: 'Pure',
+    last: 'Yesterday',
+    sessions: 8,
+    wrong: 7,
+  },
+  {
+    topic: 'Trigonometry',
+    area: 'Pure',
+    last: '17 Sep',
+    sessions: 5,
+    wrong: 4,
+  },
+  {
+    topic: 'Differentiation',
+    area: 'Pure',
+    last: '14 Sep',
+    sessions: 4,
+    wrong: 2,
+  },
 ];
 
 function statusLabel(status: WorkItem['status']) {
@@ -46,7 +96,9 @@ function dateLabel(value: string) {
   const date = new Date(value);
   const now = new Date();
 
-  if (date.toDateString() === now.toDateString()) return 'Today';
+  if (date.toDateString() === now.toDateString()) {
+    return 'Today';
+  }
 
   return date.toLocaleDateString('en-GB', {
     day: 'numeric',
@@ -78,8 +130,14 @@ export default function MyWorkPage() {
           kind,
           status,
           created_at,
+          completed_at,
+          marked_at,
           work_questions (
-            question_id
+            question_id,
+            position,
+            marks_awarded,
+            marks_available,
+            marked_at
           )
         `)
         .order('created_at', { ascending: false })
@@ -108,12 +166,17 @@ export default function MyWorkPage() {
       <CoverageSnapshot />
 
       <div className="page-kicker">A-level Mathematics</div>
+
       <h1>My Work</h1>
+
       <p className="page-intro">
         Your work, results and anything you need to come back to.
       </p>
 
-      <nav className="work-tabs" aria-label="My Work sections">
+      <nav
+        className="work-tabs"
+        aria-label="My Work sections"
+      >
         <button
           className={tab === 'recent' ? 'active' : ''}
           onClick={() => setTab('recent')}
@@ -141,15 +204,19 @@ export default function MyWorkPage() {
           <div className="work-heading">
             <div>
               <h2>Recent</h2>
+
               <p>
-                Pick up where you left off or return to something you've finished.
+                Pick up where you left off or return to something you've
+                finished.
               </p>
             </div>
           </div>
 
           <div className="work-list">
             {loadingRecent && (
-              <p className="empty-history">Loading your work...</p>
+              <p className="empty-history">
+                Loading your work...
+              </p>
             )}
 
             {!loadingRecent && recent.length === 0 && (
@@ -158,37 +225,86 @@ export default function MyWorkPage() {
               </p>
             )}
 
-            {!loadingRecent && recent.map(item => {
-              const questionCount = item.work_questions?.length ?? 0;
-              const isExam = item.kind === 'exam';
+            {!loadingRecent &&
+              recent.map(item => {
+                const questions = [
+                  ...(item.work_questions ?? []),
+                ].sort(
+                  (a, b) => a.position - b.position
+                );
 
-              return (
-                <article className="work-row" key={item.id}>
-                  <div
-                    className={`work-type-dot ${isExam ? 'exam' : 'practice'}`}
-                  />
+                const questionCount = questions.length;
+                const isExam = item.kind === 'exam';
 
-                  <div className="work-main">
-                    <strong>{item.title}</strong>
-                    <span>
-                      {isExam ? 'Exam' : 'Practice'}
-                      {questionCount > 0
-                        ? ` · ${questionCount} questions`
-                        : ''}
-                    </span>
-                  </div>
+                const awarded = questions.reduce(
+                  (total, question) =>
+                    total + (question.marks_awarded ?? 0),
+                  0
+                );
 
-                  <div className="work-status">
-                    <strong>{statusLabel(item.status)}</strong>
-                    <span>{dateLabel(item.created_at)}</span>
-                  </div>
+                const available = questions.reduce(
+                  (total, question) =>
+                    total + (question.marks_available ?? 0),
+                  0
+                );
 
-                  <Link href={`/practice?work=${encodeURIComponent(item.id)}`}>
-                    {actionLabel(item.status)}
-                  </Link>
-                </article>
-              );
-            })}
+                const hasResult =
+                  item.status === 'marked' &&
+                  questions.some(
+                    question =>
+                      question.marks_available !== null
+                  );
+
+                return (
+                  <article
+                    className="work-row"
+                    key={item.id}
+                  >
+                    <div
+                      className={`work-type-dot ${
+                        isExam ? 'exam' : 'practice'
+                      }`}
+                    />
+
+                    <div className="work-main">
+                      <strong>{item.title}</strong>
+
+                      <span>
+                        {isExam ? 'Exam' : 'Practice'}
+
+                        {questionCount > 0
+                          ? ` · ${questionCount} questions`
+                          : ''}
+                      </span>
+                    </div>
+
+                    <div className="work-status">
+                      <strong>
+                        {hasResult
+                          ? `${awarded}/${available} marks`
+                          : statusLabel(item.status)}
+                      </strong>
+
+                      <span>
+                        {hasResult
+                          ? `Marked · ${dateLabel(
+                              item.marked_at ??
+                                item.created_at
+                            )}`
+                          : dateLabel(item.created_at)}
+                      </span>
+                    </div>
+
+                    <Link
+                      href={`/practice?work=${encodeURIComponent(
+                        item.id
+                      )}`}
+                    >
+                      {actionLabel(item.status)}
+                    </Link>
+                  </article>
+                );
+              })}
           </div>
         </section>
       )}
@@ -198,17 +314,27 @@ export default function MyWorkPage() {
           <div className="work-heading">
             <div>
               <h2>Exams</h2>
+
               <p>
-                Exam-condition papers are kept separately so you can track
-                assessment results over time.
+                Exam-condition papers are kept separately so you can
+                track assessment results over time.
               </p>
             </div>
 
-            <Link href="/papers">Sit another paper →</Link>
+            <Link href="/papers">
+              Sit another paper →
+            </Link>
           </div>
 
           <div className="work-filter-row">
-            {(['All', 'Pure', 'Statistics', 'Mechanics'] as Area[]).map(x => (
+            {(
+              [
+                'All',
+                'Pure',
+                'Statistics',
+                'Mechanics',
+              ] as Area[]
+            ).map(x => (
               <button
                 key={x}
                 className={area === x ? 'active' : ''}
@@ -221,12 +347,18 @@ export default function MyWorkPage() {
 
           <div className="exam-summary">
             <div>
-              <span className="summary-label">Completed exams</span>
+              <span className="summary-label">
+                Completed exams
+              </span>
+
               <strong>{filteredExams.length}</strong>
             </div>
 
             <div>
-              <span className="summary-label">Latest result</span>
+              <span className="summary-label">
+                Latest result
+              </span>
+
               <strong>
                 {filteredExams.length
                   ? `${filteredExams[0].score}/${filteredExams[0].total}`
@@ -240,21 +372,36 @@ export default function MyWorkPage() {
 
             {filteredExams.length ? (
               <div className="score-bars">
-                {[...filteredExams].reverse().map((x, i) => {
-                  const pct = Math.round((x.score / x.total) * 100);
+                {[...filteredExams]
+                  .reverse()
+                  .map((x, i) => {
+                    const pct = Math.round(
+                      (x.score / x.total) * 100
+                    );
 
-                  return (
-                    <div className="score-column" key={i}>
-                      <div className="score-number">{pct}%</div>
+                    return (
+                      <div
+                        className="score-column"
+                        key={i}
+                      >
+                        <div className="score-number">
+                          {pct}%
+                        </div>
 
-                      <div className="score-track">
-                        <div style={{ height: `${pct}%` }} />
+                        <div className="score-track">
+                          <div
+                            style={{
+                              height: `${pct}%`,
+                            }}
+                          />
+                        </div>
+
+                        <div className="score-date">
+                          {x.date}
+                        </div>
                       </div>
-
-                      <div className="score-date">{x.date}</div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
             ) : (
               <p className="empty-history">
@@ -265,10 +412,16 @@ export default function MyWorkPage() {
 
           <div className="work-list exam-list">
             {filteredExams.map((x, i) => (
-              <article className="work-row" key={i}>
+              <article
+                className="work-row"
+                key={i}
+              >
                 <div className="work-main">
                   <strong>{x.title}</strong>
-                  <span>{x.source} · {x.area}</span>
+
+                  <span>
+                    {x.source} · {x.area}
+                  </span>
                 </div>
 
                 <div className="exam-score">
@@ -285,8 +438,9 @@ export default function MyWorkPage() {
           </div>
 
           <p className="quiet-note">
-            Generated papers and official past papers remain identifiable rather
-            than being treated as automatically equivalent assessments.
+            Generated papers and official past papers remain
+            identifiable rather than being treated as automatically
+            equivalent assessments.
           </p>
         </section>
       )}
@@ -296,17 +450,27 @@ export default function MyWorkPage() {
           <div className="work-heading">
             <div>
               <h2>Practice</h2>
+
               <p>
-                A record of what you've worked on, without turning everyday
-                practice into a grade.
+                A record of what you've worked on, without turning
+                everyday practice into a grade.
               </p>
             </div>
 
-            <Link href="/topics">Go to Topics →</Link>
+            <Link href="/topics">
+              Go to Topics →
+            </Link>
           </div>
 
           <div className="work-filter-row">
-            {(['All', 'Pure', 'Statistics', 'Mechanics'] as Area[]).map(x => (
+            {(
+              [
+                'All',
+                'Pure',
+                'Statistics',
+                'Mechanics',
+              ] as Area[]
+            ).map(x => (
               <button
                 key={x}
                 className={area === x ? 'active' : ''}
@@ -319,19 +483,32 @@ export default function MyWorkPage() {
 
           <div className="practice-grid">
             {practice
-              .filter(x => area === 'All' || x.area === area)
+              .filter(
+                x =>
+                  area === 'All' ||
+                  x.area === area
+              )
               .map((x, i) => (
-                <article className="practice-card" key={i}>
+                <article
+                  className="practice-card"
+                  key={i}
+                >
                   <div>
-                    <span className="practice-area">{x.area}</span>
+                    <span className="practice-area">
+                      {x.area}
+                    </span>
+
                     <h3>{x.topic}</h3>
+
                     <p>
-                      Last practised {x.last} · {x.sessions} sessions
+                      Last practised {x.last} ·{' '}
+                      {x.sessions} sessions
                     </p>
                   </div>
 
                   <div className="practice-wrong">
-                    {x.wrong} previously wrong questions
+                    {x.wrong} previously wrong
+                    questions
                   </div>
 
                   <div className="practice-actions">
@@ -343,13 +520,19 @@ export default function MyWorkPage() {
                       Practise {x.topic}
                     </Link>
 
-                    <button>View history</button>
+                    <button>
+                      View history
+                    </button>
                   </div>
                 </article>
               ))}
           </div>
 
-          {practice.filter(x => area === 'All' || x.area === area).length === 0 && (
+          {practice.filter(
+            x =>
+              area === 'All' ||
+              x.area === area
+          ).length === 0 && (
             <p className="empty-history">
               No practice history in this area yet.
             </p>

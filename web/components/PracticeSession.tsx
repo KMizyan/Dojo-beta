@@ -1,7 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import {createWorkItem, updateWorkProgress} from '../lib/work';
+import {
+  createWorkItem,
+  updateWorkProgress,
+  saveQuestionMark,
+  completeWorkItem,
+  beginMarkingWorkItem,
+  finishMarkingWorkItem
+} from '../lib/work';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
@@ -480,17 +487,31 @@ export default function PracticeSession({
     }
   };
 
-  const setMark=(v:number)=>
-    setMarks({
-      ...marks,
-      [q.id]:Math.max(
-        0,
-        Math.min(
-          max,
-          Number.isFinite(v)?v:0
-        )
-      )
-    });
+ const setMark=(v:number)=>{
+  const awardedMark=Math.max(
+    0,
+    Math.min(
+      max,
+      Number.isFinite(v)?v:0
+    )
+  );
+
+  setMarks({
+    ...marks,
+    [q.id]:awardedMark
+  });
+
+  if(workId){
+    saveQuestionMark({
+      workId,
+      questionId:q.id,
+      marksAwarded:awardedMark,
+      marksAvailable:max
+    }).catch(err=>
+      console.error('Could not save question mark',err)
+    );
+  }
+};
 
   if(stage==='results') {
     return (
@@ -507,7 +528,7 @@ export default function PracticeSession({
         </div>
 
         <p>
-          Your question-by-question marks have been saved on this device.
+          Your question-by-question marks have been saved to My Work.
         </p>
 
         <div className="resultQuestions">
@@ -583,7 +604,7 @@ export default function PracticeSession({
         </div>
       </header>
 
-      <div className="questionWorkspace">
+           <div className="questionWorkspace">
         <div className="questionColumn">
           <div className="questionPaper edexcelPaper">
             <div className="paperQuestionNumber">
@@ -607,6 +628,96 @@ export default function PracticeSession({
                 setTab={setTab}
               />
             )}
+
+          {stage !== 'doing' && (
+            <div
+              style={{
+                marginTop:'14px',
+                padding:'18px 20px',
+                border:'1px solid #d9d9d9',
+                background:'#fff',
+                display:'flex',
+                alignItems:'center',
+                justifyContent:'space-between',
+                gap:'20px'
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize:'11px',
+                    color:'#777',
+                    marginBottom:'4px'
+                  }}
+                >
+                  YOUR MARK
+                </div>
+
+                <strong style={{fontSize:'18px'}}>
+                  {marks[q.id] ?? 0} / {max}
+                </strong>
+              </div>
+
+              <div
+                style={{
+                  display:'flex',
+                  alignItems:'center',
+                  gap:'8px'
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={()=>setMark((marks[q.id] ?? 0)-1)}
+                  disabled={(marks[q.id] ?? 0)<=0}
+                  style={{
+                    width:'38px',
+                    height:'38px',
+                    border:'1px solid #ccc',
+                    background:'#fff',
+                    borderRadius:'6px',
+                    fontSize:'20px',
+                    cursor:'pointer'
+                  }}
+                >
+                  −
+                </button>
+
+                <input
+                  type="number"
+                  min={0}
+                  max={max}
+                  value={marks[q.id] ?? 0}
+                  onChange={e=>setMark(Number(e.target.value))}
+                  style={{
+                    width:'64px',
+                    height:'38px',
+                    textAlign:'center',
+                    border:'1px solid #ccc',
+                    borderRadius:'6px',
+                    font:'inherit',
+                    fontWeight:700
+                  }}
+                />
+
+                <button
+                  type="button"
+                  onClick={()=>setMark((marks[q.id] ?? 0)+1)}
+                  disabled={(marks[q.id] ?? 0)>=max}
+                  style={{
+                    width:'38px',
+                    height:'38px',
+                    border:'1px solid #ccc',
+                    background:'#fff',
+                    borderRadius:'6px',
+                    fontSize:'20px',
+                    cursor:'pointer'
+                  }}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {options.askDojo && mode==='practice' && (
@@ -644,48 +755,81 @@ export default function PracticeSession({
           )}
         </div>
 
-        {stage==='doing'
-          ? (
-            index<questions.length-1
-              ? (
-                <button
-                  className="primarySessionButton"
-                  onClick={()=>move(index+1)}
-                >
-                  Next →
-                </button>
-              )
-              : (
-                <button
-                  className="primarySessionButton"
-                  onClick={()=>{
-                    move(0);
-                    setStage('marking');
-                  }}
-                >
-                  Finish & mark
-                </button>
-              )
+        {stage==='doing' ? (
+          index < questions.length-1 ? (
+            <button
+              className="primarySessionButton"
+              onClick={()=>move(index+1)}
+            >
+              Next →
+            </button>
+          ) : (
+            <button
+              className="primarySessionButton"
+              onClick={()=>{
+                move(0);
+                setStage('marking');
+
+                if(workId){
+                  completeWorkItem(workId)
+                    .then(()=>beginMarkingWorkItem(workId))
+                    .catch(err=>
+                      console.error('Could not begin marking',err)
+                    );
+                }
+              }}
+            >
+              Finish & mark
+            </button>
           )
-          : (
-            index<questions.length-1
-              ? (
-                <button
-                  className="primarySessionButton"
-                  onClick={()=>move(index+1)}
-                >
-                  Save mark & next →
-                </button>
-              )
-              : (
-                <button
-                  className="primarySessionButton"
-                  onClick={()=>setStage('results')}
-                >
-                  Finish marking
-                </button>
-              )
-          )}
+        ) : (
+          index < questions.length-1 ? (
+            <button
+              className="primarySessionButton"
+              onClick={()=>{
+                const currentMark = marks[q.id] ?? 0;
+
+                if(workId){
+                  saveQuestionMark({
+                    workId,
+                    questionId:q.id,
+                    marksAwarded:currentMark,
+                    marksAvailable:max
+                  }).catch(err=>
+                    console.error('Could not save question mark',err)
+                  );
+                }
+
+                move(index+1);
+              }}
+            >
+              Save mark & next →
+            </button>
+          ) : (
+            <button
+              className="primarySessionButton"
+              onClick={()=>{
+                const currentMark = marks[q.id] ?? 0;
+                setStage('results');
+
+                if(workId){
+                  saveQuestionMark({
+                    workId,
+                    questionId:q.id,
+                    marksAwarded:currentMark,
+                    marksAvailable:max
+                  })
+                    .then(()=>finishMarkingWorkItem(workId))
+                    .catch(err=>
+                      console.error('Could not finish marking',err)
+                    );
+                }
+              }}
+            >
+              Finish marking
+            </button>
+          )
+        )}
       </footer>
     </section>
   );

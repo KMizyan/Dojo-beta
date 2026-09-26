@@ -58,12 +58,24 @@ export async function updateWorkItem(
   id: string,
   status: WorkStatus
 ) {
+  const now = new Date().toISOString();
+
+  const updates: Record<string, unknown> = {
+    status,
+    updated_at: now,
+  };
+
+  if (status === 'completed') {
+    updates.completed_at = now;
+  }
+
+  if (status === 'marked') {
+    updates.marked_at = now;
+  }
+
   const { data, error } = await supabase
     .from('work_items')
-    .update({
-      status,
-      updated_at: new Date().toISOString(),
-    })
+    .update(updates)
     .eq('id', id)
     .select()
     .single();
@@ -93,6 +105,85 @@ export async function updateWorkProgress(
         currentQuestion,
       },
       updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+
+export async function saveQuestionMark(input: {
+  workId: string;
+  questionId: string;
+  marksAwarded: number;
+  marksAvailable: number;
+}) {
+  const now = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from('work_questions')
+    .update({
+      marks_awarded: input.marksAwarded,
+      marks_available: input.marksAvailable,
+      marked_at: now,
+    })
+    .eq('work_id', input.workId)
+    .eq('question_id', input.questionId)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+
+export async function completeWorkItem(id: string) {
+  const now = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from('work_items')
+    .update({
+      status: 'completed',
+      completed_at: now,
+      updated_at: now,
+    })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+
+export async function beginMarkingWorkItem(id: string) {
+  const { data, error } = await supabase
+    .from('work_items')
+    .update({
+      status: 'marking',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+
+export async function finishMarkingWorkItem(id: string) {
+  const now = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from('work_items')
+    .update({
+      status: 'marked',
+      marked_at: now,
+      updated_at: now,
     })
     .eq('id', id)
     .select()
