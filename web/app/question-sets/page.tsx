@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 
 type CourseArea = 'Pure' | 'Statistics' | 'Mechanics';
 type Exposure = 'any' | 'unseen' | 'once' | 'few' | 'explored';
@@ -56,7 +56,7 @@ function validExposure(value: string): value is Exposure {
   return ['any', 'unseen', 'once', 'few', 'explored'].includes(value);
 }
 
-export default function QuestionSetsPage() {
+function QuestionSetsContent() {
   const searchParams = useSearchParams();
 
   const incomingTopics = useMemo(() => {
@@ -348,3 +348,23 @@ export default function QuestionSetsPage() {
     </main>
   );
 }
+
+export default function QuestionSetsPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="questionSetsV2Page">
+          <header className="questionSetsV2Header">
+            <div className="page-kicker">A-level Mathematics</div>
+            <h1>Question Sets</h1>
+            <p>Loading your question set...</p>
+          </header>
+        </main>
+      }
+    >
+      <QuestionSetsContent />
+    </Suspense>
+  );
+}
+
+
