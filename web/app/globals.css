@@ -300,3 +300,1202 @@
 .coverageTrack{height:8px;border-radius:999px;background:rgba(127,127,127,.18);overflow:hidden}.coverageFill{height:100%;background:currentColor;border-radius:999px}
 .coverageMeta{margin-top:7px;font-size:.86rem;opacity:.68}.coverageEyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;font-weight:700;opacity:.6}
 @media(max-width:650px){.coverageHeading{display:block}.coverageTotal{margin-top:10px}}
+
+/* =========================================================
+   COVERAGE
+   ========================================================= */
+
+.coveragePage {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 54px 0 90px;
+}
+
+.coverageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 34px;
+}
+
+.coverageHeader h1 {
+  margin: 4px 0 8px;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.coverageHeader p {
+  margin: 0;
+  max-width: 620px;
+  color: var(--muted, #6b7280);
+  font-size: 1rem;
+}
+
+.coverageLegend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 16px;
+  max-width: 470px;
+  color: var(--muted, #6b7280);
+  font-size: 0.78rem;
+}
+
+.coverageLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.coverageDot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid rgba(20, 28, 45, 0.18);
+}
+
+.coverageDot.unseen {
+  background: #f0f1f3;
+}
+
+.coverageDot.seen-once {
+  background: #d9e5dc;
+}
+
+.coverageDot.familiar {
+  background: #9dbda6;
+}
+
+.coverageDot.explored {
+  background: #486e55;
+}
+
+.coverageTopicStrip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.coverageTopicButton {
+  min-height: 72px;
+  padding: 13px 14px;
+  border: 1px solid rgba(20, 28, 45, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
+}
+
+.coverageTopicButton:hover {
+  transform: translateY(-2px);
+  border-color: rgba(20, 28, 45, 0.2);
+}
+
+.coverageTopicButton.active {
+  background: #18221c;
+  border-color: #18221c;
+  color: white;
+}
+
+.coverageTopicButton strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.88rem;
+}
+
+.coverageTopicButton span {
+  opacity: 0.65;
+  font-size: 0.75rem;
+}
+
+.coverageMap {
+  position: relative;
+  overflow: hidden;
+  padding: 30px;
+  border: 1px solid rgba(20, 28, 45, 0.1);
+  border-radius: 24px;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(96, 130, 105, 0.08),
+      transparent 35%
+    ),
+    rgba(255, 255, 255, 0.72);
+}
+
+.coverageTopicHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid rgba(20, 28, 45, 0.08);
+}
+
+.coverageEyebrow {
+  display: block;
+  margin-bottom: 5px;
+  color: #748078;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.coverageTopicHeading h2,
+.coverageAreaNode h3 {
+  margin: 0;
+}
+
+.coverageTopicHeading h2 {
+  font-size: 1.65rem;
+  letter-spacing: -0.035em;
+}
+
+.coverageTopicScore {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.coverageTopicScore strong {
+  font-size: 2rem;
+  letter-spacing: -0.05em;
+}
+
+.coverageTopicScore span {
+  color: #747b76;
+  font-size: 0.82rem;
+}
+
+.coverageTree {
+  display: grid;
+  gap: 24px;
+  padding-top: 26px;
+}
+
+.coverageBranch {
+  position: relative;
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 42px;
+  align-items: center;
+}
+
+.coverageBranchStem {
+  position: absolute;
+  left: 230px;
+  top: 50%;
+  width: 42px;
+  height: 1px;
+  background: rgba(47, 72, 55, 0.18);
+}
+
+.coverageAreaNode {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  min-height: 82px;
+  padding: 18px 18px 18px 20px;
+  border: 1px solid rgba(20, 28, 45, 0.1);
+  border-radius: 16px;
+  background: #f8faf8;
+}
+
+.coverageAreaNode::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: calc(50% - 6px);
+  width: 11px;
+  height: 11px;
+  border: 2px solid #698271;
+  border-radius: 50%;
+  background: #f8faf8;
+}
+
+.coverageAreaNode h3 {
+  font-size: 0.96rem;
+  line-height: 1.25;
+}
+
+.coverageAreaCount {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(76, 108, 85, 0.09);
+  color: #496251;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.coverageArchitectureGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.coverageArchitectureNode {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 82px;
+  padding: 12px;
+  border: 1px solid rgba(20, 28, 45, 0.1);
+  border-radius: 15px;
+  background: white;
+  color: inherit;
+  text-align: left;
+  cursor: default;
+}
+
+.architectureOrb {
+  display: grid;
+  place-items: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border: 3px solid white;
+  border-radius: 50%;
+  outline: 1px solid rgba(20, 28, 45, 0.12);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.coverageArchitectureNode.unseen {
+  opacity: 0.58;
+}
+
+.coverageArchitectureNode.unseen .architectureOrb {
+  background: #e9ebed;
+  color: #8b9096;
+}
+
+.coverageArchitectureNode.seen-once .architectureOrb {
+  background: #d9e5dc;
+  color: #47604e;
+}
+
+.coverageArchitectureNode.familiar .architectureOrb {
+  background: #9dbda6;
+  color: #243d2c;
+}
+
+.coverageArchitectureNode.explored .architectureOrb {
+  background: #486e55;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(72, 110, 85, 0.1);
+}
+
+.architectureText {
+  min-width: 0;
+}
+
+.architectureText strong,
+.architectureText small {
+  display: block;
+}
+
+.architectureText strong {
+  margin-bottom: 4px;
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+
+.architectureText small {
+  color: #7a807c;
+  font-size: 0.69rem;
+}
+
+@media (max-width: 900px) {
+  .coverageHeader {
+    display: block;
+  }
+
+  .coverageLegend {
+    justify-content: flex-start;
+    margin-top: 20px;
+  }
+
+  .coverageTopicStrip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .coverageBranch {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .coverageBranchStem,
+  .coverageAreaNode::after {
+    display: none;
+  }
+
+  .coverageArchitectureGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .coveragePage {
+    width: min(100% - 24px, 1180px);
+    padding-top: 30px;
+  }
+
+  .coverageMap {
+    padding: 18px;
+  }
+
+  .coverageTopicHeading {
+    display: block;
+  }
+
+  .coverageTopicScore {
+    margin-top: 12px;
+  }
+
+  .coverageArchitectureGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   COVERAGE V2
+   ========================================================= */
+
+.coverageV2Page {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 54px 0 100px;
+}
+
+.coverageV2Header {
+  margin-bottom: 30px;
+}
+
+.coverageV2Header h1 {
+  margin: 5px 0 8px;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.coverageV2Header p {
+  max-width: 680px;
+  margin: 0;
+  color: #69716c;
+  line-height: 1.6;
+}
+
+.coverageMiniLabel,
+.coverageControlLabel {
+  display: block;
+  color: #7c857f;
+  font-size: 0.69rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.coverageSetLauncher {
+  display: grid;
+  grid-template-columns: 0.8fr 1.7fr;
+  gap: 40px;
+  padding: 28px;
+  margin-bottom: 22px;
+  border-radius: 22px;
+  background: #17231b;
+  color: white;
+}
+
+.coverageSetLauncher h2 {
+  margin: 7px 0 8px;
+  font-size: 1.35rem;
+  letter-spacing: -0.025em;
+}
+
+.coverageSetLauncherIntro p {
+  max-width: 330px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.coverageSetLauncher .coverageMiniLabel,
+.coverageSetLauncher .coverageControlLabel {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.coverageLauncherControls {
+  display: grid;
+  gap: 24px;
+}
+
+.coverageFilterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.coverageFilter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.66);
+  cursor: pointer;
+}
+
+.coverageFilter.active {
+  border-color: rgba(255, 255, 255, 0.52);
+  background: white;
+  color: #17231b;
+}
+
+.coverageFilterDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #87908a;
+}
+
+.coverageFilterDot.once {
+  background: #c9dbce;
+}
+
+.coverageFilterDot.few {
+  background: #8eb09a;
+}
+
+.coverageFilterDot.explored {
+  background: #476d54;
+}
+
+.coverageLauncherBottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.coverageSelectedSummary {
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.84rem;
+}
+
+.coverageBuildButton {
+  flex: 0 0 auto;
+  padding: 11px 15px;
+  border-radius: 10px;
+  background: white;
+  color: #17231b;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.coverageBuildButton.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.coverageCourseTabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin-bottom: 22px;
+}
+
+.coverageCourseTabs button {
+  padding: 17px 18px;
+  border: 1px solid rgba(22, 33, 26, 0.11);
+  border-radius: 14px;
+  background: white;
+  color: #18211b;
+  cursor: pointer;
+  text-align: left;
+}
+
+.coverageCourseTabs button.active {
+  border-color: #253b2d;
+  background: #edf2ee;
+}
+
+.coverageCourseTabs strong,
+.coverageCourseTabs span {
+  display: block;
+}
+
+.coverageCourseTabs strong {
+  margin-bottom: 4px;
+}
+
+.coverageCourseTabs span {
+  color: #858b87;
+  font-size: 0.72rem;
+}
+
+.coverageExplorer,
+.coverageEmptyCourse {
+  overflow: hidden;
+  border: 1px solid rgba(22, 33, 26, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.coverageExplorerHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 24px 26px;
+  border-bottom: 1px solid rgba(22, 33, 26, 0.08);
+}
+
+.coverageExplorerHeading h2 {
+  margin: 5px 0 0;
+  font-size: 1.25rem;
+}
+
+.coverageExplorerHint {
+  color: #888e8a;
+  font-size: 0.72rem;
+}
+
+.coverageTopicRow + .coverageTopicRow {
+  border-top: 1px solid rgba(22, 33, 26, 0.08);
+}
+
+.coverageTopicMain {
+  display: flex;
+  align-items: stretch;
+}
+
+.coverageTopicCheck {
+  display: grid;
+  place-items: center;
+  flex: 0 0 52px;
+  width: 52px;
+  border: 0;
+  border-right: 1px solid rgba(22, 33, 26, 0.07);
+  background: transparent;
+  color: #31513c;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.coverageTopicCheck::after {
+  content: '';
+  width: 17px;
+  height: 17px;
+  border: 1px solid #b9bfbb;
+  border-radius: 5px;
+}
+
+.coverageTopicCheck.selected::after {
+  display: none;
+}
+
+.coverageTopicCheck.selected {
+  background: #eef3ef;
+}
+
+.coverageTopicOpen {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 19px 22px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.coverageTopicOpen:hover {
+  background: rgba(55, 86, 65, 0.025);
+}
+
+.coverageTopicOpen strong,
+.coverageTopicOpen span {
+  display: block;
+}
+
+.coverageTopicOpen strong {
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.coverageTopicOpen > div:first-child span {
+  color: #858b87;
+  font-size: 0.73rem;
+}
+
+.coverageTopicRight {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.coverageFraction {
+  color: #637068;
+  font-size: 0.77rem;
+  font-weight: 700;
+}
+
+.coverageChevron {
+  width: 20px;
+  color: #68736c;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.coverageTopicDetail {
+  padding: 6px 22px 24px 74px;
+  background: #fafbfa;
+}
+
+.coverageSubtopic {
+  padding: 18px 0;
+}
+
+.coverageSubtopic + .coverageSubtopic {
+  border-top: 1px solid rgba(22, 33, 26, 0.07);
+}
+
+.coverageSubtopicHeading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 11px;
+}
+
+.coverageSubtopicHeading strong {
+  font-size: 0.78rem;
+}
+
+.coverageSubtopicHeading span {
+  color: #7d857f;
+  font-size: 0.7rem;
+}
+
+.coverageArchitectureList {
+  display: grid;
+  gap: 6px;
+}
+
+.coverageArchitectureRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(22, 33, 26, 0.07);
+  border-radius: 10px;
+  background: white;
+}
+
+.coverageArchitectureStatus {
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e9ecea;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.coverageArchitectureStatus.once {
+  background: #d8e5dc;
+  color: #3f5e49;
+}
+
+.coverageArchitectureStatus.few {
+  background: #9fbea8;
+  color: #203b29;
+}
+
+.coverageArchitectureStatus.explored {
+  background: #486e55;
+  color: white;
+}
+
+.coverageArchitectureRow > div strong,
+.coverageArchitectureRow > div span {
+  display: block;
+}
+
+.coverageArchitectureRow > div strong {
+  margin-bottom: 2px;
+  font-size: 0.78rem;
+}
+
+.coverageArchitectureRow > div span {
+  color: #8a908c;
+  font-size: 0.68rem;
+}
+
+.coverageArchitectureRow.unseen {
+  opacity: 0.58;
+}
+
+.coverageEmptyCourse {
+  padding: 55px 30px;
+  text-align: center;
+}
+
+.coverageEmptyCourse h2 {
+  margin: 7px 0;
+}
+
+.coverageEmptyCourse p {
+  max-width: 500px;
+  margin: 0 auto;
+  color: #7c837e;
+  line-height: 1.55;
+}
+
+@media (max-width: 760px) {
+  .coverageSetLauncher {
+    grid-template-columns: 1fr;
+  }
+
+  .coverageCourseTabs {
+    grid-template-columns: 1fr;
+  }
+
+  .coverageLauncherBottom,
+  .coverageExplorerHeading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .coverageBuildButton {
+    text-align: center;
+  }
+
+  .coverageTopicDetail {
+    padding-left: 20px;
+  }
+}
+
+/* =========================================================
+   QUESTION SETS V2
+   ========================================================= */
+
+.questionSetsV2Page {
+  width: min(1060px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 54px 0 120px;
+}
+
+.questionSetsV2Header {
+  margin-bottom: 30px;
+}
+
+.questionSetsV2Header h1 {
+  margin: 5px 0 8px;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.questionSetsV2Header p {
+  max-width: 650px;
+  margin: 0;
+  color: #707772;
+  line-height: 1.55;
+}
+
+.questionSetMiniLabel {
+  display: block;
+  color: #7b857e;
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.coverageImportCard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 20px;
+  padding: 25px 28px;
+  border-radius: 18px;
+  background: #17231b;
+  color: white;
+}
+
+.coverageImportCard .questionSetMiniLabel {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.coverageImportCard h2 {
+  margin: 5px 0 7px;
+  font-size: 1.15rem;
+}
+
+.coverageImportCard p {
+  max-width: 440px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.coverageImportSummary {
+  display: grid;
+  gap: 12px;
+}
+
+.coverageImportSummary div {
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.coverageImportSummary span,
+.coverageImportSummary strong {
+  display: block;
+}
+
+.coverageImportSummary span {
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+}
+
+.coverageImportSummary strong {
+  font-size: 0.8rem;
+}
+
+.questionSetConfig {
+  overflow: hidden;
+  border: 1px solid rgba(22, 33, 26, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.questionSetSection {
+  padding: 28px;
+}
+
+.questionSetSection + .questionSetSection {
+  border-top: 1px solid rgba(22, 33, 26, 0.08);
+}
+
+.questionSetSectionHeading {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.questionSetStep {
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #edf2ee;
+  color: #496251;
+  font-size: 0.67rem;
+  font-weight: 800;
+}
+
+.questionSetSectionHeading h2 {
+  margin: 0 0 3px;
+  font-size: 1rem;
+}
+
+.questionSetSectionHeading p {
+  margin: 0;
+  color: #858b87;
+  font-size: 0.74rem;
+}
+
+.questionSetCourseGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.questionSetCourseGrid button,
+.questionSetTopicGrid button,
+.questionSetExposureGrid button,
+.questionSetCountRow button {
+  border: 1px solid rgba(22, 33, 26, 0.1);
+  background: white;
+  color: inherit;
+  cursor: pointer;
+}
+
+.questionSetCourseGrid button {
+  padding: 15px;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.questionSetCourseGrid button.active {
+  border-color: #385443;
+  background: #edf2ee;
+}
+
+.questionSetCourseGrid strong,
+.questionSetCourseGrid span {
+  display: block;
+}
+
+.questionSetCourseGrid strong {
+  margin-bottom: 4px;
+}
+
+.questionSetCourseGrid span {
+  color: #8a908c;
+  font-size: 0.68rem;
+}
+
+.questionSetTopicGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+}
+
+.questionSetTopicGrid button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.questionSetTopicGrid button.active {
+  border-color: #52705d;
+  background: #f0f4f1;
+}
+
+.questionSetCheckbox {
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border: 1px solid #bcc4be;
+  border-radius: 5px;
+  color: #31513c;
+  font-size: 0.7rem;
+}
+
+.questionSetTopicGrid button.active .questionSetCheckbox {
+  border-color: #567160;
+  background: #dce8df;
+}
+
+.questionSetTopicGrid strong {
+  font-size: 0.78rem;
+}
+
+.questionSetExposureGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+}
+
+.questionSetExposureGrid button {
+  display: flex;
+  gap: 9px;
+  min-height: 92px;
+  padding: 12px;
+  border-radius: 11px;
+  text-align: left;
+}
+
+.questionSetExposureGrid button.active {
+  border-color: #496653;
+  background: #eff4f0;
+}
+
+.questionSetExposureDot {
+  flex: 0 0 9px;
+  width: 9px;
+  height: 9px;
+  margin-top: 3px;
+  border-radius: 50%;
+  background: #929a95;
+}
+
+.questionSetExposureDot.once {
+  background: #cadbcf;
+}
+
+.questionSetExposureDot.few {
+  background: #91b19b;
+}
+
+.questionSetExposureDot.explored {
+  background: #486e55;
+}
+
+.questionSetExposureGrid strong,
+.questionSetExposureGrid small {
+  display: block;
+}
+
+.questionSetExposureGrid strong {
+  margin-bottom: 5px;
+  font-size: 0.74rem;
+}
+
+.questionSetExposureGrid small {
+  color: #89908b;
+  font-size: 0.63rem;
+  line-height: 1.35;
+}
+
+.questionSetCountRow {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 24px;
+}
+
+.questionSetCountRow button {
+  min-width: 54px;
+  padding: 9px 13px;
+  border-radius: 9px;
+  font-weight: 700;
+}
+
+.questionSetCountRow button.active {
+  border-color: #425e4c;
+  background: #425e4c;
+  color: white;
+}
+
+.questionSetContext label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.questionSetContext label span {
+  margin-left: 7px;
+  color: #979c99;
+  font-weight: 400;
+}
+
+.questionSetContext textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 90px;
+  resize: vertical;
+  padding: 12px 14px;
+  border: 1px solid rgba(22, 33, 26, 0.12);
+  border-radius: 11px;
+  background: white;
+  font: inherit;
+}
+
+.questionSetUnavailable {
+  padding: 25px;
+  border-radius: 12px;
+  background: #f5f6f5;
+  color: #858b87;
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.questionSetLaunchBar {
+  position: sticky;
+  bottom: 18px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 16px;
+  padding: 16px 18px;
+  border: 1px solid rgba(22, 33, 26, 0.12);
+  border-radius: 15px;
+  background: rgba(248, 250, 248, 0.96);
+  box-shadow: 0 12px 35px rgba(20, 30, 23, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.questionSetLaunchBar strong,
+.questionSetLaunchBar small {
+  display: block;
+}
+
+.questionSetLaunchBar strong {
+  margin-top: 3px;
+  font-size: 0.8rem;
+}
+
+.questionSetLaunchBar small {
+  margin-top: 3px;
+  color: #818883;
+  font-size: 0.67rem;
+}
+
+.questionSetStartButton {
+  flex: 0 0 auto;
+  padding: 11px 16px;
+  border-radius: 10px;
+  background: #17231b;
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.questionSetStartButton.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .coverageImportCard {
+    grid-template-columns: 1fr;
+  }
+
+  .questionSetCourseGrid,
+  .questionSetTopicGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .questionSetExposureGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .questionSetLaunchBar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .questionSetStartButton {
+    text-align: center;
+  }
+}

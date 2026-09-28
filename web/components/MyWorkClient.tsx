@@ -1,13 +1,11 @@
 'use client';
 
-
-import CoverageSnapshot from './CoverageSnapshot';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import CoverageSnapshot from './CoverageSnapshot';
 
-type Tab = 'recent' | 'exams' | 'practice';
-type Area = 'All' | 'Pure' | 'Statistics' | 'Mechanics';
+type WorkFilter = 'all' | 'question_sets' | 'papers';
 
 type WorkQuestion = {
   question_id: string;
@@ -25,79 +23,38 @@ type WorkItem = {
   created_at: string;
   completed_at: string | null;
   marked_at: string | null;
+  settings?: Record<string, any> | null;
   work_questions?: WorkQuestion[];
 };
 
-const exams = [
-  {
-    title: 'DOJO A-level Pure',
-    area: 'Pure',
-    date: '21 Sep',
-    score: 68,
-    total: 80,
-    source: 'DOJO generated',
-  },
-  {
-    title: 'Edexcel 2022 Paper 1',
-    area: 'Pure',
-    date: '18 Sep',
-    score: 61,
-    total: 100,
-    source: 'Past paper',
-  },
-  {
-    title: 'Edexcel 2021 Paper 2',
-    area: 'Pure',
-    date: '12 Sep',
-    score: 72,
-    total: 100,
-    source: 'Past paper',
-  },
-];
-
-const practice = [
-  {
-    topic: 'Integration',
-    area: 'Pure',
-    last: 'Yesterday',
-    sessions: 8,
-    wrong: 7,
-  },
-  {
-    topic: 'Trigonometry',
-    area: 'Pure',
-    last: '17 Sep',
-    sessions: 5,
-    wrong: 4,
-  },
-  {
-    topic: 'Differentiation',
-    area: 'Pure',
-    last: '14 Sep',
-    sessions: 4,
-    wrong: 2,
-  },
-];
-
-function statusLabel(status: WorkItem['status']) {
-  if (status === 'completed') return 'Completed — waiting to be marked';
-  if (status === 'marking') return 'Marking';
-  if (status === 'marked') return 'Marked';
-  return 'In progress';
+function isPaper(item: WorkItem) {
+  return (
+    item.kind === 'exam' ||
+    item.kind === 'paper' ||
+    item.kind === 'past_paper' ||
+    item.kind === 'generated_paper'
+  );
 }
 
-function actionLabel(status: WorkItem['status']) {
-  if (status === 'completed') return 'Mark';
-  if (status === 'marked') return 'Review';
-  return 'Continue';
+function workTypeLabel(item: WorkItem) {
+  return isPaper(item) ? 'Paper' : 'Question Set';
 }
 
-function dateLabel(value: string) {
+function dateLabel(value: string | null | undefined) {
+  if (!value) return '';
+
   const date = new Date(value);
   const now = new Date();
 
   if (date.toDateString() === now.toDateString()) {
     return 'Today';
+  }
+
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+
+  if (date.toDateString() === yesterday.toDateString()) {
+    return 'Yesterday';
   }
 
   return date.toLocaleDateString('en-GB', {
@@ -106,19 +63,75 @@ function dateLabel(value: string) {
   });
 }
 
+function scoreFor(item: WorkItem) {
+  const questions = item.work_questions ?? [];
+
+  const awarded = questions.reduce(
+    (total, question) => total + (question.marks_awarded ?? 0),
+    0
+  );
+
+  const available = questions.reduce(
+    (total, question) => total + (question.marks_available ?? 0),
+    0
+  );
+
+  const hasResult =
+    item.status === 'marked' &&
+    questions.some(question => question.marks_available !== null);
+
+  return {
+    awarded,
+    available,
+    hasResult,
+  };
+}
+
+function progressFor(item: WorkItem) {
+  const total = item.work_questions?.length ?? 0;
+
+  const currentQuestion = Number(
+    item.settings?.currentQuestion ?? 0
+  );
+
+  if (!total) {
+    return {
+      current: 0,
+      total: 0,
+      percent: 0,
+    };
+  }
+
+  const current = Math.min(
+    Math.max(currentQuestion + 1, 1),
+    total
+  );
+
+  return {
+    current,
+    total,
+    percent: Math.round((current / total) * 100),
+  };
+}
+
 export default function MyWorkPage() {
-  const [tab, setTab] = useState<Tab>('recent');
-  const [area, setArea] = useState<Area>('All');
-  const [recent, setRecent] = useState<WorkItem[]>([]);
-  const [loadingRecent, setLoadingRecent] = useState(true);
+  const [work, setWork] = useState<WorkItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [filter, setFilter] =
+    useState<WorkFilter>('all');
+
+  const [showMore, setShowMore] =
+    useState(false);
 
   useEffect(() => {
-    async function loadRecent() {
-      const { data: auth } = await supabase.auth.getUser();
+    async function loadWork() {
+      const { data: auth } =
+        await supabase.auth.getUser();
 
       if (!auth.user) {
-        setRecent([]);
-        setLoadingRecent(false);
+        setWork([]);
+        setLoading(false);
         return;
       }
 
@@ -132,6 +145,7 @@ export default function MyWorkPage() {
           created_at,
           completed_at,
           marked_at,
+          settings,
           work_questions (
             question_id,
             position,
@@ -140,405 +154,902 @@ export default function MyWorkPage() {
             marked_at
           )
         `)
-        .order('created_at', { ascending: false })
-        .limit(20);
+        .order('created_at', {
+          ascending: false,
+        })
+        .limit(50);
 
       if (error) {
-        console.error('Could not load My Work:', error);
-        setRecent([]);
+        console.error(
+          'Could not load My Work:',
+          error
+        );
+
+        setWork([]);
       } else {
-        setRecent((data ?? []) as WorkItem[]);
+        setWork((data ?? []) as WorkItem[]);
       }
 
-      setLoadingRecent(false);
+      setLoading(false);
     }
 
-    loadRecent();
+    loadWork();
   }, []);
 
-  const filteredExams = useMemo(
-    () => exams.filter(x => area === 'All' || x.area === area),
-    [area]
+  const inProgress = useMemo(
+    () =>
+      work.filter(
+        item =>
+          item.status === 'in_progress' ||
+          item.status === 'completed' ||
+          item.status === 'marking'
+      ),
+    [work]
   );
+
+  const continueItem =
+    inProgress.length > 0
+      ? inProgress[0]
+      : null;
+
+  const filteredRecent = useMemo(() => {
+    return work.filter(item => {
+      if (filter === 'papers') {
+        return isPaper(item);
+      }
+
+      if (filter === 'question_sets') {
+        return !isPaper(item);
+      }
+
+      return true;
+    });
+  }, [work, filter]);
+
+  const visibleRecent = showMore
+    ? filteredRecent
+    : filteredRecent.slice(0, 3);
 
   return (
     <main className="work-page">
-      <CoverageSnapshot />
+      <div className="homeHeader">
+        <div className="page-kicker">
+          A-level Mathematics
+        </div>
+        <p>
+          Choose what you want to work on or pick up where you left off.
+        </p>
+      </div>
 
-      <div className="page-kicker">A-level Mathematics</div>
-
-      <h1>My Work</h1>
-
-      <p className="page-intro">
-        Your work, results and anything you need to come back to.
-      </p>
-
-      <nav
-        className="work-tabs"
-        aria-label="My Work sections"
-      >
-        <button
-          className={tab === 'recent' ? 'active' : ''}
-          onClick={() => setTab('recent')}
+      <section className="homeStartGrid">
+        <Link
+          href="/topics"
+          className="homeStartCard"
         >
-          Recent
-        </button>
+          <div>
+            <span className="dashboardLabel">
+              Explore
+            </span>
 
-        <button
-          className={tab === 'exams' ? 'active' : ''}
-          onClick={() => setTab('exams')}
-        >
-          Exams
-        </button>
+            <h2>Topics</h2>
 
-        <button
-          className={tab === 'practice' ? 'active' : ''}
-          onClick={() => setTab('practice')}
-        >
-          Practice
-        </button>
-      </nav>
-
-      {tab === 'recent' && (
-        <section className="work-section">
-          <div className="work-heading">
-            <div>
-              <h2>Recent</h2>
-
-              <p>
-                Pick up where you left off or return to something you've
-                finished.
-              </p>
-            </div>
+            <p>
+              Choose an area of A-level maths and practise it directly.
+            </p>
           </div>
 
-          <div className="work-list">
-            {loadingRecent && (
-              <p className="empty-history">
-                Loading your work...
+          <span className="homeStartArrow">
+            →
+          </span>
+        </Link>
+
+        <Link
+          href="/question-sets"
+          className="homeStartCard"
+        >
+          <div>
+            <span className="dashboardLabel">
+              Practice
+            </span>
+
+            <h2>Question Sets</h2>
+
+            <p>
+              Build a mixed set around the topics you want to work on.
+            </p>
+          </div>
+
+          <span className="homeStartArrow">
+            →
+          </span>
+        </Link>
+
+        <Link
+          href="/papers"
+          className="homeStartCard"
+        >
+          <div>
+            <span className="dashboardLabel">
+              Assessment
+            </span>
+
+            <h2>Papers</h2>
+
+            <p>
+              Work through past papers or DOJO-generated papers.
+            </p>
+          </div>
+
+          <span className="homeStartArrow">
+            →
+          </span>
+        </Link>
+      </section>
+
+      {!loading && continueItem && (
+        <section className="myWorkPanel continuePanel">
+          <div className="dashboardPanelHeading">
+            <div>
+              <span className="dashboardLabel">
+                Continue
+              </span>
+
+              <h2>{continueItem.title}</h2>
+
+              <p>
+                {workTypeLabel(continueItem)}
+
+                {progressFor(continueItem).total > 0
+                  ? ` · ${progressFor(continueItem).current}/${progressFor(continueItem).total} questions`
+                  : ''}
               </p>
+            </div>
+
+            <Link
+              className="dashboardPrimaryAction"
+              href={`/practice?work=${encodeURIComponent(
+                continueItem.id
+              )}`}
+            >
+              {continueItem.status === 'in_progress'
+                ? 'Resume →'
+                : continueItem.status === 'marking'
+                ? 'Continue marking →'
+                : 'Mark →'}
+            </Link>
+          </div>
+
+          {continueItem.status === 'in_progress' &&
+            progressFor(continueItem).total > 0 && (
+              <div className="continueProgress">
+                <div
+                  style={{
+                    width: `${
+                      progressFor(continueItem).percent
+                    }%`,
+                  }}
+                />
+              </div>
             )}
+        </section>
+      )}
 
-            {!loadingRecent && recent.length === 0 && (
-              <p className="empty-history">
-                You haven't started any work yet.
-              </p>
-            )}
+      {!loading && (
+        <div className="myWorkDashboardGrid">
+          <section className="myWorkPanel dashboardRecent">
+            <div className="dashboardPanelHeading compact">
+              <div>
+                <span className="dashboardLabel">
+                  Recent work
+                </span>
 
-            {!loadingRecent &&
-              recent.map(item => {
-                const questions = [
-                  ...(item.work_questions ?? []),
-                ].sort(
-                  (a, b) => a.position - b.position
-                );
+                <h2>Latest</h2>
+              </div>
+            </div>
 
-                const questionCount = questions.length;
-                const isExam = item.kind === 'exam';
+            <div className="dashboardFilters">
+              <button
+                className={filter === 'all' ? 'active' : ''}
+                onClick={() => {
+                  setFilter('all');
+                  setShowMore(false);
+                }}
+              >
+                All
+              </button>
 
-                const awarded = questions.reduce(
-                  (total, question) =>
-                    total + (question.marks_awarded ?? 0),
-                  0
-                );
+              <button
+                className={
+                  filter === 'question_sets'
+                    ? 'active'
+                    : ''
+                }
+                onClick={() => {
+                  setFilter('question_sets');
+                  setShowMore(false);
+                }}
+              >
+                Question Sets
+              </button>
 
-                const available = questions.reduce(
-                  (total, question) =>
-                    total + (question.marks_available ?? 0),
-                  0
-                );
+              <button
+                className={
+                  filter === 'papers'
+                    ? 'active'
+                    : ''
+                }
+                onClick={() => {
+                  setFilter('papers');
+                  setShowMore(false);
+                }}
+              >
+                Papers
+              </button>
+            </div>
 
-                const hasResult =
-                  item.status === 'marked' &&
-                  questions.some(
-                    question =>
-                      question.marks_available !== null
-                  );
+            <div className="dashboardRecentList">
+              {visibleRecent.length === 0 && (
+                <p className="empty-history">
+                  No work here yet.
+                </p>
+              )}
+
+              {visibleRecent.map(item => {
+                const {
+                  awarded,
+                  available,
+                  hasResult,
+                } = scoreFor(item);
 
                 return (
-                  <article
-                    className="work-row"
+                  <Link
+                    href={`/practice?work=${encodeURIComponent(
+                      item.id
+                    )}`}
+                    className="dashboardRecentRow"
                     key={item.id}
                   >
-                    <div
-                      className={`work-type-dot ${
-                        isExam ? 'exam' : 'practice'
-                      }`}
-                    />
-
-                    <div className="work-main">
+                    <div>
                       <strong>{item.title}</strong>
 
                       <span>
-                        {isExam ? 'Exam' : 'Practice'}
-
-                        {questionCount > 0
-                          ? ` · ${questionCount} questions`
-                          : ''}
+                        {workTypeLabel(item)}
+                        {' · '}
+                        {dateLabel(
+                          item.marked_at ??
+                            item.completed_at ??
+                            item.created_at
+                        )}
                       </span>
                     </div>
 
-                    <div className="work-status">
-                      <strong>
-                        {hasResult
-                          ? `${awarded}/${available} marks`
-                          : statusLabel(item.status)}
-                      </strong>
+                    <div className="dashboardRecentResult">
+                      {hasResult ? (
+                        <span className="scoreBadge">
+                          <strong>{awarded}</strong>
+                          <small>/{available}</small>
+                        </span>
+                      ) : (
+                        <span className={`statusBadge status-${item.status}`}>
+                          {item.status === 'in_progress'
+                            ? 'In progress'
+                            : item.status === 'marking'
+                            ? 'Marking'
+                            : item.status === 'completed'
+                            ? 'Ready to mark'
+                            : 'Completed'}
+                        </span>
+                      )}
 
-                      <span>
-                        {hasResult
-                          ? `Marked · ${dateLabel(
-                              item.marked_at ??
-                                item.created_at
-                            )}`
-                          : dateLabel(item.created_at)}
-                      </span>
+                      <span className="recentArrow">→</span>
                     </div>
-
-                    <Link
-                      href={`/practice?work=${encodeURIComponent(
-                        item.id
-                      )}`}
-                    >
-                      {actionLabel(item.status)}
-                    </Link>
-                  </article>
+                  </Link>
                 );
               })}
-          </div>
-        </section>
-      )}
-
-      {tab === 'exams' && (
-        <section className="work-section">
-          <div className="work-heading">
-            <div>
-              <h2>Exams</h2>
-
-              <p>
-                Exam-condition papers are kept separately so you can
-                track assessment results over time.
-              </p>
             </div>
 
-            <Link href="/papers">
-              Sit another paper →
-            </Link>
-          </div>
-
-          <div className="work-filter-row">
-            {(
-              [
-                'All',
-                'Pure',
-                'Statistics',
-                'Mechanics',
-              ] as Area[]
-            ).map(x => (
+            {filteredRecent.length > 3 && (
               <button
-                key={x}
-                className={area === x ? 'active' : ''}
-                onClick={() => setArea(x)}
+                className="dashboardShowMore"
+                onClick={() =>
+                  setShowMore(value => !value)
+                }
               >
-                {x}
+                {showMore
+                  ? 'Show less ↑'
+                  : 'Show more ↓'}
               </button>
-            ))}
-          </div>
-
-          <div className="exam-summary">
-            <div>
-              <span className="summary-label">
-                Completed exams
-              </span>
-
-              <strong>{filteredExams.length}</strong>
-            </div>
-
-            <div>
-              <span className="summary-label">
-                Latest result
-              </span>
-
-              <strong>
-                {filteredExams.length
-                  ? `${filteredExams[0].score}/${filteredExams[0].total}`
-                  : '—'}
-              </strong>
-            </div>
-          </div>
-
-          <div className="score-history">
-            <h3>Results over time</h3>
-
-            {filteredExams.length ? (
-              <div className="score-bars">
-                {[...filteredExams]
-                  .reverse()
-                  .map((x, i) => {
-                    const pct = Math.round(
-                      (x.score / x.total) * 100
-                    );
-
-                    return (
-                      <div
-                        className="score-column"
-                        key={i}
-                      >
-                        <div className="score-number">
-                          {pct}%
-                        </div>
-
-                        <div className="score-track">
-                          <div
-                            style={{
-                              height: `${pct}%`,
-                            }}
-                          />
-                        </div>
-
-                        <div className="score-date">
-                          {x.date}
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            ) : (
-              <p className="empty-history">
-                No exam results in this area yet.
-              </p>
             )}
-          </div>
+          </section>
 
-          <div className="work-list exam-list">
-            {filteredExams.map((x, i) => (
-              <article
-                className="work-row"
-                key={i}
-              >
-                <div className="work-main">
-                  <strong>{x.title}</strong>
+          <section className="myWorkPanel coveragePanel">
+            <div className="dashboardPanelHeading compact">
+              <div>
+                <span className="dashboardLabel">
+                  Coverage
+                </span>
 
-                  <span>
-                    {x.source} · {x.area}
-                  </span>
-                </div>
+                <h2>Your coverage</h2>
+              </div>
 
-                <div className="exam-score">
-                  {x.score}/{x.total}
-                </div>
-
-                <div className="work-status">
-                  <span>{x.date}</span>
-                </div>
-
-                <button>View</button>
-              </article>
-            ))}
-          </div>
-
-          <p className="quiet-note">
-            Generated papers and official past papers remain
-            identifiable rather than being treated as automatically
-            equivalent assessments.
-          </p>
-        </section>
-      )}
-
-      {tab === 'practice' && (
-        <section className="work-section">
-          <div className="work-heading">
-            <div>
-              <h2>Practice</h2>
-
-              <p>
-                A record of what you've worked on, without turning
-                everyday practice into a grade.
-              </p>
+              <Link href="/coverage">
+                View coverage →
+              </Link>
             </div>
 
-            <Link href="/topics">
-              Go to Topics →
-            </Link>
-          </div>
-
-          <div className="work-filter-row">
-            {(
-              [
-                'All',
-                'Pure',
-                'Statistics',
-                'Mechanics',
-              ] as Area[]
-            ).map(x => (
-              <button
-                key={x}
-                className={area === x ? 'active' : ''}
-                onClick={() => setArea(x)}
-              >
-                {x}
-              </button>
-            ))}
-          </div>
-
-          <div className="practice-grid">
-            {practice
-              .filter(
-                x =>
-                  area === 'All' ||
-                  x.area === area
-              )
-              .map((x, i) => (
-                <article
-                  className="practice-card"
-                  key={i}
-                >
-                  <div>
-                    <span className="practice-area">
-                      {x.area}
-                    </span>
-
-                    <h3>{x.topic}</h3>
-
-                    <p>
-                      Last practised {x.last} ·{' '}
-                      {x.sessions} sessions
-                    </p>
-                  </div>
-
-                  <div className="practice-wrong">
-                    {x.wrong} previously wrong
-                    questions
-                  </div>
-
-                  <div className="practice-actions">
-                    <Link
-                      href={`/topics/pure/${x.topic
-                        .toLowerCase()
-                        .replaceAll(' ', '-')}`}
-                    >
-                      Practise {x.topic}
-                    </Link>
-
-                    <button>
-                      View history
-                    </button>
-                  </div>
-                </article>
-              ))}
-          </div>
-
-          {practice.filter(
-            x =>
-              area === 'All' ||
-              x.area === area
-          ).length === 0 && (
-            <p className="empty-history">
-              No practice history in this area yet.
-            </p>
-          )}
-        </section>
+            <div className="coverageDashboardBody">
+              <CoverageSnapshot />
+            </div>
+          </section>
+        </div>
       )}
+
+      <style jsx>{`
+        .homeHeader {
+          margin-bottom: 28px;
+        }
+
+        .homeHeader h1 {
+          margin: 8px 0 6px;
+          font-size: 36px;
+          line-height: 1.1;
+        }
+
+        .homeHeader p {
+          margin: 0;
+          color: #6d6d6d;
+          font-size: 15px;
+        }
+
+        .homeStartGrid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 16px;
+          margin-bottom: 18px;
+        }
+
+        .homeStartCard {
+          position: relative;
+          min-height: 155px;
+          display: grid;
+          grid-template-columns: 42px minmax(0, 1fr) auto;
+          align-items: start;
+          gap: 15px;
+
+          border: 1px solid #dedede;
+          border-radius: 12px;
+          background: #fff;
+
+          padding: 21px;
+
+          color: #111;
+          text-decoration: none;
+
+          transition:
+            border-color 120ms ease,
+            transform 120ms ease,
+            box-shadow 120ms ease;
+        }
+
+        .homeStartCard:hover {
+          border-color: #aaa;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.045);
+        }
+
+        .homeStartIcon {
+          width: 40px;
+          height: 40px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 9px;
+          background: #f2f2f2;
+
+          font-size: 16px;
+          font-weight: 700;
+        }
+
+        .homeStartCard.featured .homeStartIcon {
+          background: #111;
+          color: #fff;
+        }
+
+        .homeStartCard h2 {
+          margin: 5px 0 7px;
+          font-size: 19px;
+        }
+
+        .homeStartCard p {
+          max-width: 290px;
+          margin: 0;
+
+          color: #707070;
+          font-size: 13px;
+          line-height: 1.45;
+        }
+
+        .homeStartArrow {
+          color: #777;
+          font-size: 18px;
+        }
+
+        .homeStartCard:hover .homeStartArrow {
+          color: #111;
+        }
+
+        .myWorkPanel {
+          border: 1px solid #dedede;
+          border-radius: 10px;
+          background: #fff;
+          padding: 22px;
+        }
+
+        .continuePanel {
+          margin-top: 28px;
+          padding: 20px 22px;
+        }
+
+        .dashboardPanelHeading {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+        }
+
+        .dashboardPanelHeading.compact {
+          align-items: flex-start;
+        }
+
+        .dashboardPanelHeading h2 {
+          margin: 4px 0 3px;
+          font-size: 20px;
+          line-height: 1.2;
+        }
+
+        .dashboardPanelHeading p {
+          margin: 0;
+          color: #777;
+          font-size: 13px;
+        }
+
+        .dashboardLabel {
+          display: block;
+          color: #777;
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        .dashboardPrimaryAction {
+          flex: 0 0 auto;
+          color: #111;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 700;
+        }
+
+        .continueProgress {
+          height: 4px;
+          margin-top: 17px;
+          border-radius: 999px;
+          background: #ececec;
+          overflow: hidden;
+        }
+
+        .continueProgress > div {
+          height: 100%;
+          background: #111;
+        }
+
+        .myWorkDashboardGrid {
+          display: grid;
+          grid-template-columns:
+            minmax(0, 1.2fr)
+            minmax(320px, 0.8fr);
+          gap: 18px;
+          margin-top: 18px;
+          align-items: start;
+        }
+
+        .dashboardRecent {
+          min-height: 410px;
+        }
+
+        .dashboardFilters {
+          display: flex;
+          gap: 6px;
+          margin: 18px 0 14px;
+        }
+
+        .dashboardFilters button {
+          border: 1px solid #ddd;
+          border-radius: 999px;
+          background: #fff;
+          padding: 6px 11px;
+          cursor: pointer;
+          font: inherit;
+          font-size: 11px;
+        }
+
+        .dashboardFilters button.active {
+          border-color: #111;
+          background: #111;
+          color: #fff;
+        }
+
+        .dashboardRecentList {
+          border-top: 1px solid #e5e5e5;
+        }
+
+        .dashboardRecentRow {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 20px;
+          min-height: 62px;
+          padding: 12px 4px;
+          border-bottom: 1px solid #e5e5e5;
+          color: inherit;
+          text-decoration: none;
+        }
+
+        .dashboardRecentRow:hover {
+          background: #fafafa;
+        }
+
+        .dashboardRecentRow > div:first-child {
+          min-width: 0;
+        }
+
+        .dashboardRecentRow strong {
+          display: block;
+          overflow: hidden;
+          font-size: 13px;
+          line-height: 1.3;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .dashboardRecentRow span {
+          display: block;
+          margin-top: 4px;
+          color: #777;
+          font-size: 11px;
+        }
+
+        .dashboardRecentResult {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex: 0 0 auto;
+          text-align: right;
+        }
+
+        .dashboardRecentResult strong {
+          white-space: nowrap;
+          font-size: 13px;
+        }
+
+        .dashboardRecentResult span {
+          margin: 0;
+          color: #111;
+          font-size: 15px;
+        }
+
+        .dashboardShowMore {
+          display: block;
+          margin: 16px auto 0;
+          border: 0;
+          background: transparent;
+          cursor: pointer;
+          font: inherit;
+          color: #555;
+          font-size: 11px;
+          font-weight: 700;
+        }
+
+        .dashboardShowMore:hover {
+          color: #111;
+        }
+
+        .coveragePanel {
+          min-height: 410px;
+        }
+
+        .coveragePanel a {
+          color: #111;
+          text-decoration: none;
+          white-space: nowrap;
+          font-size: 12px;
+          font-weight: 700;
+        }
+
+        .coverageDashboardBody {
+          margin-top: 18px;
+        }
+
+        .coverageDashboardBody :global(.coverage-snapshot) {
+          border: 0;
+          border-radius: 0;
+          padding: 0;
+          background: transparent;
+        }
+
+        .myWorkActionGrid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 18px;
+          margin-top: 18px;
+        }
+
+        .myWorkActionCard {
+          min-height: 145px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          border: 1px solid #dedede;
+          border-radius: 10px;
+          background: #fff;
+          padding: 22px;
+          color: inherit;
+          text-decoration: none;
+          transition:
+            border-color 120ms ease,
+            transform 120ms ease;
+        }
+
+        .myWorkActionCard:hover {
+          border-color: #aaa;
+          transform: translateY(-1px);
+        }
+
+        .myWorkActionCard h2 {
+          margin: 5px 0 7px;
+          font-size: 20px;
+        }
+
+        .myWorkActionCard p {
+          max-width: 440px;
+          margin: 0;
+          color: #707070;
+          font-size: 13px;
+          line-height: 1.45;
+        }
+
+        .myWorkActionCard > strong {
+          margin-top: 20px;
+          font-size: 12px;
+        }
+
+        @media (max-width: 850px) {
+          .homeStartGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .homeStartCard {
+            min-height: 0;
+          }
+
+          .myWorkDashboardGrid,
+          .myWorkActionGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .dashboardRecent,
+          .coveragePanel {
+            min-height: 0;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .myWorkPanel,
+          .myWorkActionCard {
+            padding: 17px;
+          }
+
+          .continuePanel .dashboardPanelHeading {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .dashboardRecentRow {
+            gap: 12px;
+          }
+        }
+
+        /* Home checkpoint visual cleanup */
+        .homeHeader {
+          margin-bottom: 24px;
+        }
+
+        .homeHeader p {
+          margin: 0;
+          color: #6f7671;
+          font-size: 15px;
+          line-height: 1.5;
+        }
+
+        .homeStartGrid {
+          gap: 12px;
+          margin-bottom: 18px;
+        }
+
+        .homeStartCard {
+          min-height: 150px;
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          padding: 22px;
+          border: 1px solid rgba(22, 33, 26, 0.11);
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.78);
+          transition:
+            border-color 140ms ease,
+            background 140ms ease,
+            transform 140ms ease,
+            box-shadow 140ms ease;
+        }
+
+        .homeStartCard:hover {
+          border-color: #496251;
+          background: #f7faf8;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 28px rgba(23, 35, 27, 0.055);
+        }
+
+        .homeStartCard h2 {
+          margin: 8px 0 7px;
+          font-size: 20px;
+          letter-spacing: -0.02em;
+        }
+
+        .homeStartCard p {
+          margin: 0 0 22px;
+          color: #707772;
+          line-height: 1.5;
+        }
+
+        .homeStartArrow {
+          margin-top: auto;
+          color: #627068;
+          transition: transform 140ms ease;
+        }
+
+        .homeStartCard:hover .homeStartArrow {
+          transform: translateX(3px);
+        }
+
+        .myWorkPanel {
+          border: 1px solid rgba(22, 33, 26, 0.1);
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.78);
+        }
+
+        .continuePanel {
+          margin-top: 18px;
+          padding: 21px 22px 18px;
+        }
+
+        .dashboardPrimaryAction {
+          padding: 9px 12px;
+          border: 1px solid rgba(22, 33, 26, 0.12);
+          border-radius: 9px;
+          background: #fff;
+        }
+
+        .dashboardPrimaryAction:hover {
+          border-color: #496251;
+          background: #f2f6f3;
+        }
+
+        .continueProgress {
+          height: 5px;
+          background: #e8ece9;
+        }
+
+        .continueProgress > div {
+          border-radius: inherit;
+          background: #365441;
+        }
+
+        .myWorkDashboardGrid {
+          gap: 16px;
+          margin-top: 16px;
+        }
+
+        .dashboardRecentList {
+          display: grid;
+          gap: 8px;
+          border-top: 0;
+        }
+
+        .dashboardRecentRow {
+          min-height: 68px;
+          padding: 13px 14px;
+          border: 1px solid rgba(22, 33, 26, 0.09);
+          border-radius: 11px;
+          background: #fff;
+        }
+
+        .dashboardRecentRow:hover {
+          border-color: rgba(57, 84, 67, 0.35);
+          background: #fafcfb;
+        }
+
+        .dashboardRecentRow > div:first-child span {
+          margin-top: 5px;
+          color: #858b87;
+        }
+
+        .dashboardRecentResult {
+          gap: 11px;
+        }
+
+        .scoreBadge {
+          min-width: 57px;
+          display: inline-flex !important;
+          align-items: baseline;
+          justify-content: center;
+          padding: 8px 9px;
+          border: 1px solid #cbd6ce;
+          border-radius: 9px;
+          background: #f1f5f2;
+          color: #294534 !important;
+          margin: 0 !important;
+        }
+
+        .scoreBadge strong {
+          display: inline;
+          overflow: visible;
+          color: #294534;
+          font-size: 14px;
+          line-height: 1;
+        }
+
+        .scoreBadge small {
+          color: #607067;
+          font-size: 10px;
+          font-weight: 700;
+        }
+
+        .statusBadge {
+          display: inline-flex !important;
+          align-items: center;
+          min-height: 28px;
+          padding: 0 9px;
+          margin: 0 !important;
+          border: 1px solid #d9dedb;
+          border-radius: 8px;
+          background: #f6f7f6;
+          color: #667069 !important;
+          white-space: nowrap;
+          font-size: 10px !important;
+          font-weight: 700;
+        }
+
+        .status-marking,
+        .status-completed {
+          border-color: #d8d0bc;
+          background: #faf7ef;
+          color: #6f6040 !important;
+        }
+
+        .recentArrow {
+          margin: 0 !important;
+          color: #66736b !important;
+          font-size: 15px !important;
+        }
+
+        .coverageDashboardBody {
+          padding-top: 16px;
+          border-top: 1px solid rgba(22, 33, 26, 0.08);
+        }
+
+      `}</style>
     </main>
   );
 }
