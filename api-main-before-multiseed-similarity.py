@@ -243,10 +243,24 @@ class SimilarQuestionRequest(BaseModel):
 
 def _similarity_to_seed(candidate:dict, seed:dict)->tuple[bool,int]:
     """
-    DOJO similarity is generator-native.
+    Decide whether candidate is genuinely similar to one seed.
 
-    Two questions are similar when they were generated from the
-    same family + architecture sub-batch.
+    Eligibility is deliberately stricter than merely sharing a
+    broad topic.
+
+    Strong match:
+      - same non-empty family
+
+    Structural match:
+      - same non-empty architecture AND
+        at least one shared technique or area
+
+    Technique match:
+      - at least one shared technique AND
+        same topic or at least one shared area
+
+    The numeric score only ranks questions AFTER they have passed
+    one of those eligibility rules.
     """
 
     candidate_family=_norm(str(candidate.get('family') or ''))
@@ -259,109 +273,94 @@ def _similarity_to_seed(candidate:dict, seed:dict)->tuple[bool,int]:
         str(seed.get('architecture') or '')
     )
 
-    eligible=bool(
+    candidate_topic=_norm(str(candidate.get('topic') or ''))
+    seed_topic=_norm(str(seed.get('topic') or ''))
+
+    candidate_areas={
+        _norm(str(x))
+        for x in (candidate.get('areas') or [])
+        if x
+    }
+    seed_areas={
+        _norm(str(x))
+        for x in (seed.get('areas') or [])
+        if x
+    }
+
+    candidate_techniques={
+        _norm(str(x))
+        for x in (candidate.get('techniques') or [])
+        if x
+    }
+    seed_techniques={
+        _norm(str(x))
+        for x in (seed.get('techniques') or [])
+        if x
+    }
+
+    shared_areas=candidate_areas & seed_areas
+    shared_techniques=candidate_techniques & seed_techniques
+
+    same_family=bool(
         seed_family
-        and seed_architecture
         and candidate_family == seed_family
+    )
+
+    same_architecture=bool(
+        seed_architecture
         and candidate_architecture == seed_architecture
+    )
+
+    same_topic=bool(
+        seed_topic
+        and candidate_topic == seed_topic
+    )
+
+    # HARD ELIGIBILITY
+    eligible=(
+        same_family
+        or (
+            same_architecture
+            and bool(shared_techniques or shared_areas)
+        )
+        or (
+            bool(shared_techniques)
+            and (
+                same_topic
+                or bool(shared_areas)
+            )
+        )
     )
 
     if not eligible:
         return False,0
 
-    return True,1
+    # RANK ELIGIBLE QUESTIONS ONLY
+    score=0
 
-def _question_identity(q:dict)->str:
-    """
-    Stable identity used for deduplication.
-    """
-    return str(
-        q.get('id')
-        or q.get('source_question_id')
-        or ''
-    )
+    if same_family:
+        score += 8
+
+    if same_architecture:
+        score += 6
+
+    score += 3 * len(shared_techniques)
+    score += 2 * len(shared_areas)
+
+    if same_topic:
+        score += 2
+
+    return True,score
 
 
-def _resolve_question_id(
-    qs:list[dict],
-    requested_id:str
-)->dict:
-    """
-    Resolve a question safely.
-
-    Canonical catalogue IDs are globally unique:
-        <source bank>::<source question id>
-
-    Short source IDs such as Q000017 are accepted ONLY when they
-    identify exactly one question across the entire catalogue.
-    """
-
-    requested=str(requested_id or '').strip()
-
-    if not requested:
-        raise HTTPException(
-            400,
-            'Question ID is required'
-        )
-
-    # Canonical ID always wins.
-    exact=[
-        q for q in qs
-        if str(q.get('id') or '') == requested
-    ]
-
-    if len(exact) == 1:
-        return exact[0]
-
-    # Legacy short-ID compatibility, but never guess.
-    source_matches=[
-        q for q in qs
-        if str(
-            q.get('source_question_id') or ''
-        ) == requested
-    ]
-
-    if len(source_matches) == 1:
-        return source_matches[0]
-
-    if len(source_matches) > 1:
-        raise HTTPException(
-            409,
-            (
-                f'Ambiguous question ID "{requested}". '
-                'Use the full canonical bank question ID.'
-            )
-        )
-
-    raise HTTPException(
-        404,
-        f'Question not found: {requested}'
-    )
-
-def _similar_pools(
+def _similar_candidates(
     seed_ids:list[str]
-)->tuple[list[dict],list[list[dict]]]:
-    """
-    Build one independent similarity pool per seed.
-
-    If the selected seeds are:
-      - vectors
-      - integration by parts
-      - quadratics
-
-    this returns three separate pools.
-
-    It does NOT look for questions which somehow match all three.
-    """
-
-    wanted=[
+)->tuple[list[dict],list[dict]]:
+    wanted={
         str(x).strip()
         for x in seed_ids
         if str(x).strip()
-    ]
-
-    # Preserve selection order while removing duplicate seed IDs.
-    wanted=list(dict.fromkeys(wanted))
+    }
 
     if not wanted:
         raise HTTPException(
@@ -371,160 +370,78 @@ def _similar_pools(
 
     qs=catalogue()
 
-    seeds=[]
+    seeds=[
+        q for q in qs
+        if str(q.get('id') or '') in wanted
+        or str(q.get('source_question_id') or '') in wanted
+    ]
 
-    for wanted_id in wanted:
-        seed=_resolve_question_id(
-            qs,
-            wanted_id
+    if not seeds:
+        raise HTTPException(
+            404,
+            'Seed questions not found'
         )
-
-        seeds.append(seed)
 
     excluded=set(wanted)
 
-    for seed in seeds:
-        if seed.get('id'):
-            excluded.add(str(seed['id']))
+    for q in seeds:
+        if q.get('id'):
+            excluded.add(str(q['id']))
 
-        if seed.get('source_question_id'):
-            excluded.add(
-                str(seed['source_question_id'])
-            )
+        if q.get('source_question_id'):
+            excluded.add(str(q['source_question_id']))
 
-    rng=random.Random()
-    pools=[]
+    scored=[]
 
-    for seed in seeds:
-        scored=[]
+    for candidate in qs:
+        qid=str(candidate.get('id') or '')
+        source_id=str(
+            candidate.get('source_question_id') or ''
+        )
 
-        for candidate in qs:
-            qid=str(candidate.get('id') or '')
-            source_id=str(
-                candidate.get('source_question_id') or ''
-            )
+        if qid in excluded or source_id in excluded:
+            continue
 
-            if qid in excluded or source_id in excluded:
-                continue
+        best_score=0
+        eligible=False
 
-            eligible,score=_similarity_to_seed(
+        for seed in seeds:
+            matches,score=_similarity_to_seed(
                 candidate,
                 seed
             )
 
-            if eligible:
-                scored.append(
-                    (score,candidate)
-                )
+            if matches:
+                eligible=True
+                best_score=max(best_score,score)
 
-        # Randomise equal-score ordering, then strongest first.
-        rng.shuffle(scored)
+        if eligible:
+            scored.append((best_score,candidate))
 
-        scored.sort(
-            key=lambda item:item[0],
-            reverse=True
-        )
+    # Shuffle first so equal-scoring candidates don't always appear
+    # in catalogue order.
+    rng=random.Random()
+    rng.shuffle(scored)
 
-        pools.append(
-            [q for _,q in scored]
-        )
+    scored.sort(
+        key=lambda item:item[0],
+        reverse=True
+    )
 
-    return seeds,pools
-
-
-def _unique_similar_candidates(
-    pools:list[list[dict]]
-)->list[dict]:
-    """
-    Unique union of all qualifying per-seed pools.
-
-    Used for the availability number.
-    """
-    seen=set()
-    result=[]
-
-    for pool in pools:
-        for q in pool:
-            key=_question_identity(q)
-
-            if not key or key in seen:
-                continue
-
-            seen.add(key)
-            result.append(q)
-
-    return result
-
-
-def _balanced_similar_selection(
-    pools:list[list[dict]],
-    count:int
-)->list[dict]:
-    """
-    Round-robin across the independent seed pools.
-
-    This prevents a seed with a large question family from
-    overwhelming seeds which have fewer available matches.
-
-    Duplicate candidates which occur in multiple pools are emitted
-    only once.
-    """
-
-    if count <= 0:
-        return []
-
-    positions=[0 for _ in pools]
-    chosen=[]
-    chosen_ids=set()
-
-    while len(chosen) < count:
-        added_this_round=False
-
-        for pool_index,pool in enumerate(pools):
-            while positions[pool_index] < len(pool):
-                candidate=pool[positions[pool_index]]
-                positions[pool_index] += 1
-
-                key=_question_identity(candidate)
-
-                if not key or key in chosen_ids:
-                    continue
-
-                chosen.append(candidate)
-                chosen_ids.add(key)
-                added_this_round=True
-                break
-
-            if len(chosen) >= count:
-                break
-
-        if not added_this_round:
-            break
-
-    return chosen
-
+    return seeds,[q for _,q in scored]
 
 @app.post('/questions/similar')
 def questions_similar(body:SimilarQuestionRequest):
-    requested=max(
-        1,
-        min(int(body.count),50)
-    )
+    requested=max(1,min(int(body.count),50))
 
-    seeds,pools=_similar_pools(
+    seeds,candidates=_similar_candidates(
         body.seed_ids
     )
 
-    unique_candidates=_unique_similar_candidates(
-        pools
-    )
+    available=len(candidates)
 
-    available=len(unique_candidates)
-
-    chosen=_balanced_similar_selection(
-        pools,
-        min(requested,available)
-    )
+    # Count is a maximum, never a target that weakens similarity.
+    chosen=candidates[:requested]
 
     return {
         'seed_ids':[
@@ -541,12 +458,8 @@ def questions_similar(body:SimilarQuestionRequest):
 
 @app.post('/questions/similar/count')
 def questions_similar_count(body:SimilarQuestionRequest):
-    seeds,pools=_similar_pools(
+    seeds,candidates=_similar_candidates(
         body.seed_ids
-    )
-
-    candidates=_unique_similar_candidates(
-        pools
     )
 
     return {
@@ -555,98 +468,7 @@ def questions_similar_count(body:SimilarQuestionRequest):
             for q in seeds
             if q.get('id')
         ],
-        'available':len(candidates),
-        'available_by_seed':[
-            {
-                'seed_id':str(seed.get('id') or ''),
-                'available':len(pool)
-            }
-            for seed,pool in zip(seeds,pools)
-        ]
-    }
-
-
-class SimilarSeedAllocation(BaseModel):
-    seed_id:str
-    count:int
-
-
-class SimilarAllocationRequest(BaseModel):
-    allocations:list[SimilarSeedAllocation]
-
-
-@app.post('/questions/similar/allocated')
-def questions_similar_allocated(
-    body:SimilarAllocationRequest
-):
-    allocations=[
-        item for item in body.allocations
-        if item.seed_id.strip() and item.count > 0
-    ]
-
-    if not allocations:
-        return {
-            'question_count':0,
-            'questions':[],
-            'allocations':[]
-        }
-
-    seed_ids=[
-        item.seed_id.strip()
-        for item in allocations
-    ]
-
-    seeds,pools=_similar_pools(seed_ids)
-
-    pool_by_seed={}
-
-    for seed,pool in zip(seeds,pools):
-        qid=str(seed.get('id') or '')
-        source_id=str(
-            seed.get('source_question_id') or ''
-        )
-
-        if qid:
-            pool_by_seed[qid]=pool
-
-        if source_id:
-            pool_by_seed[source_id]=pool
-
-    chosen=[]
-    chosen_ids=set()
-    summary=[]
-
-    for item in allocations:
-        seed_id=item.seed_id.strip()
-        requested=max(0,min(int(item.count),50))
-        pool=pool_by_seed.get(seed_id,[])
-
-        created=0
-
-        for candidate in pool:
-            if created >= requested:
-                break
-
-            key=_question_identity(candidate)
-
-            if not key or key in chosen_ids:
-                continue
-
-            chosen.append(candidate)
-            chosen_ids.add(key)
-            created += 1
-
-        summary.append({
-            'seed_id':seed_id,
-            'requested':requested,
-            'created':created,
-            'available':len(pool)
-        })
-
-    return {
-        'question_count':len(chosen),
-        'questions':chosen,
-        'allocations':summary
+        'available':len(candidates)
     }
 
 @app.get('/health')
@@ -678,10 +500,30 @@ def questions_select(
 
 @app.get('/questions/{qid:path}')
 def question(qid:str):
-    return _resolve_question_id(
-        catalogue(),
-        qid
-    )
+    q=next((q for q in catalogue() if q['id']==qid or q['source_question_id']==qid),None)
+    if not q: raise HTTPException(404,'Question not found')
+    return q
+
+# --- Persistent work items ---------------------------------------------------
+DB_PATH=Path(os.getenv("DOJO_DB_PATH", str(Path(__file__).resolve().parent/"dojo.db")))
+
+def db():
+    con=sqlite3.connect(DB_PATH)
+    con.row_factory=sqlite3.Row
+    con.execute("PRAGMA foreign_keys=ON")
+    con.execute("CREATE TABLE IF NOT EXISTS work_items(id TEXT PRIMARY KEY, kind TEXT NOT NULL, title TEXT NOT NULL, status TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, settings_json TEXT NOT NULL)")
+    con.execute("CREATE TABLE IF NOT EXISTS work_questions(work_id TEXT NOT NULL, position INTEGER NOT NULL, question_id TEXT NOT NULL, PRIMARY KEY(work_id,position), FOREIGN KEY(work_id) REFERENCES work_items(id) ON DELETE CASCADE)")
+    con.commit()
+    return con
+
+class WorkCreate(BaseModel):
+    kind:str="question_set"
+    title:str="Question Set"
+    question_ids:list[str]
+    settings:dict[str,Any]={}
+
+class WorkUpdate(BaseModel):
+    status:str|None=None
 
 @app.post("/work")
 def create_work(body:WorkCreate):

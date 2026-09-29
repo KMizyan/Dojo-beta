@@ -53,7 +53,7 @@ function Blocks({blocks}:{blocks:any[]}) {
   })}</>;
 }
 
-export function QuestionDisplay({q}:{q:any}) {
+function QuestionDisplay({q}:{q:any}) {
   const blocks=q?.question?.display_blocks || q?.display?.question_blocks || [];
   return blocks.length ? <Blocks blocks={blocks}/> : <MathText text={String(q?.question?.text || '')}/>;
 }
@@ -126,7 +126,7 @@ function RevealStep({step,index}:{step:any;index:number}) {
   );
 }
 
-export function MarkSchemeView({q}:{q:any}) {
+function MarkSchemeView({q}:{q:any}) {
   const p=partsOf(q), groups=p.length?p:[{steps:q?.solution?.steps||[]}];
 
   return (
@@ -143,7 +143,7 @@ export function MarkSchemeView({q}:{q:any}) {
   );
 }
 
-export function FullSolutionView({q}:{q:any}) {
+function FullSolutionView({q}:{q:any}) {
   const p=partsOf(q), groups=p.length?p:[{steps:q?.solution?.steps||[]}];
 
   return (
@@ -535,7 +535,7 @@ export default function PracticeSession({
   };
 
  const toggleQuestionFlag=async()=>{
-  const questionId=String(q?.id ?? q?.question_id ?? q?.ref ?? '');
+  const questionId=String(q?.id ?? '');
 
   if(!questionId || flagBusy===questionId) return;
 
@@ -563,15 +563,7 @@ export default function PracticeSession({
       });
     }
   } catch(err:any) {
-    console.warn('Could not update question flag',err);
-    const flagMessage =
-      err instanceof Error
-        ? err.message
-        : (err?.message || JSON.stringify(err));
-
-    setFlagError(
-      flagMessage || 'Could not update this question flag.'
-    );
+    console.error('Could not update question flag',err);
     setFlagError(
       err?.message || 'Could not update this question flag.'
     );
@@ -778,30 +770,30 @@ export default function PracticeSession({
                 <button
                   type="button"
                   onClick={toggleQuestionFlag}
-                  disabled={flagBusy===String(q?.id ?? q?.question_id ?? q?.ref ?? '')}
+                  disabled={flagBusy===String(q.id)}
                   style={{
                     minHeight:'38px',
                     padding:'0 14px',
-                    border:flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
+                    border:flaggedQuestions.has(String(q.id))
                       ? '1px solid #111'
                       : '1px solid #ccc',
-                    background:flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
+                    background:flaggedQuestions.has(String(q.id))
                       ? '#111'
                       : '#fff',
-                    color:flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
+                    color:flaggedQuestions.has(String(q.id))
                       ? '#fff'
                       : '#222',
                     borderRadius:'6px',
                     font:'inherit',
                     fontWeight:700,
-                    cursor:flagBusy===String(q?.id ?? q?.question_id ?? q?.ref ?? '')
+                    cursor:flagBusy===String(q.id)
                       ? 'default'
                       : 'pointer'
                   }}
                 >
-                  {flagBusy===String(q?.id ?? q?.question_id ?? q?.ref ?? '')
+                  {flagBusy===String(q.id)
                     ? 'Saving...'
-                    : flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
+                    : flaggedQuestions.has(String(q.id))
                       ? 'Flagged for later'
                       : 'Flag for later'}
                 </button>

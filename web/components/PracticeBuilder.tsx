@@ -7,7 +7,7 @@ export default function PracticeBuilder({topic,available}:{topic:string;availabl
   const [content,setContent]=useState<'all'|'as'>('all');
   const [ask,setAsk]=useState(true),[solutions,setSolutions]=useState(true),[timer,setTimer]=useState(false),[freeNav,setFreeNav]=useState(true);
   const start=()=>{
-    const x=new URLSearchParams({topic,count:String(count),selection,mode,content,ask:ask?'1':'0',solutions:solutions?'1':'0',timer:timer?'1':'0',freeNav:freeNav?'1':'0'});
+    const x=new URLSearchParams({topic,topics:`topic:${topic}`,count:String(count),selection,mode,content,ask:ask?'1':'0',solutions:solutions?'1':'0',timer:timer?'1':'0',freeNav:freeNav?'1':'0'});
     location.href=`/practice?${x}`;
   };
   return <section className="practiceBox">

@@ -243,14 +243,26 @@ class SimilarQuestionRequest(BaseModel):
 
 def _similarity_to_seed(candidate:dict, seed:dict)->tuple[bool,int]:
     """
-    DOJO similarity is generator-native.
+    Similarity follows the generator hierarchy.
 
-    Two questions are similar when they were generated from the
-    same family + architecture sub-batch.
+    Eligibility:
+      - same generator family
+
+    Priority:
+      - same family + same architecture first
+      - other questions from the same family afterwards
+
+    This means the current bank can use family-level similarity,
+    while future architecture-level variants automatically become
+    the strongest matches as the bank expands.
     """
 
-    candidate_family=_norm(str(candidate.get('family') or ''))
-    seed_family=_norm(str(seed.get('family') or ''))
+    candidate_family=_norm(
+        str(candidate.get('family') or '')
+    )
+    seed_family=_norm(
+        str(seed.get('family') or '')
+    )
 
     candidate_architecture=_norm(
         str(candidate.get('architecture') or '')
@@ -259,17 +271,25 @@ def _similarity_to_seed(candidate:dict, seed:dict)->tuple[bool,int]:
         str(seed.get('architecture') or '')
     )
 
-    eligible=bool(
+    same_family=bool(
         seed_family
-        and seed_architecture
         and candidate_family == seed_family
+    )
+
+    if not same_family:
+        return False,0
+
+    same_architecture=bool(
+        seed_architecture
         and candidate_architecture == seed_architecture
     )
 
-    if not eligible:
-        return False,0
+    # Architecture is the preferred sub-batch.
+    # Family-only questions remain valid fallback candidates.
+    if same_architecture:
+        return True,100
 
-    return True,1
+    return True,10
 
 def _question_identity(q:dict)->str:
     """

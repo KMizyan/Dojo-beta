@@ -8,10 +8,7 @@ import {
   completeWorkItem,
   beginMarkingWorkItem,
   finishMarkingWorkItem,
-  saveWorkItem,
-  getQuestionFlags,
-  flagQuestion,
-  unflagQuestion
+  saveWorkItem
 } from '../lib/work';
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { BlockMath, InlineMath } from 'react-katex';
@@ -53,7 +50,7 @@ function Blocks({blocks}:{blocks:any[]}) {
   })}</>;
 }
 
-export function QuestionDisplay({q}:{q:any}) {
+function QuestionDisplay({q}:{q:any}) {
   const blocks=q?.question?.display_blocks || q?.display?.question_blocks || [];
   return blocks.length ? <Blocks blocks={blocks}/> : <MathText text={String(q?.question?.text || '')}/>;
 }
@@ -126,7 +123,7 @@ function RevealStep({step,index}:{step:any;index:number}) {
   );
 }
 
-export function MarkSchemeView({q}:{q:any}) {
+function MarkSchemeView({q}:{q:any}) {
   const p=partsOf(q), groups=p.length?p:[{steps:q?.solution?.steps||[]}];
 
   return (
@@ -143,7 +140,7 @@ export function MarkSchemeView({q}:{q:any}) {
   );
 }
 
-export function FullSolutionView({q}:{q:any}) {
+function FullSolutionView({q}:{q:any}) {
   const p=partsOf(q), groups=p.length?p:[{steps:q?.solution?.steps||[]}];
 
   return (
@@ -154,7 +151,7 @@ export function FullSolutionView({q}:{q:any}) {
             <h3>
               Part {partName(part,pi)}
               {' '}
-              {part?.marks_available!=null && <span>— {part.marks_available} marks</span>}
+              {part?.marks_available!=null && <span>â€” {part.marks_available} marks</span>}
             </h3>
           )}
 
@@ -268,7 +265,7 @@ function AskDojo({q}:{q:any}) {
 
           {busy && (
             <div className="dojoMessage assistant">
-              Thinking…
+              Thinkingâ€¦
             </div>
           )}
 
@@ -284,7 +281,7 @@ function AskDojo({q}:{q:any}) {
           <input
             value={input}
             onChange={e=>setInput(e.target.value)}
-            placeholder="Ask DOJO about this question…"
+            placeholder="Ask DOJO about this questionâ€¦"
           />
 
           <button
@@ -404,11 +401,6 @@ export default function PracticeSession({
   const [stage,setStage]=useState<'doing'|'marking'|'results'>(initialStage);
   const [tab,setTab]=useState<Tab>('answer');
   const [marks,setMarks]=useState<Record<string,number>>({});
-  const [flaggedQuestions,setFlaggedQuestions]=useState<Set<string>>(
-    () => new Set()
-  );
-  const [flagBusy,setFlagBusy]=useState<string|null>(null);
-  const [flagError,setFlagError]=useState('');
   const [startedAt]=useState(()=>new Date().toISOString());
   const [elapsed,setElapsed]=useState(0);
   const [timerPaused,setTimerPaused]=useState(false);
@@ -425,35 +417,6 @@ export default function PracticeSession({
     (n,x)=>n+(marks[x.id]||0),
     0
   );
-
-
-  useEffect(()=>{
-    let cancelled=false;
-
-    getQuestionFlags()
-      .then(flags=>{
-        if(cancelled) return;
-
-        setFlaggedQuestions(
-          new Set(
-            flags.map((flag:any)=>String(flag.question_id))
-          )
-        );
-      })
-      .catch(err=>{
-        if(cancelled) return;
-        console.warn('Could not load question flags',err);
-        setFlagError(
-          err instanceof Error
-            ? err.message
-            : JSON.stringify(err)
-        );
-      });
-
-    return ()=>{
-      cancelled=true;
-    };
-  },[]);
 
   const storageKey=`dojo-session-${topic}-${startedAt}`;
 
@@ -534,52 +497,6 @@ export default function PracticeSession({
     }
   };
 
- const toggleQuestionFlag=async()=>{
-  const questionId=String(q?.id ?? q?.question_id ?? q?.ref ?? '');
-
-  if(!questionId || flagBusy===questionId) return;
-
-  const isFlagged=flaggedQuestions.has(questionId);
-
-  setFlagBusy(questionId);
-  setFlagError('');
-
-  try {
-    if(isFlagged) {
-      await unflagQuestion(questionId);
-
-      setFlaggedQuestions(current=>{
-        const next=new Set(current);
-        next.delete(questionId);
-        return next;
-      });
-    } else {
-      await flagQuestion(questionId);
-
-      setFlaggedQuestions(current=>{
-        const next=new Set(current);
-        next.add(questionId);
-        return next;
-      });
-    }
-  } catch(err:any) {
-    console.warn('Could not update question flag',err);
-    const flagMessage =
-      err instanceof Error
-        ? err.message
-        : (err?.message || JSON.stringify(err));
-
-    setFlagError(
-      flagMessage || 'Could not update this question flag.'
-    );
-    setFlagError(
-      err?.message || 'Could not update this question flag.'
-    );
-  } finally {
-    setFlagBusy(null);
-  }
-};
-
  const setMark=(v:number)=>{
   const awardedMark=Math.max(
     0,
@@ -610,7 +527,7 @@ export default function PracticeSession({
     return (
       <section className="sessionResults">
         <div className="sessionEyebrow">
-          {topic} · {mode==='exam'?'Exam':'Practice'}
+          {topic} Â· {mode==='exam'?'Exam':'Practice'}
         </div>
 
         <h1>Finished</h1>
@@ -663,7 +580,7 @@ export default function PracticeSession({
       <header className="sessionHeader">
         <div>
           <div className="sessionEyebrow">
-            {topic} · {mode==='exam'?'Exam mode':'Practice mode'}
+            {topic} Â· {mode==='exam'?'Exam mode':'Practice mode'}
           </div>
 
           <h1>Question {index+1}</h1>
@@ -675,7 +592,7 @@ export default function PracticeSession({
             type="button"
             onClick={()=>window.history.back()}
           >
-            ← Back
+            â† Back
           </button>
 
           <button
@@ -777,37 +694,6 @@ export default function PracticeSession({
               >
                 <button
                   type="button"
-                  onClick={toggleQuestionFlag}
-                  disabled={flagBusy===String(q?.id ?? q?.question_id ?? q?.ref ?? '')}
-                  style={{
-                    minHeight:'38px',
-                    padding:'0 14px',
-                    border:flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
-                      ? '1px solid #111'
-                      : '1px solid #ccc',
-                    background:flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
-                      ? '#111'
-                      : '#fff',
-                    color:flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
-                      ? '#fff'
-                      : '#222',
-                    borderRadius:'6px',
-                    font:'inherit',
-                    fontWeight:700,
-                    cursor:flagBusy===String(q?.id ?? q?.question_id ?? q?.ref ?? '')
-                      ? 'default'
-                      : 'pointer'
-                  }}
-                >
-                  {flagBusy===String(q?.id ?? q?.question_id ?? q?.ref ?? '')
-                    ? 'Saving...'
-                    : flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
-                      ? 'Flagged for later'
-                      : 'Flag for later'}
-                </button>
-
-                <button
-                  type="button"
                   onClick={()=>setMark((marks[q.id] ?? 0)-1)}
                   disabled={(marks[q.id] ?? 0)<=0}
                   style={{
@@ -820,7 +706,7 @@ export default function PracticeSession({
                     cursor:'pointer'
                   }}
                 >
-                  −
+                  âˆ’
                 </button>
 
                 <input
@@ -879,7 +765,7 @@ export default function PracticeSession({
           disabled={index===0}
           onClick={()=>move(Math.max(0,index-1))}
         >
-          ← Previous
+          â† Previous
         </button>
 
         <div className="questionDots">
@@ -902,7 +788,7 @@ export default function PracticeSession({
               className="primarySessionButton"
               onClick={()=>move(index+1)}
             >
-              Next →
+              Next â†’
             </button>
           ) : (
             <button
@@ -947,7 +833,7 @@ export default function PracticeSession({
                 move(index+1);
               }}
             >
-              Save mark & next →
+              Save mark & next â†’
             </button>
           ) : (
             <button

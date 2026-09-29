@@ -53,7 +53,7 @@ function Blocks({blocks}:{blocks:any[]}) {
   })}</>;
 }
 
-export function QuestionDisplay({q}:{q:any}) {
+function QuestionDisplay({q}:{q:any}) {
   const blocks=q?.question?.display_blocks || q?.display?.question_blocks || [];
   return blocks.length ? <Blocks blocks={blocks}/> : <MathText text={String(q?.question?.text || '')}/>;
 }
@@ -126,7 +126,7 @@ function RevealStep({step,index}:{step:any;index:number}) {
   );
 }
 
-export function MarkSchemeView({q}:{q:any}) {
+function MarkSchemeView({q}:{q:any}) {
   const p=partsOf(q), groups=p.length?p:[{steps:q?.solution?.steps||[]}];
 
   return (
@@ -143,7 +143,7 @@ export function MarkSchemeView({q}:{q:any}) {
   );
 }
 
-export function FullSolutionView({q}:{q:any}) {
+function FullSolutionView({q}:{q:any}) {
   const p=partsOf(q), groups=p.length?p:[{steps:q?.solution?.steps||[]}];
 
   return (

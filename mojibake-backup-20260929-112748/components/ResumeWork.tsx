@@ -328,12 +328,16 @@ function practiseSimilarHref(q:any) {
     q?.topic ||
     '';
 
-  const topic = String(primary).trim();
+  const slug = String(primary)
+    .toLowerCase()
+    .trim()
+    .replace(/&/g,'and')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-|-$/g,'');
 
-  return topic
-    ? `/question-sets?topics=${encodeURIComponent(topic)}&source=similar`
-    : '/question-sets';
+  return `/topics/pure/${slug}`;
 }
+
 function ReviewWork({
   work,
   questions,
@@ -509,7 +513,7 @@ const questionFamily =
         fontWeight:700
       }}
     >
-      Practise similar
+      Practise similar Ã¢â€ â€™
     </Link>
   </div>
 </div>
@@ -655,7 +659,7 @@ const questionFamily =
             move(Math.max(0,index - 1))
           }
         >
-          Previous
+          Ã¢â€ Â Previous
         </button>
 
         <div className="questionDots">
@@ -680,7 +684,7 @@ const questionFamily =
             className="primarySessionButton"
             onClick={() => move(index + 1)}
           >
-          Next
+            Next Ã¢â€ â€™
           </button>
         ) : (
           <Link
@@ -899,7 +903,7 @@ return {
           My Work
         </Link>
 
-        <span>/</span>
+        <span>Ã¢â‚¬Âº</span>
 
         {work.title}
       </div>

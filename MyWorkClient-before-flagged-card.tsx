@@ -117,7 +117,6 @@ function progressFor(item: WorkItem) {
 export default function MyWorkPage() {
   const [work, setWork] = useState<WorkItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [flaggedCount, setFlaggedCount] = useState(0);
 
   const [filter, setFilter] =
     useState<WorkFilter>('all');
@@ -134,23 +133,6 @@ export default function MyWorkPage() {
         setWork([]);
         setLoading(false);
         return;
-      }
-
-      const { count: flagsCount, error: flagsError } = await supabase
-        .from('question_flags')
-        .select('question_id', {
-          count: 'exact',
-          head: true
-        })
-        .eq('user_id', auth.user.id);
-
-      if (flagsError) {
-        console.warn(
-          'Could not load flagged question count',
-          flagsError
-        );
-      } else {
-        setFlaggedCount(flagsCount ?? 0);
       }
 
       const { data, error } = await supabase
@@ -299,30 +281,6 @@ export default function MyWorkPage() {
 
             <p>
               Work through past papers or DOJO-generated papers.
-            </p>
-          </div>
-
-          <span className="homeStartArrow">
-            →
-          </span>
-        </Link>
-
-        <Link
-          href="/review"
-          className="homeStartCard"
-        >
-          <div>
-            <span className="dashboardLabel">
-              Review
-            </span>
-
-            <h2>Review</h2>
-
-            <p>
-              Review past results and revisit questions.
-              {!loading && flaggedCount > 0
-                ? ` ${flaggedCount} flagged.`
-                : ''}
             </p>
           </div>
 
@@ -549,7 +507,7 @@ export default function MyWorkPage() {
 
         .homeStartGrid {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 16px;
           margin-bottom: 18px;
         }

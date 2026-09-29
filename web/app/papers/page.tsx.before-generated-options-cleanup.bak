@@ -1,8 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { useState } from 'react';
 
 type PaperArea = 'Pure' | 'Statistics' | 'Mechanics';
 type Level = 'A-level' | 'AS';
@@ -22,84 +21,6 @@ export default function PapersPage() {
   const [solutions, setSolutions] = useState(true);
   const [timer, setTimer] = useState(false);
   const [freeNav, setFreeNav] = useState(true);
-  const [savedPapers, setSavedPapers] = useState<any[]>([]);
-  const [papersLoading, setPapersLoading] = useState(true);
-
-  useEffect(() => {
-    let active = true;
-
-    async function loadSavedPapers() {
-      setPapersLoading(true);
-
-      const { data: auth } = await supabase.auth.getUser();
-
-      if (!auth.user) {
-        if (active) {
-          setSavedPapers([]);
-          setPapersLoading(false);
-        }
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from('work_items')
-        .select('id,title,status,settings,created_at,updated_at,completed_at,marked_at')
-        .eq('user_id', auth.user.id)
-        .eq('kind', 'generated_paper')
-        .order('updated_at', { ascending: false })
-        .limit(3);
-
-      if (error || !data) {
-        if (active) {
-          setSavedPapers([]);
-          setPapersLoading(false);
-        }
-        return;
-      }
-
-      const paperIds = data.map((paper) => paper.id);
-
-      const { data: markedQuestions } = paperIds.length
-        ? await supabase
-            .from('work_questions')
-            .select('work_id,marks_awarded,marks_available')
-            .in('work_id', paperIds)
-        : { data: [] };
-
-      const papersWithScores = data.map((paper) => {
-        const questionMarks = (markedQuestions ?? []).filter(
-          (question) => question.work_id === paper.id
-        );
-
-        const score = questionMarks.reduce(
-          (sum, question) => sum + Number(question.marks_awarded ?? 0),
-          0
-        );
-
-        const available = questionMarks.reduce(
-          (sum, question) => sum + Number(question.marks_available ?? 0),
-          0
-        );
-
-        return {
-          ...paper,
-          score,
-          available,
-        };
-      });
-
-      if (active) {
-        setSavedPapers(papersWithScores);
-        setPapersLoading(false);
-      }
-    }
-
-    loadSavedPapers();
-
-    return () => {
-      active = false;
-    };
-  }, [section]);
 
   return (
     <main className="papers-page">
@@ -126,7 +47,7 @@ export default function PapersPage() {
             </span>
 
             <span className="paper-entry-action">
-              Browse papers
+              Browse papers →
             </span>
           </button>
 
@@ -143,7 +64,7 @@ export default function PapersPage() {
             </span>
 
             <span className="paper-entry-action">
-              Create paper
+              Create paper →
             </span>
           </button>
         </div>
@@ -155,7 +76,7 @@ export default function PapersPage() {
             className="text-back"
             onClick={() => setSection(null)}
           >
-            Back to Papers
+            ← Papers
           </button>
 
           <div className="section-heading-row">
@@ -220,7 +141,7 @@ export default function PapersPage() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Pearson / Edexcel
+                  Pearson / Edexcel ↗
                 </a>
               </div>
             ))}
@@ -240,7 +161,7 @@ export default function PapersPage() {
             className="text-back"
             onClick={() => setSection(null)}
           >
-            Back to Papers
+            ← Papers
           </button>
 
           <h2>Generate a Paper</h2>
@@ -341,11 +262,43 @@ export default function PapersPage() {
             }
           >
             Advanced options{' '}
-            <span>{advanced ? '-' : '+'}</span>
+            <span>{advanced ? '−' : '+'}</span>
           </button>
 
           {advanced && (
             <div className="advanced-panel paper-advanced-panel">
+              <div>
+                <label>Question selection</label>
+
+                <select defaultValue="mixed">
+                  <option value="mixed">
+                    Mixed
+                  </option>
+
+                  <option value="unseen">
+                    Unseen questions
+                  </option>
+
+                  <option value="wrong">
+                    Previously wrong questions
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label>Topic weighting</label>
+
+                <select defaultValue="balanced">
+                  <option value="balanced">
+                    Balanced
+                  </option>
+
+                  <option value="custom">
+                    Choose topics
+                  </option>
+                </select>
+              </div>
+
               {!examMode && (
                 <div className="paper-workspace-options">
                   <div className="paper-workspace-heading">
@@ -451,68 +404,16 @@ export default function PapersPage() {
           <div className="paper-history">
             <div className="history-heading">
               <h3>Your papers</h3>
-              <Link href="/papers/history">View all papers</Link>
+
+              <Link href="/">
+                View all work →
+              </Link>
             </div>
 
-            {papersLoading ? (
-              <p className="empty-history">Loading papers...</p>
-            ) : savedPapers.length === 0 ? (
-              <p className="empty-history">
-                Generated papers and results will appear here as you use DOJO.
-              </p>
-            ) : (
-              <div className="past-paper-list">
-                {savedPapers.map((paper) => {
-                  const elapsed = Number(paper.settings?.elapsedSeconds ?? 0);
-                  const minutes = Math.floor(elapsed / 60);
-                  const seconds = elapsed % 60;
-
-                  return (
-                    <div className="past-paper-row" key={paper.id}>
-                      <div className="paper-year">
-                        {String(paper.settings?.paper?.area ?? 'Paper')}
-                      </div>
-
-                      <div className="paper-name">
-                        <strong>{paper.title}</strong>
-                        {elapsed > 0 && (
-                          <span>
-                            {' - '}
-                            {minutes}:{String(seconds).padStart(2, '0')}
-                          </span>
-                        )}
-
-                        <span>
-                          {' - '}
-                          {paper.status === 'marked' && paper.available > 0
-                            ? `${paper.score}/${paper.available} (${Math.round(
-                                (paper.score / paper.available) * 100
-                              )}%)`
-                            : paper.status === 'marking'
-                              ? 'Marking'
-                              : 'Finished'}
-                        </span>
-                      </div>
-
-                      <Link
-                        className="paper-open"
-                        href={
-                          paper.status === 'marked'
-                            ? `/practice?work=${encodeURIComponent(paper.id)}`
-                            : `/practice?work=${encodeURIComponent(paper.id)}&mode=mark`
-                        }
-                      >
-                        {paper.status === 'marked'
-                          ? 'View result'
-                          : paper.status === 'marking'
-                            ? 'Continue marking'
-                            : 'Mark paper'}
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+            <p className="empty-history">
+              Generated papers and results will appear here as
+              you use DOJO.
+            </p>
           </div>
         </section>
       )}

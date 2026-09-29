@@ -243,10 +243,10 @@ class SimilarQuestionRequest(BaseModel):
 
 def _similarity_to_seed(candidate:dict, seed:dict)->tuple[bool,int]:
     """
-    DOJO similarity is generator-native.
+    Test similarity against ONE seed question.
 
-    Two questions are similar when they were generated from the
-    same family + architecture sub-batch.
+    Multiple selected seeds are intentionally NOT combined here.
+    A candidate only needs to be genuinely similar to one seed.
     """
 
     candidate_family=_norm(str(candidate.get('family') or ''))
@@ -259,17 +259,83 @@ def _similarity_to_seed(candidate:dict, seed:dict)->tuple[bool,int]:
         str(seed.get('architecture') or '')
     )
 
-    eligible=bool(
+    candidate_topic=_norm(str(candidate.get('topic') or ''))
+    seed_topic=_norm(str(seed.get('topic') or ''))
+
+    candidate_areas={
+        _norm(str(x))
+        for x in (candidate.get('areas') or [])
+        if x
+    }
+    seed_areas={
+        _norm(str(x))
+        for x in (seed.get('areas') or [])
+        if x
+    }
+
+    candidate_techniques={
+        _norm(str(x))
+        for x in (candidate.get('techniques') or [])
+        if x
+    }
+    seed_techniques={
+        _norm(str(x))
+        for x in (seed.get('techniques') or [])
+        if x
+    }
+
+    shared_areas=candidate_areas & seed_areas
+    shared_techniques=candidate_techniques & seed_techniques
+
+    same_family=bool(
         seed_family
-        and seed_architecture
         and candidate_family == seed_family
+    )
+
+    same_architecture=bool(
+        seed_architecture
         and candidate_architecture == seed_architecture
+    )
+
+    same_topic=bool(
+        seed_topic
+        and candidate_topic == seed_topic
+    )
+
+    eligible=(
+        same_family
+        or (
+            same_architecture
+            and bool(shared_techniques or shared_areas)
+        )
+        or (
+            bool(shared_techniques)
+            and (
+                same_topic
+                or bool(shared_areas)
+            )
+        )
     )
 
     if not eligible:
         return False,0
 
-    return True,1
+    score=0
+
+    if same_family:
+        score += 8
+
+    if same_architecture:
+        score += 6
+
+    score += 3 * len(shared_techniques)
+    score += 2 * len(shared_areas)
+
+    if same_topic:
+        score += 2
+
+    return True,score
+
 
 def _question_identity(q:dict)->str:
     """

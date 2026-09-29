@@ -167,12 +167,12 @@ export default function GeneratedExam({paper,options}:{paper:any;options?:Partia
 
   return <main className="generatedExamPage paperRunning">
     <div className="examStickyBar">
-      <div><b>{paper.level} - {title}</b><span>{paper.total_marks} marks</span></div>
+      <div><b>{paper.level} Â· {title}</b><span>{paper.total_marks} marks</span></div>
       <div className="examStickyRight">
         {workspace.timer&&<span>{formatTime(seconds)}</span>}
         {!finished&&<button className="pauseExamButton" onClick={()=>setPaused(true)}>Pause</button>}
         {!finished&&<button className="pauseExamButton" onClick={leavePaper}>Back to Papers</button>}
-        {!finished&&<button onClick={()=>{setPaused(false);setFinished(true)}}>Finish paper</button>}
+        <button onClick={()=>{setPaused(false);setFinished(true)}}>{finished?'Paper finished':'Finish paper'}</button>
       </div>
     </div>
 
@@ -186,40 +186,37 @@ export default function GeneratedExam({paper,options}:{paper:any;options?:Partia
     </div>}
 
     <article className={`continuousPaper ${paused?'paperIsPaused':''}`}>
-      <header className="paperMiniHeader"><span>DOJO</span><span>{paper.level} Mathematics - {title}</span></header>
+      <header className="paperMiniHeader"><span>DOJO</span><span>{paper.level} Mathematics Â· {title}</span></header>
       {paper.questions.map((q:any,i:number)=><ExamQuestion q={q} index={i} key={q.id||i}/>)}
       <footer className="endOfPaper"><b>END OF PAPER</b><span>Total for paper: {paper.total_marks} marks</span></footer>
     </article>
-    {finished&&
-      <div className="examFinishedBar">
-        <div>
-          <b>Paper finished</b>
-          <span>
-            {saveError
-              ? saveError
-              : 'Save this paper for marking later, or mark it now.'}
-          </span>
-        </div>
 
-        <div style={{display:'flex',gap:'10px'}}>
-          <button
-            type="button"
-            disabled={saving}
-            onClick={()=>saveFinishedPaper(false)}
-          >
-            {saving ? 'Saving...' : 'Save for later'}
-          </button>
-
-          <button
-            type="button"
-            disabled={saving}
-            onClick={()=>saveFinishedPaper(true)}
-          >
-            Mark now
-          </button>
-        </div>
+    {finished&&<div className="examFinishedBar">
+      <div>
+        <b>Paper finished</b>
+        <span>
+          {saveError
+            ? saveError
+            : 'Save this paper for marking later, or mark it now.'}
+        </span>
       </div>
-    }
+      <div>
+        <button
+          type="button"
+          disabled={saving}
+          onClick={()=>saveFinishedPaper(false)}
+        >
+          {saving?'Saving...':'Save for later'}
+        </button>
+        <button
+          type="button"
+          disabled={saving}
+          onClick={()=>saveFinishedPaper(true)}
+        >
+          Mark now
+        </button>
+      </div>
+    </div>}
   </main>;
 }
 

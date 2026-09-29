@@ -17,7 +17,7 @@ export default async function Practice({
   const p=await searchParams;
 
   if(p.work){
-    return <ResumeWork workId={p.work} startMarking={p.mode==='mark'}/>;
+    return <ResumeWork workId={p.work}/>;
   }
 
   const label=p.topic||'';
@@ -73,9 +73,9 @@ export default async function Practice({
     <main className="main practiceShell">
       <div className="crumb">
         <Link href="/topics">Topics</Link>
-        <span>/</span>
+        <span>›</span>
         {label}
-        <span>/</span>
+        <span>›</span>
         Practice
       </div>
 

@@ -47,49 +47,10 @@ export default function PapersPage() {
         .eq('user_id', auth.user.id)
         .eq('kind', 'generated_paper')
         .order('updated_at', { ascending: false })
-        .limit(3);
-
-      if (error || !data) {
-        if (active) {
-          setSavedPapers([]);
-          setPapersLoading(false);
-        }
-        return;
-      }
-
-      const paperIds = data.map((paper) => paper.id);
-
-      const { data: markedQuestions } = paperIds.length
-        ? await supabase
-            .from('work_questions')
-            .select('work_id,marks_awarded,marks_available')
-            .in('work_id', paperIds)
-        : { data: [] };
-
-      const papersWithScores = data.map((paper) => {
-        const questionMarks = (markedQuestions ?? []).filter(
-          (question) => question.work_id === paper.id
-        );
-
-        const score = questionMarks.reduce(
-          (sum, question) => sum + Number(question.marks_awarded ?? 0),
-          0
-        );
-
-        const available = questionMarks.reduce(
-          (sum, question) => sum + Number(question.marks_available ?? 0),
-          0
-        );
-
-        return {
-          ...paper,
-          score,
-          available,
-        };
-      });
+        .limit(5);
 
       if (active) {
-        setSavedPapers(papersWithScores);
+        setSavedPapers(error ? [] : data ?? []);
         setPapersLoading(false);
       }
     }
@@ -451,7 +412,7 @@ export default function PapersPage() {
           <div className="paper-history">
             <div className="history-heading">
               <h3>Your papers</h3>
-              <Link href="/papers/history">View all papers</Link>
+              <Link href="/">View all work</Link>
             </div>
 
             {papersLoading ? (
@@ -470,7 +431,11 @@ export default function PapersPage() {
                   return (
                     <div className="past-paper-row" key={paper.id}>
                       <div className="paper-year">
-                        {String(paper.settings?.paper?.area ?? 'Paper')}
+                        {paper.status === 'marked'
+                          ? 'Marked'
+                          : paper.status === 'marking'
+                            ? 'Marking'
+                            : 'Finished'}
                       </div>
 
                       <div className="paper-name">
@@ -481,17 +446,6 @@ export default function PapersPage() {
                             {minutes}:{String(seconds).padStart(2, '0')}
                           </span>
                         )}
-
-                        <span>
-                          {' - '}
-                          {paper.status === 'marked' && paper.available > 0
-                            ? `${paper.score}/${paper.available} (${Math.round(
-                                (paper.score / paper.available) * 100
-                              )}%)`
-                            : paper.status === 'marking'
-                              ? 'Marking'
-                              : 'Finished'}
-                        </span>
                       </div>
 
                       <Link

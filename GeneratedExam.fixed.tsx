@@ -1,7 +1,5 @@
 'use client';
 import Link from 'next/link';
-import {useRouter} from 'next/navigation';
-import {createWorkItem, completeWorkItem, beginMarkingWorkItem, updateWorkSettings} from '../lib/work';
 import {useEffect,useMemo,useState} from 'react';
 import {BlockMath,InlineMath} from 'react-katex';
 import 'katex/dist/katex.min.css';
@@ -18,11 +16,7 @@ function MathText({text}:{text:string}) {
   const bits=normalised.split(/(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$)/g).filter(Boolean);
   return <>{bits.map((bit,i)=>{
     if(bit.startsWith('$$')&&bit.endsWith('$$')) return <BlockMath key={i} math={bit.slice(2,-2).trim()}/>;
-    if(bit.startsWith('$')&&bit.endsWith('$')) {
-      const math=bit.slice(1,-1).trim();
-      const tall=/\\(?:int|sum|prod|lim)\b|\\frac\s*\{|\\dfrac\s*\{/.test(math);
-      return <span key={i} className={tall?'examTallInlineMath':'examInlineMath'}><InlineMath math={tall?`\\displaystyle ${math}`:math}/></span>;
-    }
+    if(bit.startsWith('$')&&bit.endsWith('$')) return <InlineMath key={i} math={bit.slice(1,-1).trim()}/>;
     return <span key={i} style={{whiteSpace:'pre-wrap'}}>{bit}</span>;
   })}</>;
 }
@@ -79,68 +73,17 @@ function formatTime(seconds:number){
   return `${m}:${String(s).padStart(2,'0')}`;
 }
 
-type PaperOptions={examMode:boolean;askDojo:boolean;solutions:boolean;timer:boolean;freeNav:boolean};
-export default function GeneratedExam({paper,options}:{paper:any;options?:Partial<PaperOptions>}){
-  const router=useRouter();
-  const workspace:PaperOptions={examMode:options?.examMode??true,askDojo:options?.askDojo??false,solutions:options?.solutions??false,timer:options?.timer??true,freeNav:options?.freeNav??false};
+export default function GeneratedExam({paper}:{paper:any}){
   const [started,setStarted]=useState(false);
   const [seconds,setSeconds]=useState(0);
   const [finished,setFinished]=useState(false);
   const [paused,setPaused]=useState(false);
-  const [saving,setSaving]=useState(false);
-  const [saveError,setSaveError]=useState('');
-  const saveFinishedPaper=async(markNow:boolean)=>{
-    if(saving)return;
-    setSaving(true);
-    setSaveError('');
 
-    try{
-      const questionIds=(paper.questions||[])
-        .map((q:any)=>String(q?.id||''))
-        .filter(Boolean);
-
-      if(!questionIds.length){
-        throw new Error('This paper has no saveable question IDs.');
-      }
-
-      const work=await createWorkItem({
-        kind:'generated_paper',
-        title:`DOJO ${paper.level} ${paper.area} paper`,
-        question_ids:questionIds,
-        settings:{
-          paper,
-          workspace,
-          elapsedSeconds:seconds,
-          totalMarks:paper.total_marks,
-          requestedMarks:paper.requested_marks,
-        },
-      });
-
-      await completeWorkItem(work.id);
-
-      if(markNow){
-        await beginMarkingWorkItem(work.id);
-        router.push(`/practice?work=${encodeURIComponent(work.id)}&mode=mark`);
-      }else{
-        router.push('/');
-      }
-    }catch(err:any){
-      setSaveError(err?.message||'Could not save this paper.');
-      setSaving(false);
-    }
-  };
-
-  const leavePaper=()=>{
-    const ok=window.confirm(
-      'Leave this paper without saving? Your progress on this paper will be lost.'
-    );
-    if(ok)router.push('/papers');
-  };
   useEffect(()=>{
-    if(!workspace.timer||!started||finished||paused)return;
+    if(!started||finished||paused)return;
     const id=window.setInterval(()=>setSeconds(v=>v+1),1000);
     return()=>window.clearInterval(id);
-  },[workspace.timer,started,finished,paused]);
+  },[started,finished,paused]);
 
   const suggestedMinutes=useMemo(()=>Math.max(20,Math.round((paper.total_marks||paper.requested_marks)*1.2)),[paper]);
   const title=paper.area==='Pure'?'Pure Mathematics':paper.area;
@@ -162,17 +105,16 @@ export default function GeneratedExam({paper,options}:{paper:any;options?:Partia
     </ul></section>
     <section className="examAdvice"><h2>Advice</h2><p>Read each question carefully. Try to answer every question and check your work if you have time.</p></section>
     <button className="startExamButton" onClick={()=>setStarted(true)}>Start paper</button>
-    <button className="leaveExamLink" type="button" onClick={()=>router.push('/papers')}>Back to Papers</button>
+    <Link className="leaveExamLink" href="/papers">← Back to Papers</Link>
   </div></main>;
 
   return <main className="generatedExamPage paperRunning">
     <div className="examStickyBar">
-      <div><b>{paper.level} - {title}</b><span>{paper.total_marks} marks</span></div>
+      <div><b>{paper.level} · {title}</b><span>{paper.total_marks} marks</span></div>
       <div className="examStickyRight">
-        {workspace.timer&&<span>{formatTime(seconds)}</span>}
+        <span>{formatTime(seconds)}</span>
         {!finished&&<button className="pauseExamButton" onClick={()=>setPaused(true)}>Pause</button>}
-        {!finished&&<button className="pauseExamButton" onClick={leavePaper}>Back to Papers</button>}
-        {!finished&&<button onClick={()=>{setPaused(false);setFinished(true)}}>Finish paper</button>}
+        <button onClick={()=>{setPaused(false);setFinished(true)}}>{finished?'Paper finished':'Finish paper'}</button>
       </div>
     </div>
 
@@ -186,40 +128,11 @@ export default function GeneratedExam({paper,options}:{paper:any;options?:Partia
     </div>}
 
     <article className={`continuousPaper ${paused?'paperIsPaused':''}`}>
-      <header className="paperMiniHeader"><span>DOJO</span><span>{paper.level} Mathematics - {title}</span></header>
+      <header className="paperMiniHeader"><span>DOJO</span><span>{paper.level} Mathematics · {title}</span></header>
       {paper.questions.map((q:any,i:number)=><ExamQuestion q={q} index={i} key={q.id||i}/>)}
       <footer className="endOfPaper"><b>END OF PAPER</b><span>Total for paper: {paper.total_marks} marks</span></footer>
     </article>
-    {finished&&
-      <div className="examFinishedBar">
-        <div>
-          <b>Paper finished</b>
-          <span>
-            {saveError
-              ? saveError
-              : 'Save this paper for marking later, or mark it now.'}
-          </span>
-        </div>
 
-        <div style={{display:'flex',gap:'10px'}}>
-          <button
-            type="button"
-            disabled={saving}
-            onClick={()=>saveFinishedPaper(false)}
-          >
-            {saving ? 'Saving...' : 'Save for later'}
-          </button>
-
-          <button
-            type="button"
-            disabled={saving}
-            onClick={()=>saveFinishedPaper(true)}
-          >
-            Mark now
-          </button>
-        </div>
-      </div>
-    }
+    {finished&&<div className="examFinishedBar"><div><b>Paper finished</b><span>Your marking and review flow will live here next.</span></div><Link href="/my-work">Go to My Work →</Link></div>}
   </main>;
 }
-

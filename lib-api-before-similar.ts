@@ -50,55 +50,6 @@ export async function selectQuestionsWithExposure(
   }
 }
 
-
-export async function getSimilarQuestionCount(
-  seedIds:string[]
-){
-  try{
-    const r=await fetch(
-      `${API}/questions/similar/count`,
-      {
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json'
-        },
-        body:JSON.stringify({
-          seed_ids:seedIds,
-          count:1
-        })
-      }
-    );
-
-    if(!r.ok) return null;
-
-    return await r.json();
-  }catch{
-    return null;
-  }
-}
-export async function selectSimilarQuestions(
-  seedIds:string[],
-  count:number
-){
-  try{
-    const r=await fetch(`${API}/questions/similar`,{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({
-        seed_ids:seedIds,
-        count
-      })
-    });
-
-    if(!r.ok) return null;
-
-    return await r.json();
-  }catch{
-    return null;
-  }
-}
 export async function getQuestion(id:string){
   try{
     const r=await fetch(`${API}/questions/${encodeURIComponent(id)}`,{cache:'no-store'});
@@ -112,25 +63,3 @@ export function matchBankTopic(displayName:string, topics:any[]){
   return topics.find(t=>{const n=norm(t.name);return n===wanted || n.includes(wanted) || wanted.includes(n)})?.name ?? null;
 }
 
-
-export async function selectAllocatedSimilarQuestions(
-  allocations:{seed_id:string;count:number}[]
-){
-  const r=await fetch(
-    `${API}/questions/similar/allocated`,
-    {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({allocations})
-    }
-  );
-
-  if(!r.ok){
-    throw new Error(
-      await r.text() ||
-      'Could not create similar practice set.'
-    );
-  }
-
-  return await r.json();
-}

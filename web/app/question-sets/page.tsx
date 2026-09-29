@@ -1,8 +1,9 @@
 'use client';
 
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useMemo, useState } from 'react';
+import { selectQuestionsWithExposure } from '../../lib/api';
+import { supabase } from '../../lib/supabase';
 
 type CourseArea = 'Pure' | 'Statistics' | 'Mechanics';
 type Exposure = 'any' | 'unseen' | 'once' | 'few' | 'explored';
@@ -32,23 +33,23 @@ const exposureChoices: { id: Exposure; label: string; detail: string }[] = [
   },
   {
     id: 'unseen',
-    label: 'Not encountered',
-    detail: 'Question types you have not met yet',
+    label: 'Unseen',
+    detail: 'Exact questions you have not marked before',
   },
   {
     id: 'once',
     label: 'Seen once',
-    detail: 'Question types you have only encountered once',
+    detail: 'Exact questions you have marked once',
   },
   {
     id: 'few',
     label: 'Seen a few times',
-    detail: 'Question types with some exposure',
+    detail: 'Exact questions you have marked 2–3 times',
   },
   {
     id: 'explored',
     label: 'Well explored',
-    detail: 'Question types you have encountered repeatedly',
+    detail: 'Exact questions you have marked 4+ times',
   },
 ];
 
@@ -58,6 +59,7 @@ function validExposure(value: string): value is Exposure {
 
 function QuestionSetsContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const incomingTopics = useMemo(() => {
     const raw = searchParams.get('topics');
@@ -89,7 +91,8 @@ function QuestionSetsContent() {
   const [setTopics, setSetTopics] = useState<string[]>(incomingTopics);
   const [exposures, setExposures] = useState<Exposure[]>(incomingExposure);
   const [setCount, setSetCount] = useState(10);
-  const [setNote, setSetNote] = useState('');
+  const [starting, setStarting] = useState(false);
+  const [startError, setStartError] = useState('');
 
   const topics = topicGroups[courseArea];
 
@@ -126,10 +129,79 @@ function QuestionSetsContent() {
         setTopics.join(' + ')
       )}&topics=${encodeURIComponent(
         setTopics.join(',')
-      )}&count=${setCount}&mode=practice&ask=1&solutions=1&freeNav=1&brief=${encodeURIComponent(
-        setNote
-      )}&exposure=${encodeURIComponent(exposures.join(','))}`
+      )}&count=${setCount}&mode=practice&ask=1&solutions=1&freeNav=1&exposure=${encodeURIComponent(
+        exposures.join(',')
+      )}`
     : '#';
+
+  async function startQuestionSet() {
+    if (!canStart || starting) return;
+
+    setStarting(true);
+    setStartError('');
+
+    try {
+      // "Any" does not need account history at all.
+      if (exposures.includes('any')) {
+        router.push(practiceHref);
+        return;
+      }
+
+      const history: Record<string, number> = {};
+      const { data: auth } = await supabase.auth.getUser();
+
+      if (auth.user) {
+        const { data, error } = await supabase
+          .from('work_items')
+          .select(`
+            id,
+            work_questions (
+              question_id,
+              marked_at
+            )
+          `);
+
+        if (error) throw error;
+
+        for (const item of data ?? []) {
+          for (const question of item.work_questions ?? []) {
+            if (!question.marked_at) continue;
+
+            history[question.question_id] =
+              (history[question.question_id] ?? 0) + 1;
+          }
+        }
+      }
+
+      const result = await selectQuestionsWithExposure(
+        setTopics,
+        setCount,
+        exposures,
+        history
+      );
+
+      const ids = (result?.questions ?? [])
+        .map((question:any) => question.id)
+        .filter(Boolean);
+
+      if (!ids.length) {
+        throw new Error(
+          'No questions match those history filters yet.'
+        );
+      }
+
+      router.push(
+        `${practiceHref}&ids=${encodeURIComponent(ids.join(','))}`
+      );
+    } catch (error:any) {
+      setStartError(
+        error?.message ||
+        'Could not build this question set.'
+      );
+    } finally {
+      setStarting(false);
+    }
+  }
 
   return (
     <main className="questionSetsV2Page">
@@ -162,7 +234,7 @@ function QuestionSetsContent() {
             </div>
 
             <div>
-              <span>Question types</span>
+              <span>Question history</span>
               <strong>
                 {exposures
                   .map(
@@ -246,10 +318,10 @@ function QuestionSetsContent() {
           <div className="questionSetSectionHeading">
             <span className="questionSetStep">03</span>
             <div>
-              <h2>Choose question types</h2>
+              <h2>Choose question history</h2>
               <p>
-                Use your Coverage history to control how familiar the
-                questions should be.
+                Control how many times you have previously marked the exact
+                questions included in this set.
               </p>
             </div>
           </div>
@@ -297,19 +369,6 @@ function QuestionSetsContent() {
             ))}
           </div>
 
-          <div className="questionSetContext">
-            <label htmlFor="question-set-context">
-              Anything else DOJO should know?
-              <span>Optional</span>
-            </label>
-
-            <textarea
-              id="question-set-context"
-              value={setNote}
-              onChange={(event) => setSetNote(event.target.value)}
-              placeholder="e.g. My class is revising trig identities, but we haven't covered small-angle approximations yet."
-            />
-          </div>
         </div>
       </section>
 
@@ -326,7 +385,7 @@ function QuestionSetsContent() {
           {setTopics.length > 0 && (
             <small>
               {exposures.includes('any')
-                ? 'Any question type'
+                ? 'Any question'
                 : exposureChoices
                     .filter((choice) => exposures.includes(choice.id))
                     .map((choice) => choice.label)
@@ -335,15 +394,24 @@ function QuestionSetsContent() {
           )}
         </div>
 
-        <Link
-          href={practiceHref}
-          aria-disabled={!canStart}
-          className={`questionSetStartButton ${
-            !canStart ? 'disabled' : ''
-          }`}
-        >
-          Start question set →
-        </Link>
+        <div>
+          <button
+            type="button"
+            disabled={!canStart || starting}
+            className={`questionSetStartButton ${
+              !canStart ? 'disabled' : ''
+            }`}
+            onClick={startQuestionSet}
+          >
+            {starting ? 'Building set…' : 'Start question set →'}
+          </button>
+
+          {startError && (
+            <small className="questionSetStartError">
+              {startError}
+            </small>
+          )}
+        </div>
       </aside>
     </main>
   );

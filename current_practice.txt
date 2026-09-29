@@ -1,19 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  createWorkItem,
-  updateWorkProgress,
-  saveQuestionMark,
-  completeWorkItem,
-  beginMarkingWorkItem,
-  finishMarkingWorkItem,
-  saveWorkItem,
-  getQuestionFlags,
-  flagQuestion,
-  unflagQuestion
-} from '../lib/work';
-import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import {createWorkItem, updateWorkProgress} from '../lib/work';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 
@@ -22,7 +11,6 @@ type Props = {
   persistWork?: boolean;
   existingWorkId?: string;
   initialQuestion?: number;
-  initialStage?: 'doing' | 'marking' | 'results';
   topic: string;
   mode: 'practice' | 'exam';
   questions: any[];
@@ -53,7 +41,7 @@ function Blocks({blocks}:{blocks:any[]}) {
   })}</>;
 }
 
-export function QuestionDisplay({q}:{q:any}) {
+function QuestionDisplay({q}:{q:any}) {
   const blocks=q?.question?.display_blocks || q?.display?.question_blocks || [];
   return blocks.length ? <Blocks blocks={blocks}/> : <MathText text={String(q?.question?.text || '')}/>;
 }
@@ -126,7 +114,7 @@ function RevealStep({step,index}:{step:any;index:number}) {
   );
 }
 
-export function MarkSchemeView({q}:{q:any}) {
+function MarkSchemeView({q}:{q:any}) {
   const p=partsOf(q), groups=p.length?p:[{steps:q?.solution?.steps||[]}];
 
   return (
@@ -143,7 +131,7 @@ export function MarkSchemeView({q}:{q:any}) {
   );
 }
 
-export function FullSolutionView({q}:{q:any}) {
+function FullSolutionView({q}:{q:any}) {
   const p=partsOf(q), groups=p.length?p:[{steps:q?.solution?.steps||[]}];
 
   return (
@@ -177,6 +165,7 @@ export function FullSolutionView({q}:{q:any}) {
 }
 
 function AskDojo({q}:{q:any}) {
+  const [open,setOpen]=useState(false);
   const [messages,setMessages]=useState<Message[]>([]);
   const [input,setInput]=useState('');
   const [busy,setBusy]=useState(false);
@@ -194,10 +183,7 @@ function AskDojo({q}:{q:any}) {
     const prompt=input.trim();
     if(!prompt||busy) return;
 
-    const next=[
-      ...messages,
-      {role:'user' as const,content:prompt}
-    ];
+    const next=[...messages,{role:'user' as const,content:prompt}];
 
     setMessages(next);
     setInput('');
@@ -209,9 +195,7 @@ function AskDojo({q}:{q:any}) {
         (process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:8000') + '/ask-dojo',
         {
           method:'POST',
-          headers:{
-            'Content-Type':'application/json'
-          },
+          headers:{'Content-Type':'application/json'},
           body:JSON.stringify({
             question_id:q.id,
             messages:next
@@ -222,79 +206,59 @@ function AskDojo({q}:{q:any}) {
       const data=await r.json();
 
       if(!r.ok) {
-        throw new Error(
-          data.detail || 'Ask DOJO could not respond.'
-        );
+        throw new Error(data.detail||'Ask DOJO could not respond.');
       }
 
       setMessages([
         ...next,
-        {
-          role:'assistant',
-          content:data.text
-        }
+        {role:'assistant',content:data.text}
       ]);
-
     } catch(err:any) {
-      setError(
-        err.message || 'Ask DOJO could not respond.'
-      );
+      setError(err.message||'Ask DOJO could not respond.');
     } finally {
       setBusy(false);
     }
   }
 
   return (
-    <div className="dojoChat open">
-      <div className="dojoChatBody">
+    <div className={'dojoChat '+(open?'open':'')}>
+      <button className="dojoChatToggle" onClick={()=>setOpen(!open)}>
+        <span>
+          <b>Ask DOJO</b>
+          <small>Ask about this question</small>
+        </span>
+        <span>{open?'×':'↑'}</span>
+      </button>
 
-        <div className="dojoMessages">
+      {open && (
+        <div className="dojoChatBody">
+          <div className="dojoMessages">
+            {!messages.length && (
+              <p>
+                Ask for a hint, an explanation of a step, or why something works.
+              </p>
+            )}
 
-          {!messages.length && (
-            <p>
-              Ask for a hint, an explanation of a step,
-              or anything about this question.
-            </p>
-          )}
+            {messages.map((m,i)=>
+              <div className={'dojoMessage '+m.role} key={i}>
+                <MathText text={m.content}/>
+              </div>
+            )}
 
-          {messages.map((m,i)=>(
-            <div
-              className={'dojoMessage '+m.role}
-              key={i}
-            >
-              <MathText text={m.content}/>
-            </div>
-          ))}
+            {busy && <div className="dojoMessage assistant">Thinking…</div>}
+            {error && <div className="dojoChatError">{error}</div>}
+          </div>
 
-          {busy && (
-            <div className="dojoMessage assistant">
-              Thinking…
-            </div>
-          )}
-
-          {error && (
-            <div className="dojoChatError">
-              {error}
-            </div>
-          )}
-
+          <form onSubmit={send}>
+            <input
+              value={input}
+              onChange={e=>setInput(e.target.value)}
+              placeholder="Ask DOJO about this question…"
+            />
+            <button disabled={busy||!input.trim()}>Send</button>
+          </form>
         </div>
-
-        <form onSubmit={send}>
-          <input
-            value={input}
-            onChange={e=>setInput(e.target.value)}
-            placeholder="Ask DOJO about this question…"
-          />
-
-          <button
-            disabled={busy||!input.trim()}
-          >
-            Send
-          </button>
-        </form>
-
-      </div>
+      )}
     </div>
   );
 }
@@ -364,30 +328,33 @@ export default function PracticeSession({
   options:rawOptions,
   persistWork,
   existingWorkId,
-  initialQuestion = 0,
-  initialStage = 'doing'
+  initialQuestion = 0
 }:Props) {
   const [workId,setWorkId]=useState<string|null>(existingWorkId ?? null);
-  const draftStarted=useRef(false);
 
   useEffect(()=>{
-    if(!persistWork || existingWorkId || workId || !questions.length) return;
-    if(draftStarted.current) return;
+    if(!persistWork || workId || !questions.length) return;
 
-    draftStarted.current=true;
+    const key='dojo-work:'+questions.map((q:any)=>q.id).join('|');
+    const existing=sessionStorage.getItem(key);
+
+    if(existing){
+      setWorkId(existing);
+      return;
+    }
 
     createWorkItem({
       kind:'question_set',
       title:topic||'Question Set',
       question_ids:questions.map((q:any)=>q.id),
-      settings:{mode,draft:true}
+      settings:{mode}
     })
-      .then(w=>setWorkId(w.id))
-      .catch(err=>{
-        draftStarted.current=false;
-        console.error('Could not create DOJO draft',err);
-      });
-  },[persistWork,existingWorkId,workId,questions,topic,mode]);
+      .then(w=>{
+        sessionStorage.setItem(key,w.id);
+        setWorkId(w.id);
+      })
+      .catch(err=>console.error('Could not persist DOJO work item',err));
+  },[persistWork,workId,questions,topic,mode]);
 
   const options: WorkspaceOptions = {
     askDojo: rawOptions?.askDojo ?? true,
@@ -401,14 +368,9 @@ export default function PracticeSession({
     Math.min(initialQuestion, Math.max(0, questions.length - 1))
   );
   const [index,setIndex]=useState(safeInitialQuestion);
-  const [stage,setStage]=useState<'doing'|'marking'|'results'>(initialStage);
+  const [stage,setStage]=useState<'doing'|'marking'|'results'>('doing');
   const [tab,setTab]=useState<Tab>('answer');
   const [marks,setMarks]=useState<Record<string,number>>({});
-  const [flaggedQuestions,setFlaggedQuestions]=useState<Set<string>>(
-    () => new Set()
-  );
-  const [flagBusy,setFlagBusy]=useState<string|null>(null);
-  const [flagError,setFlagError]=useState('');
   const [startedAt]=useState(()=>new Date().toISOString());
   const [elapsed,setElapsed]=useState(0);
   const [timerPaused,setTimerPaused]=useState(false);
@@ -425,35 +387,6 @@ export default function PracticeSession({
     (n,x)=>n+(marks[x.id]||0),
     0
   );
-
-
-  useEffect(()=>{
-    let cancelled=false;
-
-    getQuestionFlags()
-      .then(flags=>{
-        if(cancelled) return;
-
-        setFlaggedQuestions(
-          new Set(
-            flags.map((flag:any)=>String(flag.question_id))
-          )
-        );
-      })
-      .catch(err=>{
-        if(cancelled) return;
-        console.warn('Could not load question flags',err);
-        setFlagError(
-          err instanceof Error
-            ? err.message
-            : JSON.stringify(err)
-        );
-      });
-
-    return ()=>{
-      cancelled=true;
-    };
-  },[]);
 
   const storageKey=`dojo-session-${topic}-${startedAt}`;
 
@@ -523,88 +456,17 @@ export default function PracticeSession({
     }
   };
 
-  const saveAndExit=async()=>{
-    if(!workId) return;
-
-    try {
-      await saveWorkItem(workId,index);
-      window.history.back();
-    } catch(err) {
-      console.error('Could not save DOJO work',err);
-    }
-  };
-
- const toggleQuestionFlag=async()=>{
-  const questionId=String(q?.id ?? q?.question_id ?? q?.ref ?? '');
-
-  if(!questionId || flagBusy===questionId) return;
-
-  const isFlagged=flaggedQuestions.has(questionId);
-
-  setFlagBusy(questionId);
-  setFlagError('');
-
-  try {
-    if(isFlagged) {
-      await unflagQuestion(questionId);
-
-      setFlaggedQuestions(current=>{
-        const next=new Set(current);
-        next.delete(questionId);
-        return next;
-      });
-    } else {
-      await flagQuestion(questionId);
-
-      setFlaggedQuestions(current=>{
-        const next=new Set(current);
-        next.add(questionId);
-        return next;
-      });
-    }
-  } catch(err:any) {
-    console.warn('Could not update question flag',err);
-    const flagMessage =
-      err instanceof Error
-        ? err.message
-        : (err?.message || JSON.stringify(err));
-
-    setFlagError(
-      flagMessage || 'Could not update this question flag.'
-    );
-    setFlagError(
-      err?.message || 'Could not update this question flag.'
-    );
-  } finally {
-    setFlagBusy(null);
-  }
-};
-
- const setMark=(v:number)=>{
-  const awardedMark=Math.max(
-    0,
-    Math.min(
-      max,
-      Number.isFinite(v)?v:0
-    )
-  );
-
-  setMarks({
-    ...marks,
-    [q.id]:awardedMark
-  });
-
-  if(workId){
-    saveQuestionMark({
-      workId,
-      questionId:q.id,
-      marksAwarded:awardedMark,
-      marksAvailable:max
-    }).catch(err=>
-      console.error('Could not save question mark',err)
-    );
-  }
-};
+  const setMark=(v:number)=>
+    setMarks({
+      ...marks,
+      [q.id]:Math.max(
+        0,
+        Math.min(
+          max,
+          Number.isFinite(v)?v:0
+        )
+      )
+    });
 
   if(stage==='results') {
     return (
@@ -621,7 +483,7 @@ export default function PracticeSession({
         </div>
 
         <p>
-          Your question-by-question marks have been saved to My Work.
+          Your question-by-question marks have been saved on this device.
         </p>
 
         <div className="resultQuestions">
@@ -670,23 +532,6 @@ export default function PracticeSession({
         </div>
 
         <div className="sessionHeaderRight">
-          <button
-            className="secondarySessionButton"
-            type="button"
-            onClick={()=>window.history.back()}
-          >
-            ← Back
-          </button>
-
-          <button
-            className="secondarySessionButton"
-            type="button"
-            onClick={saveAndExit}
-            disabled={!workId}
-          >
-            Save & exit
-          </button>
-
           {options.timer && (
             <div className="practiceTimer">
               <span>
@@ -714,7 +559,7 @@ export default function PracticeSession({
         </div>
       </header>
 
-           <div className="questionWorkspace">
+      <div className="questionWorkspace">
         <div className="questionColumn">
           <div className="questionPaper edexcelPaper">
             <div className="paperQuestionNumber">
@@ -738,127 +583,6 @@ export default function PracticeSession({
                 setTab={setTab}
               />
             )}
-
-          {stage !== 'doing' && (
-            <div
-              style={{
-                marginTop:'14px',
-                padding:'18px 20px',
-                border:'1px solid #d9d9d9',
-                background:'#fff',
-                display:'flex',
-                alignItems:'center',
-                justifyContent:'space-between',
-                gap:'20px'
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize:'11px',
-                    color:'#777',
-                    marginBottom:'4px'
-                  }}
-                >
-                  YOUR MARK
-                </div>
-
-                <strong style={{fontSize:'18px'}}>
-                  {marks[q.id] ?? 0} / {max}
-                </strong>
-              </div>
-
-              <div
-                style={{
-                  display:'flex',
-                  alignItems:'center',
-                  gap:'8px'
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={toggleQuestionFlag}
-                  disabled={flagBusy===String(q?.id ?? q?.question_id ?? q?.ref ?? '')}
-                  style={{
-                    minHeight:'38px',
-                    padding:'0 14px',
-                    border:flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
-                      ? '1px solid #111'
-                      : '1px solid #ccc',
-                    background:flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
-                      ? '#111'
-                      : '#fff',
-                    color:flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
-                      ? '#fff'
-                      : '#222',
-                    borderRadius:'6px',
-                    font:'inherit',
-                    fontWeight:700,
-                    cursor:flagBusy===String(q?.id ?? q?.question_id ?? q?.ref ?? '')
-                      ? 'default'
-                      : 'pointer'
-                  }}
-                >
-                  {flagBusy===String(q?.id ?? q?.question_id ?? q?.ref ?? '')
-                    ? 'Saving...'
-                    : flaggedQuestions.has(String(q?.id ?? q?.question_id ?? q?.ref ?? ''))
-                      ? 'Flagged for later'
-                      : 'Flag for later'}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={()=>setMark((marks[q.id] ?? 0)-1)}
-                  disabled={(marks[q.id] ?? 0)<=0}
-                  style={{
-                    width:'38px',
-                    height:'38px',
-                    border:'1px solid #ccc',
-                    background:'#fff',
-                    borderRadius:'6px',
-                    fontSize:'20px',
-                    cursor:'pointer'
-                  }}
-                >
-                  −
-                </button>
-
-                <input
-                  type="number"
-                  min={0}
-                  max={max}
-                  value={marks[q.id] ?? 0}
-                  onChange={e=>setMark(Number(e.target.value))}
-                  style={{
-                    width:'64px',
-                    height:'38px',
-                    textAlign:'center',
-                    border:'1px solid #ccc',
-                    borderRadius:'6px',
-                    font:'inherit',
-                    fontWeight:700
-                  }}
-                />
-
-                <button
-                  type="button"
-                  onClick={()=>setMark((marks[q.id] ?? 0)+1)}
-                  disabled={(marks[q.id] ?? 0)>=max}
-                  style={{
-                    width:'38px',
-                    height:'38px',
-                    border:'1px solid #ccc',
-                    background:'#fff',
-                    borderRadius:'6px',
-                    fontSize:'20px',
-                    cursor:'pointer'
-                  }}
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
         {options.askDojo && mode==='practice' && (
@@ -896,84 +620,48 @@ export default function PracticeSession({
           )}
         </div>
 
-        {stage==='doing' ? (
-          index < questions.length-1 ? (
-            <button
-              className="primarySessionButton"
-              onClick={()=>move(index+1)}
-            >
-              Next →
-            </button>
-          ) : (
-            <button
-              className="primarySessionButton"
-              onClick={async()=>{
-                setIndex(0);
-                setTab('answer');
-                setStage('marking');
-
-                if(workId){
-                  try {
-                    await saveWorkItem(workId,0);
-                    await completeWorkItem(workId);
-                    await beginMarkingWorkItem(workId);
-                  } catch(err) {
-                    console.error('Could not begin marking',err);
-                  }
-                }
-              }}
-            >
-              Finish & mark
-            </button>
+        {stage==='doing'
+          ? (
+            index<questions.length-1
+              ? (
+                <button
+                  className="primarySessionButton"
+                  onClick={()=>move(index+1)}
+                >
+                  Next →
+                </button>
+              )
+              : (
+                <button
+                  className="primarySessionButton"
+                  onClick={()=>{
+                    move(0);
+                    setStage('marking');
+                  }}
+                >
+                  Finish & mark
+                </button>
+              )
           )
-        ) : (
-          index < questions.length-1 ? (
-            <button
-              className="primarySessionButton"
-              onClick={()=>{
-                const currentMark = marks[q.id] ?? 0;
-
-                if(workId){
-                  saveQuestionMark({
-                    workId,
-                    questionId:q.id,
-                    marksAwarded:currentMark,
-                    marksAvailable:max
-                  }).catch(err=>
-                    console.error('Could not save question mark',err)
-                  );
-                }
-
-                move(index+1);
-              }}
-            >
-              Save mark & next →
-            </button>
-          ) : (
-            <button
-              className="primarySessionButton"
-              onClick={()=>{
-                const currentMark = marks[q.id] ?? 0;
-                setStage('results');
-
-                if(workId){
-                  saveQuestionMark({
-                    workId,
-                    questionId:q.id,
-                    marksAwarded:currentMark,
-                    marksAvailable:max
-                  })
-                    .then(()=>finishMarkingWorkItem(workId))
-                    .catch(err=>
-                      console.error('Could not finish marking',err)
-                    );
-                }
-              }}
-            >
-              Finish marking
-            </button>
-          )
-        )}
+          : (
+            index<questions.length-1
+              ? (
+                <button
+                  className="primarySessionButton"
+                  onClick={()=>move(index+1)}
+                >
+                  Save mark & next →
+                </button>
+              )
+              : (
+                <button
+                  className="primarySessionButton"
+                  onClick={()=>setStage('results')}
+                >
+                  Finish marking
+                </button>
+              )
+          )}
       </footer>
     </section>
   );

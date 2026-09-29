@@ -117,7 +117,6 @@ function progressFor(item: WorkItem) {
 export default function MyWorkPage() {
   const [work, setWork] = useState<WorkItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [flaggedCount, setFlaggedCount] = useState(0);
 
   const [filter, setFilter] =
     useState<WorkFilter>('all');
@@ -134,23 +133,6 @@ export default function MyWorkPage() {
         setWork([]);
         setLoading(false);
         return;
-      }
-
-      const { count: flagsCount, error: flagsError } = await supabase
-        .from('question_flags')
-        .select('question_id', {
-          count: 'exact',
-          head: true
-        })
-        .eq('user_id', auth.user.id);
-
-      if (flagsError) {
-        console.warn(
-          'Could not load flagged question count',
-          flagsError
-        );
-      } else {
-        setFlaggedCount(flagsCount ?? 0);
       }
 
       const { data, error } = await supabase
@@ -212,10 +194,6 @@ export default function MyWorkPage() {
 
   const filteredRecent = useMemo(() => {
     return work.filter(item => {
-      if (item.settings?.draft === true) {
-        return false;
-      }
-
       if (filter === 'papers') {
         return isPaper(item);
       }
@@ -238,6 +216,9 @@ export default function MyWorkPage() {
         <div className="page-kicker">
           A-level Mathematics
         </div>
+
+        <h1>Home</h1>
+
         <p>
           Choose what you want to work on or pick up where you left off.
         </p>
@@ -248,6 +229,10 @@ export default function MyWorkPage() {
           href="/topics"
           className="homeStartCard"
         >
+          <div className="homeStartIcon">
+            ∑
+          </div>
+
           <div>
             <span className="dashboardLabel">
               Explore
@@ -267,8 +252,12 @@ export default function MyWorkPage() {
 
         <Link
           href="/question-sets"
-          className="homeStartCard"
+          className="homeStartCard featured"
         >
+          <div className="homeStartIcon">
+            +
+          </div>
+
           <div>
             <span className="dashboardLabel">
               Practice
@@ -290,6 +279,10 @@ export default function MyWorkPage() {
           href="/papers"
           className="homeStartCard"
         >
+          <div className="homeStartIcon">
+            01
+          </div>
+
           <div>
             <span className="dashboardLabel">
               Assessment
@@ -299,30 +292,6 @@ export default function MyWorkPage() {
 
             <p>
               Work through past papers or DOJO-generated papers.
-            </p>
-          </div>
-
-          <span className="homeStartArrow">
-            →
-          </span>
-        </Link>
-
-        <Link
-          href="/review"
-          className="homeStartCard"
-        >
-          <div>
-            <span className="dashboardLabel">
-              Review
-            </span>
-
-            <h2>Review</h2>
-
-            <p>
-              Review past results and revisit questions.
-              {!loading && flaggedCount > 0
-                ? ` ${flaggedCount} flagged.`
-                : ''}
             </p>
           </div>
 
@@ -470,24 +439,19 @@ export default function MyWorkPage() {
                     </div>
 
                     <div className="dashboardRecentResult">
-                      {hasResult ? (
-                        <span className="scoreBadge">
-                          <strong>{awarded}</strong>
-                          <small>/{available}</small>
-                        </span>
-                      ) : (
-                        <span className={`statusBadge status-${item.status}`}>
-                          {item.status === 'in_progress'
-                            ? 'In progress'
-                            : item.status === 'marking'
-                            ? 'Marking'
-                            : item.status === 'completed'
-                            ? 'Ready to mark'
-                            : 'Completed'}
-                        </span>
-                      )}
+                      <strong>
+                        {hasResult
+                          ? `${awarded}/${available}`
+                          : item.status === 'in_progress'
+                          ? 'In progress'
+                          : item.status === 'marking'
+                          ? 'Marking'
+                          : item.status === 'completed'
+                          ? 'Ready to mark'
+                          : 'Completed'}
+                      </strong>
 
-                      <span className="recentArrow">→</span>
+                      <span>→</span>
                     </div>
                   </Link>
                 );
@@ -549,7 +513,7 @@ export default function MyWorkPage() {
 
         .homeStartGrid {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 16px;
           margin-bottom: 18px;
         }
@@ -906,195 +870,6 @@ export default function MyWorkPage() {
             gap: 12px;
           }
         }
-
-        /* Home checkpoint visual cleanup */
-        .homeHeader {
-          margin-bottom: 24px;
-        }
-
-        .homeHeader p {
-          margin: 0;
-          color: #6f7671;
-          font-size: 15px;
-          line-height: 1.5;
-        }
-
-        .homeStartGrid {
-          gap: 12px;
-          margin-bottom: 18px;
-        }
-
-        .homeStartCard {
-          min-height: 150px;
-          display: flex;
-          flex-direction: column;
-          gap: 0;
-          padding: 22px;
-          border: 1px solid rgba(22, 33, 26, 0.11);
-          border-radius: 16px;
-          background: rgba(255, 255, 255, 0.78);
-          transition:
-            border-color 140ms ease,
-            background 140ms ease,
-            transform 140ms ease,
-            box-shadow 140ms ease;
-        }
-
-        .homeStartCard:hover {
-          border-color: #496251;
-          background: #f7faf8;
-          transform: translateY(-2px);
-          box-shadow: 0 10px 28px rgba(23, 35, 27, 0.055);
-        }
-
-        .homeStartCard h2 {
-          margin: 8px 0 7px;
-          font-size: 20px;
-          letter-spacing: -0.02em;
-        }
-
-        .homeStartCard p {
-          margin: 0 0 22px;
-          color: #707772;
-          line-height: 1.5;
-        }
-
-        .homeStartArrow {
-          margin-top: auto;
-          color: #627068;
-          transition: transform 140ms ease;
-        }
-
-        .homeStartCard:hover .homeStartArrow {
-          transform: translateX(3px);
-        }
-
-        .myWorkPanel {
-          border: 1px solid rgba(22, 33, 26, 0.1);
-          border-radius: 16px;
-          background: rgba(255, 255, 255, 0.78);
-        }
-
-        .continuePanel {
-          margin-top: 18px;
-          padding: 21px 22px 18px;
-        }
-
-        .dashboardPrimaryAction {
-          padding: 9px 12px;
-          border: 1px solid rgba(22, 33, 26, 0.12);
-          border-radius: 9px;
-          background: #fff;
-        }
-
-        .dashboardPrimaryAction:hover {
-          border-color: #496251;
-          background: #f2f6f3;
-        }
-
-        .continueProgress {
-          height: 5px;
-          background: #e8ece9;
-        }
-
-        .continueProgress > div {
-          border-radius: inherit;
-          background: #365441;
-        }
-
-        .myWorkDashboardGrid {
-          gap: 16px;
-          margin-top: 16px;
-        }
-
-        .dashboardRecentList {
-          display: grid;
-          gap: 8px;
-          border-top: 0;
-        }
-
-        .dashboardRecentRow {
-          min-height: 68px;
-          padding: 13px 14px;
-          border: 1px solid rgba(22, 33, 26, 0.09);
-          border-radius: 11px;
-          background: #fff;
-        }
-
-        .dashboardRecentRow:hover {
-          border-color: rgba(57, 84, 67, 0.35);
-          background: #fafcfb;
-        }
-
-        .dashboardRecentRow > div:first-child span {
-          margin-top: 5px;
-          color: #858b87;
-        }
-
-        .dashboardRecentResult {
-          gap: 11px;
-        }
-
-        .scoreBadge {
-          min-width: 57px;
-          display: inline-flex !important;
-          align-items: baseline;
-          justify-content: center;
-          padding: 8px 9px;
-          border: 1px solid #cbd6ce;
-          border-radius: 9px;
-          background: #f1f5f2;
-          color: #294534 !important;
-          margin: 0 !important;
-        }
-
-        .scoreBadge strong {
-          display: inline;
-          overflow: visible;
-          color: #294534;
-          font-size: 14px;
-          line-height: 1;
-        }
-
-        .scoreBadge small {
-          color: #607067;
-          font-size: 10px;
-          font-weight: 700;
-        }
-
-        .statusBadge {
-          display: inline-flex !important;
-          align-items: center;
-          min-height: 28px;
-          padding: 0 9px;
-          margin: 0 !important;
-          border: 1px solid #d9dedb;
-          border-radius: 8px;
-          background: #f6f7f6;
-          color: #667069 !important;
-          white-space: nowrap;
-          font-size: 10px !important;
-          font-weight: 700;
-        }
-
-        .status-marking,
-        .status-completed {
-          border-color: #d8d0bc;
-          background: #faf7ef;
-          color: #6f6040 !important;
-        }
-
-        .recentArrow {
-          margin: 0 !important;
-          color: #66736b !important;
-          font-size: 15px !important;
-        }
-
-        .coverageDashboardBody {
-          padding-top: 16px;
-          border-top: 1px solid rgba(22, 33, 26, 0.08);
-        }
-
       `}</style>
     </main>
   );

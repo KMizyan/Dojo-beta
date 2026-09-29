@@ -328,12 +328,16 @@ function practiseSimilarHref(q:any) {
     q?.topic ||
     '';
 
-  const topic = String(primary).trim();
+  const slug = String(primary)
+    .toLowerCase()
+    .trim()
+    .replace(/&/g,'and')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-|-$/g,'');
 
-  return topic
-    ? `/question-sets?topics=${encodeURIComponent(topic)}&source=similar`
-    : '/question-sets';
+  return `/topics/pure/${slug}`;
 }
+
 function ReviewWork({
   work,
   questions,

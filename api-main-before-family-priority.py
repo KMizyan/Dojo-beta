@@ -243,14 +243,18 @@ class SimilarQuestionRequest(BaseModel):
 
 def _similarity_to_seed(candidate:dict, seed:dict)->tuple[bool,int]:
     """
-    DOJO similarity is generator-native.
+    A similar question is another question generated from the
+    same generator family + architecture sub-batch.
 
-    Two questions are similar when they were generated from the
-    same family + architecture sub-batch.
+    Topic, area and technique metadata do not broaden eligibility.
     """
 
-    candidate_family=_norm(str(candidate.get('family') or ''))
-    seed_family=_norm(str(seed.get('family') or ''))
+    candidate_family=_norm(
+        str(candidate.get('family') or '')
+    )
+    seed_family=_norm(
+        str(seed.get('family') or '')
+    )
 
     candidate_architecture=_norm(
         str(candidate.get('architecture') or '')
@@ -259,16 +263,27 @@ def _similarity_to_seed(candidate:dict, seed:dict)->tuple[bool,int]:
         str(seed.get('architecture') or '')
     )
 
-    eligible=bool(
+    same_family=bool(
         seed_family
-        and seed_architecture
         and candidate_family == seed_family
+    )
+
+    same_architecture=bool(
+        seed_architecture
         and candidate_architecture == seed_architecture
+    )
+
+    eligible=(
+        same_family
+        and same_architecture
     )
 
     if not eligible:
         return False,0
 
+    # All eligible questions belong to the same generator
+    # sub-batch. Score is retained only because the surrounding
+    # pool code expects one.
     return True,1
 
 def _question_identity(q:dict)->str:

@@ -308,7 +308,7 @@ export default function MyWorkPage() {
         </Link>
 
         <Link
-          href="/review"
+          href="/flagged"
           className="homeStartCard"
         >
           <div>
@@ -316,10 +316,10 @@ export default function MyWorkPage() {
               Review
             </span>
 
-            <h2>Review</h2>
+            <h2>Flagged Questions</h2>
 
             <p>
-              Review past results and revisit questions.
+              Revisit questions you saved while marking.
               {!loading && flaggedCount > 0
                 ? ` ${flaggedCount} flagged.`
                 : ''}
