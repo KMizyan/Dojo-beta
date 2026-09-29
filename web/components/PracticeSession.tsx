@@ -368,26 +368,31 @@ export default function PracticeSession({
   initialStage = 'doing'
 }:Props) {
   const [workId,setWorkId]=useState<string|null>(existingWorkId ?? null);
-  const draftStarted=useRef(false);
+  const workCreationRef=useRef<Promise<string>|null>(null);
 
-  useEffect(()=>{
-    if(!persistWork || existingWorkId || workId || !questions.length) return;
-    if(draftStarted.current) return;
+  const ensureWorkItem=async():Promise<string|null>=>{
+    if(workId) return workId;
+    if(!persistWork || !questions.length) return null;
 
-    draftStarted.current=true;
+    if(!workCreationRef.current){
+      workCreationRef.current=createWorkItem({
+        kind:'question_set',
+        title:topic||'Question Set',
+        question_ids:questions.map((q:any)=>q.id),
+        settings:{mode}
+      })
+        .then(w=>{
+          setWorkId(w.id);
+          return w.id;
+        })
+        .catch(err=>{
+          workCreationRef.current=null;
+          throw err;
+        });
+    }
 
-    createWorkItem({
-      kind:'question_set',
-      title:topic||'Question Set',
-      question_ids:questions.map((q:any)=>q.id),
-      settings:{mode,draft:true}
-    })
-      .then(w=>setWorkId(w.id))
-      .catch(err=>{
-        draftStarted.current=false;
-        console.error('Could not create DOJO draft',err);
-      });
-  },[persistWork,existingWorkId,workId,questions,topic,mode]);
+    return workCreationRef.current;
+  };
 
   const options: WorkspaceOptions = {
     askDojo: rawOptions?.askDojo ?? true,
@@ -524,10 +529,11 @@ export default function PracticeSession({
   };
 
   const saveAndExit=async()=>{
-    if(!workId) return;
-
     try {
-      await saveWorkItem(workId,index);
+      const id=await ensureWorkItem();
+      if(!id) return;
+
+      await saveWorkItem(id,index);
       window.history.back();
     } catch(err) {
       console.error('Could not save DOJO work',err);
@@ -682,7 +688,7 @@ export default function PracticeSession({
             className="secondarySessionButton"
             type="button"
             onClick={saveAndExit}
-            disabled={!workId}
+            disabled={!persistWork && !workId}
           >
             Save & exit
           </button>
@@ -912,14 +918,16 @@ export default function PracticeSession({
                 setTab('answer');
                 setStage('marking');
 
-                if(workId){
-                  try {
-                    await saveWorkItem(workId,0);
-                    await completeWorkItem(workId);
-                    await beginMarkingWorkItem(workId);
-                  } catch(err) {
-                    console.error('Could not begin marking',err);
+                try {
+                  const id=await ensureWorkItem();
+
+                  if(id){
+                    await saveWorkItem(id,0);
+                    await completeWorkItem(id);
+                    await beginMarkingWorkItem(id);
                   }
+                } catch(err) {
+                  console.error('Could not begin marking',err);
                 }
               }}
             >
