@@ -270,29 +270,31 @@ function QuestionSetsContent(){
   async function buildHistory(){
     const history:Record<string,number>={};
 
-    const {data:auth}=await supabase.auth.getUser();
+    const {data:auth,error:authError}=
+      await supabase.auth.getUser();
 
+    if(authError) throw authError;
     if(!auth.user) return history;
 
-    const {data,error}=await supabase
-      .from('work_items')
-      .select(`
-        id,
-        work_questions (
-          question_id,
-          marked_at
-        )
-      `);
+    const {
+      data:markedHistory,
+      error:historyError
+    } = await supabase.rpc(
+      'get_marked_question_history'
+    );
 
-    if(error) throw error;
+    if(historyError) throw historyError;
 
-    for(const item of data ?? []){
-      for(const question of item.work_questions ?? []){
-        if(!question.marked_at) continue;
+    for(const row of markedHistory ?? []){
+      const id=String(
+        row?.question_id ?? ''
+      );
 
-        history[question.question_id]=
-          (history[question.question_id] ?? 0)+1;
-      }
+      if(!id) continue;
+
+      history[id]=Number(
+        row?.marked_attempts ?? 0
+      );
     }
 
     return history;

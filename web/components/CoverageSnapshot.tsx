@@ -36,37 +36,25 @@ export default function CoverageSnapshot(){
         const history:Record<string,number>={};
 
         if(auth.user){
-          const {data:workItems,error:workError}=
-            await supabase
-              .from('work_items')
-              .select(`
-                id,
-                work_questions (
-                  question_id,
-                  marked_at
-                )
-              `)
-              .eq('user_id',auth.user.id);
+          const {
+            data:markedHistory,
+            error:historyError
+          } = await supabase.rpc(
+            'get_marked_question_history'
+          );
 
-          if(workError) throw workError;
+          if(historyError) throw historyError;
 
-          for(const work of workItems ?? []){
-            const questions=
-              Array.isArray(work.work_questions)
-                ? work.work_questions
-                : [];
+          for(const row of markedHistory ?? []){
+            const id=String(
+              row?.question_id ?? ''
+            );
 
-            for(const question of questions){
-              if(!question?.marked_at) continue;
+            if(!id) continue;
 
-              const id=String(
-                question.question_id || ''
-              );
-
-              if(!id) continue;
-
-              history[id]=(history[id]||0)+1;
-            }
+            history[id]=Number(
+              row?.marked_attempts ?? 0
+            );
           }
         }
 

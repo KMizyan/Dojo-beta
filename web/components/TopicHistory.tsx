@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import {useEffect,useMemo,useState} from 'react';
 import {supabase} from '../lib/supabase';
-import {getQuestion} from '../lib/api';
+import {getQuestionsBulk} from '../lib/api';
 
 type View = 'in_progress' | 'latest';
 
@@ -253,19 +253,23 @@ export default function TopicHistory({
         loadedRecovery?.questionIds
           .forEach(id=>ids.add(id));
 
-        const topicEntries=
-          await Promise.all(
-            [...ids].map(async id=>{
-              const question=
-                await getQuestion(id);
+        const loadedQuestions=
+          await getQuestionsBulk(
+            [...ids]
+          );
 
-              return [
-                id,
-                String(
-                  question?.topic ?? ''
-                )
-              ] as const;
-            })
+        const topicEntries=
+          loadedQuestions.map(
+            (question:any)=>[
+              String(
+                question?.id ??
+                question?.question_id ??
+                ''
+              ),
+              String(
+                question?.topic ?? ''
+              )
+            ] as const
           );
 
         if(cancelled) return;

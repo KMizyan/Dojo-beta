@@ -1,10 +1,75 @@
 const API=process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:8000';
 
+let topicsPromise:Promise<any[]>|null=null;
+const topicPromises=new Map<string,Promise<any>>();
+
 export async function getTopics(){
-  try{const r=await fetch(`${API}/topics`,{cache:'no-store'});if(!r.ok)throw new Error();return await r.json()}catch{return []}
+  if(!topicsPromise){
+    topicsPromise=(
+      async ()=>{
+        const r=await fetch(
+          `${API}/topics`
+        );
+
+        if(!r.ok){
+          throw new Error(
+            'Could not load topics.'
+          );
+        }
+
+        return await r.json();
+      }
+    )().catch(error=>{
+      topicsPromise=null;
+      throw error;
+    });
+  }
+
+  try{
+    return await topicsPromise;
+  }catch{
+    return [];
+  }
 }
+
 export async function getTopic(name:string){
-  try{const r=await fetch(`${API}/topics/${encodeURIComponent(name)}`,{cache:'no-store'});if(!r.ok)throw new Error();return await r.json()}catch{return null}
+  const key=String(name).trim();
+
+  if(!key) return null;
+
+  let request=topicPromises.get(key);
+
+  if(!request){
+    request=(
+      async ()=>{
+        const r=await fetch(
+          `${API}/topics/${encodeURIComponent(key)}`
+        );
+
+        if(!r.ok){
+          throw new Error(
+            'Could not load topic.'
+          );
+        }
+
+        return await r.json();
+      }
+    )().catch(error=>{
+      topicPromises.delete(key);
+      throw error;
+    });
+
+    topicPromises.set(
+      key,
+      request
+    );
+  }
+
+  try{
+    return await request;
+  }catch{
+    return null;
+  }
 }
 export async function selectQuestions(
   topics:string[],
@@ -133,6 +198,45 @@ export async function selectSimilarQuestions(
     return null;
   }
 }
+export async function getQuestionsBulk(
+  ids:string[]
+):Promise<any[]>{
+  const unique=[
+    ...new Set(
+      ids
+        .map(id=>String(id).trim())
+        .filter(Boolean)
+    )
+  ];
+
+  if(!unique.length) return [];
+
+  const r=await fetch(
+    `${API}/questions/bulk`,
+    {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        ids:unique
+      })
+    }
+  );
+
+  if(!r.ok){
+    throw new Error(
+      'Could not load questions.'
+    );
+  }
+
+  const payload=await r.json();
+
+  return Array.isArray(payload?.questions)
+    ? payload.questions
+    : [];
+}
+
 export async function getQuestion(id:string){
   try{
     const r=await fetch(`${API}/questions/${encodeURIComponent(id)}`,{cache:'no-store'});
@@ -169,17 +273,29 @@ export async function selectAllocatedSimilarQuestions(
   return await r.json();
 }
 
-export async function getCoverageCatalogue(){
-  const r=await fetch(
-    `${API}/questions/coverage-catalogue`,
-    {cache:'no-store'}
-  );
+let coverageCataloguePromise:Promise<any>|null=null;
 
-  if(!r.ok){
-    throw new Error(
-      'Could not load the question architecture catalogue.'
-    );
+export async function getCoverageCatalogue(){
+  if(!coverageCataloguePromise){
+    coverageCataloguePromise=(
+      async ()=>{
+        const r=await fetch(
+          `${API}/questions/coverage-catalogue`
+        );
+
+        if(!r.ok){
+          throw new Error(
+            'Could not load the question architecture catalogue.'
+          );
+        }
+
+        return await r.json();
+      }
+    )().catch(error=>{
+      coverageCataloguePromise=null;
+      throw error;
+    });
   }
 
-  return await r.json();
+  return coverageCataloguePromise;
 }

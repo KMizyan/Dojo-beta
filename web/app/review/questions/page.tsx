@@ -15,7 +15,7 @@ import {
 } from '../../../lib/work';
 
 import {
-  getQuestion,
+  getQuestionsBulk,
   getSimilarQuestionCount,
   selectAllocatedSimilarQuestions
 } from '../../../lib/api';
@@ -109,8 +109,8 @@ function ReviewQuestionsContent() {
       try{
         if(requestedSeeds.length){
           const loaded=(
-            await Promise.all(
-              requestedSeeds.map(id=>getQuestion(id))
+            await getQuestionsBulk(
+              requestedSeeds
             )
           ).filter(Boolean);
 
@@ -132,22 +132,39 @@ function ReviewQuestionsContent() {
 
         const flags=await getQuestionFlags();
 
-        const loaded=(
-          await Promise.all(
-            flags.map(async flag=>{
-              const q=await getQuestion(
-                String(flag.question_id)
-              );
+        const loadedFlagQuestions=
+          await getQuestionsBulk(
+            flags.map(
+              flag=>String(flag.question_id)
+            )
+          );
 
-              return q
-                ? {
-                    ...q,
-                    flagged_at:flag.created_at
-                  }
-                : null;
-            })
-          )
-        ).filter(Boolean);
+        const flagsById=
+          new Map(
+            flags.map(flag=>[
+              String(flag.question_id),
+              flag
+            ])
+          );
+
+        const loaded=loadedFlagQuestions.map(q=>{
+          const canonicalId=String(
+            q?.id ?? ''
+          );
+
+          const sourceId=String(
+            q?.source_question_id ?? ''
+          );
+
+          const flag=
+            flagsById.get(canonicalId) ??
+            flagsById.get(sourceId);
+
+          return {
+            ...q,
+            flagged_at:flag?.created_at
+          };
+        });
 
         if(!active) return;
 

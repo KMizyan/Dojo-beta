@@ -1,6 +1,7 @@
 from __future__ import annotations
 import json, os, random, sqlite3, uuid
 from pathlib import Path
+from functools import lru_cache
 from typing import Any
 from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException, Query
@@ -100,6 +101,7 @@ def _techniques(q:dict)->list[str]:
         if isinstance(x,list): vals += [str(v) for v in x]
     return list(dict.fromkeys(vals))
 
+@lru_cache(maxsize=1)
 def catalogue()->list[dict]:
     out=[]
     seen=set()
@@ -889,6 +891,60 @@ def questions_select(
     qs=select_questions(topics,count,seed)
     if not qs: raise HTTPException(404,'No matching questions found')
     return {'topics':topics,'question_count':len(qs),'questions':qs}
+
+class BulkQuestionRequest(BaseModel):
+    ids:list[str]
+
+
+@app.post('/questions/bulk')
+def questions_bulk(body:BulkQuestionRequest):
+    """
+    Resolve multiple question IDs against one catalogue build.
+
+    Results preserve request order. Duplicate requested IDs are
+    returned once. Missing IDs are reported separately rather than
+    causing the entire request to fail.
+    """
+    requested=list(dict.fromkeys(
+        str(qid).strip()
+        for qid in body.ids
+        if str(qid).strip()
+    ))
+
+    if not requested:
+        return {
+            'questions':[],
+            'missing':[]
+        }
+
+    if len(requested) > 500:
+        raise HTTPException(
+            400,
+            'A maximum of 500 question IDs may be requested at once'
+        )
+
+    qs=catalogue()
+
+    questions=[]
+    missing=[]
+
+    for qid in requested:
+        try:
+            questions.append(
+                _resolve_question_id(qs,qid)
+            )
+        except HTTPException as exc:
+            if exc.status_code == 404:
+                missing.append(qid)
+                continue
+
+            raise
+
+    return {
+        'questions':questions,
+        'missing':missing
+    }
+
 
 @app.get('/questions/{qid:path}')
 def question(qid:str):

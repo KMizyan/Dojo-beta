@@ -57,42 +57,25 @@ export default function CoveragePage(){
         const history:AttemptMap={};
 
         if(auth.user){
-          /*
-           * Coverage counts MARKED QUESTIONS only.
-           *
-           * A work item existing is not enough.
-           * A question being served is not enough.
-           * work_questions.marked_at is the encounter event.
-           */
-          const {data:workItems,error:workError}=
-            await supabase
-              .from('work_items')
-              .select(`
-                id,
-                user_id,
-                work_questions (
-                  question_id,
-                  marked_at
-                )
-              `)
-              .eq('user_id',auth.user.id);
+          const {
+            data:markedHistory,
+            error:historyError
+          } = await supabase.rpc(
+            'get_marked_question_history'
+          );
 
-          if(workError) throw workError;
+          if(historyError) throw historyError;
 
-          for(const work of workItems ?? []){
-            const questions=
-              Array.isArray(work.work_questions)
-                ? work.work_questions
-                : [];
+          for(const row of markedHistory ?? []){
+            const id=String(
+              row?.question_id ?? ''
+            );
 
-            for(const q of questions){
-              if(!q?.marked_at) continue;
+            if(!id) continue;
 
-              const id=String(q.question_id||'');
-              if(!id) continue;
-
-              history[id]=(history[id]||0)+1;
-            }
+            history[id]=Number(
+              row?.marked_attempts ?? 0
+            );
           }
         }
 

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { getQuestionsBulk } from '../lib/api';
 import PracticeSession from './PracticeSession';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
@@ -765,43 +766,62 @@ export default function ResumeWork({workId,startMarking=false}:Props) {
           );
         }
 
-        const loaded = await Promise.all(
-          savedRefs.map(async ref => {
-            const response = await fetch(
-              `${API}/questions/${encodeURIComponent(
-                ref.question_id
-              )}`,
-              {
-                cache:'no-store'
-              }
+        const loadedQuestions =
+          await getQuestionsBulk(
+            savedRefs.map(
+              ref => ref.question_id
+            )
+          );
+
+        const questionsById =
+          new Map<string,any>();
+
+        for(const question of loadedQuestions) {
+          const canonicalId = String(
+            question?.id ?? ''
+          );
+
+          const sourceId = String(
+            question?.source_question_id ?? ''
+          );
+
+          if(canonicalId) {
+            questionsById.set(
+              canonicalId,
+              question
+            );
+          }
+
+          if(sourceId) {
+            questionsById.set(
+              sourceId,
+              question
+            );
+          }
+        }
+
+        const loaded = savedRefs.map(ref => {
+          const question =
+            questionsById.get(
+              String(ref.question_id)
             );
 
-            if(!response.ok) {
-              throw new Error(
-                `Could not load question ${ref.question_id}.`
-              );
-            }
+          if(!question) {
+            throw new Error(
+              `Could not load question ${ref.question_id}.`
+            );
+          }
 
-const payload = await response.json();
-
-const question =
-  payload?.id || payload?.question_id
-    ? payload
-    : payload?.question ?? payload;
-
-return {
-  ...question,
-  id:
-    question?.id ??
-    question?.question_id ??
-    ref.question_id,
-  question_id:
-    question?.question_id ??
-    ref.question_id
-};
-          })
-        );
-
+          return {
+            ...question,
+            id:
+              question?.id ??
+              ref.question_id,
+            question_id:
+              question?.question_id ??
+              ref.question_id
+          };
+        });
         if(cancelled) return;
 
         setWork(data);

@@ -187,58 +187,66 @@ async function loadWork() {
         return;
       }
 
-      const { count: flagsCount, error: flagsError } = await supabase
-        .from('question_flags')
-        .select('question_id', {
-          count: 'exact',
-          head: true
-        })
-        .eq('user_id', auth.user.id);
+      const [
+        flagsResult,
+        workResult
+      ] = await Promise.all([
+        supabase
+          .from('question_flags')
+          .select('question_id', {
+            count:'exact',
+            head:true
+          })
+          .eq('user_id',auth.user.id),
 
-      if (flagsError) {
+        supabase
+          .from('work_items')
+          .select(`
+            id,
+            title,
+            kind,
+            status,
+            created_at,
+            completed_at,
+            marked_at,
+            settings,
+            work_questions (
+              question_id,
+              position,
+              marks_awarded,
+              marks_available,
+              marked_at
+            )
+          `)
+          .order('created_at',{
+            ascending:false
+          })
+          .limit(50)
+      ]);
+
+      if(flagsResult.error){
         console.warn(
           'Could not load flagged question count',
-          flagsError
+          flagsResult.error
         );
-      } else {
-        setFlaggedCount(flagsCount ?? 0);
+      }else{
+        setFlaggedCount(
+          flagsResult.count ?? 0
+        );
       }
 
-      const { data, error } = await supabase
-        .from('work_items')
-        .select(`
-          id,
-          title,
-          kind,
-          status,
-          created_at,
-          completed_at,
-          marked_at,
-          settings,
-          work_questions (
-            question_id,
-            position,
-            marks_awarded,
-            marks_available,
-            marked_at
-          )
-        `)
-        .order('created_at', {
-          ascending: false,
-        })
-        .limit(50);
-
-      if (error) {
+      if(workResult.error){
         console.error(
           'Could not load My Work:',
-          error
+          workResult.error
         );
 
         setWork([]);
-      } else {
-        setWork((data ?? []) as WorkItem[]);
+      }else{
+        setWork(
+          (workResult.data ?? []) as WorkItem[]
+        );
       }
-
       setLoading(false);
     }
 

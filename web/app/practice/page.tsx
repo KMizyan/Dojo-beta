@@ -5,7 +5,7 @@ import ResumeWork from '../../components/ResumeWork';
 import {
   getTopic,
   getTopics,
-  getQuestion,
+  getQuestionsBulk,
   matchBankTopic,
   selectQuestions
 } from '../../lib/api';
@@ -41,11 +41,10 @@ export default async function Practice({
 
   if(selectedIds.length){
     qs=(
-      await Promise.all(
-        selectedIds.map(id=>getQuestion(id))
+      await getQuestionsBulk(
+        selectedIds
       )
-    ).filter(Boolean);
-  }else if(requested.length){
+    ).filter(Boolean);  }else if(requested.length){
     const data=await selectQuestions(
       requested,
       count,
