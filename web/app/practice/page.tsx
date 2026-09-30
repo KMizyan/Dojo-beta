@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import PracticeSession from '../../components/PracticeSession';
+import GeneratedExam from '../../components/GeneratedExam';
 import ResumeWork from '../../components/ResumeWork';
 import {
   getTopic,
@@ -81,22 +82,60 @@ export default async function Practice({
 
       {qs.length
         ? (
-          <PracticeSession
-            persistWork={true}
-            topic={label}
-            mode={
-              p.mode==='exam'
-                ? 'exam'
-                : 'practice'
-            }
-            questions={qs}
-            options={{
-              askDojo:p.ask!=='0',
-              solutions:p.solutions!=='0',
-              timer:p.timer==='1',
-              freeNav:p.freeNav!=='0'
-            }}
-          />
+          p.mode==='exam'
+            ? (
+              <GeneratedExam
+                variant="question_set"
+                questionSetTitle={
+                  label || 'Question Set'
+                }
+                paper={{
+                  level:'A-level',
+                  area:label || 'Question Set',
+                  total_marks:qs.reduce(
+                    (total,q)=>
+                      total+(Number(q?.marks)||0),
+                    0
+                  ),
+                  requested_marks:qs.reduce(
+                    (total,q)=>
+                      total+(Number(q?.marks)||0),
+                    0
+                  ),
+                  questions:qs
+                }}
+                options={{
+                  examMode:true,
+                  askDojo:false,
+                  solutions:false,
+                  timer:p.timer==='1',
+                  freeNav:false
+                }}
+              />
+            )
+            : (
+              <PracticeSession
+                persistWork={true}
+                initialQuestion={Math.max(
+                  0,
+                  Number(p.resumeQuestion)||0
+                )}
+                initialStage={
+                  p.resumeStage==='marking'
+                    ? 'marking'
+                    : 'doing'
+                }
+                topic={label}
+                mode="practice"
+                questions={qs}
+                options={{
+                  askDojo:p.ask!=='0',
+                  solutions:p.solutions!=='0',
+                  timer:p.timer==='1',
+                  freeNav:p.freeNav!=='0'
+                }}
+              />
+            )
         )
         : (
           <div className="placeholder">

@@ -4,6 +4,7 @@ import PracticeBuilder from '../../../../components/PracticeBuilder';
 import FocusPractice from '../../../../components/FocusPractice';
 import {getTopics,matchBankTopic} from '../../../../lib/api';
 import {focusGroups,topicInfo} from '../../../../lib/topics';
+import TopicHistory from '../../../../components/TopicHistory';
 
 export default async function TopicPage({params}:{params:Promise<{area:string,topic:string}>}){
   const {area,topic}=await params;
@@ -15,7 +16,7 @@ export default async function TopicPage({params}:{params:Promise<{area:string,to
   return <main className="main">
     <div className="crumb"><Link href="/topics">Topics</Link><span>›</span><Link href={`/topics/${area}`}>{info.areaLabel}</Link><span>›</span>{info.label}</div>
     <h1 className="pageTitle">{info.label}</h1>
-    <section className="historyStrip"><div><b>Your {info.label} history</b><p>Your recent work and areas to revisit will appear here as you practise.</p></div><span className="historyEmpty">No history yet</span></section>
+    <TopicHistory topic={info.label}/>
     <PracticeBuilder topic={info.label} available={!!bankName}/>
     <section className="subSection">
       <div className="eyebrow">Focus your practice</div>

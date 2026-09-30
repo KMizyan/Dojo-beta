@@ -23,6 +23,40 @@ export async function selectQuestions(
   }catch{return null}
 }
 
+export async function selectBalancedQuestionPools(
+  pools:{
+    label:string;
+    within?:string;
+    any:string[];
+  }[],
+  count:number,
+  exposures:string[],
+  history:Record<string,number>
+){
+  try{
+    const r=await fetch(`${API}/questions/select-balanced`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        pools,
+        count,
+        exposure:exposures,
+        history
+      })
+    });
+
+    if(!r.ok){
+      throw new Error(
+        await r.text() ||
+        'Could not build this question set.'
+      );
+    }
+
+    return await r.json();
+  }catch(error){
+    throw error;
+  }
+}
 export async function selectQuestionsWithExposure(
   topics:string[],
   count:number,
@@ -129,6 +163,21 @@ export async function selectAllocatedSimilarQuestions(
     throw new Error(
       await r.text() ||
       'Could not create similar practice set.'
+    );
+  }
+
+  return await r.json();
+}
+
+export async function getCoverageCatalogue(){
+  const r=await fetch(
+    `${API}/questions/coverage-catalogue`,
+    {cache:'no-store'}
+  );
+
+  if(!r.ok){
+    throw new Error(
+      'Could not load the question architecture catalogue.'
     );
   }
 

@@ -6,6 +6,17 @@ import { supabase } from '../lib/supabase';
 import CoverageSnapshot from './CoverageSnapshot';
 
 type WorkFilter = 'all' | 'question_sets' | 'papers';
+type RecentView = 'latest' | 'in_progress';
+
+type RecoverySession = {
+  id:string;
+  topic:string;
+  mode:'practice'|'exam';
+  status:'in-progress'|'marking';
+  questionIds:string[];
+  currentQuestion:number;
+  updatedAt:string;
+};
 
 type WorkQuestion = {
   question_id: string;
@@ -119,14 +130,54 @@ export default function MyWorkPage() {
   const [loading, setLoading] = useState(true);
   const [flaggedCount, setFlaggedCount] = useState(0);
 
+  const [recovery,setRecovery] =
+    useState<RecoverySession|null>(null);
+
   const [filter, setFilter] =
     useState<WorkFilter>('all');
 
   const [showMore, setShowMore] =
     useState(false);
 
+  const [recentView, setRecentView] =
+    useState<RecentView>('latest');
+
   useEffect(() => {
-    async function loadWork() {
+    
+    try{
+      const key =
+        localStorage.getItem('dojo-continue');
+
+      if(key){
+        const raw=localStorage.getItem(key);
+
+        if(raw){
+          const value=JSON.parse(raw);
+
+          if(
+            Array.isArray(value?.questionIds) &&
+            value.questionIds.length &&
+            (
+              value.status==='in-progress' ||
+              value.status==='marking'
+            )
+          ){
+            setRecovery(value);
+          }else{
+            localStorage.removeItem('dojo-continue');
+          }
+        }else{
+          localStorage.removeItem('dojo-continue');
+        }
+      }
+    }catch(err){
+      console.warn(
+        'Could not restore Continue',
+        err
+      );
+      localStorage.removeItem('dojo-continue');
+    }
+async function loadWork() {
       const { data: auth } =
         await supabase.auth.getUser();
 
@@ -193,27 +244,29 @@ export default function MyWorkPage() {
 
     loadWork();
   }, []);
-
-  const inProgress = useMemo(
-    () =>
-      work.filter(
-        item =>
-          item.status === 'in_progress' ||
-          item.status === 'completed' ||
-          item.status === 'marking'
-      ),
-    [work]
-  );
-
-  const continueItem =
-    inProgress.length > 0
-      ? inProgress[0]
-      : null;
+  /*
+   * Continue is one recovery slot, not an unfinished-work queue.
+   *
+   * `work` is loaded newest-first. Only the newest saved item can
+   * occupy Continue. If that item has been properly ended, Continue
+   * is empty rather than falling back to an older abandoned item.
+   */
 
   const filteredRecent = useMemo(() => {
     return work.filter(item => {
       if (item.settings?.draft === true) {
         return false;
+      }
+
+      const isUnfinished =
+        item.status === 'in_progress' ||
+        item.status === 'completed' ||
+        item.status === 'marking';
+
+      if (recentView === 'in_progress') {
+        if (!isUnfinished) return false;
+      } else {
+        if (item.status !== 'marked') return false;
       }
 
       if (filter === 'papers') {
@@ -226,7 +279,7 @@ export default function MyWorkPage() {
 
       return true;
     });
-  }, [work, filter]);
+  }, [work, filter, recentView]);
 
   const visibleRecent = showMore
     ? filteredRecent
@@ -332,7 +385,7 @@ export default function MyWorkPage() {
         </Link>
       </section>
 
-      {!loading && continueItem && (
+      {!loading && recovery && (
         <section className="myWorkPanel continuePanel">
           <div className="dashboardPanelHeading">
             <div>
@@ -340,46 +393,67 @@ export default function MyWorkPage() {
                 Continue
               </span>
 
-              <h2>{continueItem.title}</h2>
+              <h2>
+                {recovery.topic || 'Question Set'}
+              </h2>
 
               <p>
-                {workTypeLabel(continueItem)}
+                {recovery.mode==='exam'
+                  ? 'Paper'
+                  : 'Question Set'}
 
-                {progressFor(continueItem).total > 0
-                  ? ` · ${progressFor(continueItem).current}/${progressFor(continueItem).total} questions`
-                  : ''}
+                {` · ${Math.min(
+                  recovery.currentQuestion + 1,
+                  recovery.questionIds.length
+                )}/${recovery.questionIds.length} questions`}
               </p>
             </div>
 
             <Link
               className="dashboardPrimaryAction"
-              href={`/practice?work=${encodeURIComponent(
-                continueItem.id
-              )}`}
+              href={
+                `/practice?topic=${encodeURIComponent(
+                  recovery.topic || 'Question Set'
+                )}` +
+                `&mode=${encodeURIComponent(
+                  recovery.mode
+                )}` +
+                `&ids=${encodeURIComponent(
+                  recovery.questionIds.join(',')
+                )}` +
+                `&resumeQuestion=${recovery.currentQuestion}` +
+                `&resumeStage=${
+                  recovery.status==='marking'
+                    ? 'marking'
+                    : 'doing'
+                }`
+              }
             >
-              {continueItem.status === 'in_progress'
-                ? 'Resume →'
-                : continueItem.status === 'marking'
+              {recovery.status==='marking'
                 ? 'Continue marking →'
-                : 'Mark →'}
+                : 'Resume →'}
             </Link>
           </div>
 
-          {continueItem.status === 'in_progress' &&
-            progressFor(continueItem).total > 0 && (
-              <div className="continueProgress">
-                <div
-                  style={{
-                    width: `${
-                      progressFor(continueItem).percent
-                    }%`,
-                  }}
-                />
-              </div>
-            )}
+          {recovery.status==='in-progress' && (
+            <div className="continueProgress">
+              <div
+                style={{
+                  width:`${Math.round(
+                    (
+                      Math.min(
+                        recovery.currentQuestion + 1,
+                        recovery.questionIds.length
+                      ) /
+                      recovery.questionIds.length
+                    ) * 100
+                  )}%`
+                }}
+              />
+            </div>
+          )}
         </section>
       )}
-
       {!loading && (
         <div className="myWorkDashboardGrid">
           <section className="myWorkPanel dashboardRecent">
@@ -389,7 +463,57 @@ export default function MyWorkPage() {
                   Recent work
                 </span>
 
-                <h2>Latest</h2>
+                <div style={{display:'flex',alignItems:'center',gap:'14px'}}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRecentView('latest');
+                      setShowMore(false);
+                    }}
+                    style={{
+                      border:0,
+                      borderBottom:recentView === 'latest'
+                        ? '2px solid currentColor'
+                        : '2px solid transparent',
+                      background:'transparent',
+                      padding:'0 0 4px',
+                      font:'inherit',
+                      fontSize:'20px',
+                      fontWeight:700,
+                      color:recentView === 'latest'
+                        ? 'inherit'
+                        : '#777',
+                      cursor:'pointer'
+                    }}
+                  >
+                    Latest
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRecentView('in_progress');
+                      setShowMore(false);
+                    }}
+                    style={{
+                      border:0,
+                      borderBottom:recentView === 'in_progress'
+                        ? '2px solid currentColor'
+                        : '2px solid transparent',
+                      background:'transparent',
+                      padding:'0 0 4px',
+                      font:'inherit',
+                      fontSize:'14px',
+                      fontWeight:700,
+                      color:recentView === 'in_progress'
+                        ? 'inherit'
+                        : '#777',
+                      cursor:'pointer'
+                    }}
+                  >
+                    In progress
+                  </button>
+                </div>
               </div>
             </div>
 

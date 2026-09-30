@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   QuestionDisplay,
   MarkSchemeView,
@@ -55,6 +56,19 @@ function metadata(q:any) {
 }
 
 export default function ReviewQuestionsPage() {
+  const searchParams=useSearchParams();
+
+  const requestedSeeds=useMemo(
+    ()=>(
+      searchParams
+        .get('seeds')
+        ?.split(',')
+        .map(value=>value.trim())
+        .filter(Boolean)
+      ?? []
+    ),
+    [searchParams]
+  );
   const [questions,setQuestions] =
     useState<any[]>([]);
 
@@ -93,6 +107,29 @@ export default function ReviewQuestionsPage() {
 
     async function load(){
       try{
+        if(requestedSeeds.length){
+          const loaded=(
+            await Promise.all(
+              requestedSeeds.map(id=>getQuestion(id))
+            )
+          ).filter(Boolean);
+
+          if(!active) return;
+
+          setQuestions(loaded);
+
+          setSelected(
+            new Set(
+              loaded
+                .map(questionId)
+                .filter(Boolean)
+            )
+          );
+
+          setLoading(false);
+          return;
+        }
+
         const flags=await getQuestionFlags();
 
         const loaded=(
@@ -120,7 +157,7 @@ export default function ReviewQuestionsPage() {
 
         setError(
           err?.message ||
-          'Could not load flagged questions.'
+          'Could not load questions.'
         );
       }finally{
         if(active) setLoading(false);
@@ -132,7 +169,7 @@ export default function ReviewQuestionsPage() {
     return ()=>{
       active=false;
     };
-  },[]);
+  },[requestedSeeds]);
 
   const q=questions[index] ?? null;
 

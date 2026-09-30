@@ -237,6 +237,220 @@ def select_questions(topics:list[str],count:int,seed:str|None=None)->list[dict]:
         pools=[p for p in pools if p]; i+=1
     return chosen
 
+
+@app.get('/questions/coverage-catalogue')
+def questions_coverage_catalogue():
+    """
+    Canonical bank inventory for Coverage.
+
+    One row per real question architecture, grouped by topic.
+    Questions without an architecture are not treated as an
+    invented archetype.
+    """
+    qs = catalogue()
+    groups = {}
+
+    for q in qs:
+        topic = str(q.get('topic') or '').strip()
+        architecture = str(q.get('architecture') or '').strip()
+
+        if not topic or not architecture:
+            continue
+
+        key = (topic, architecture)
+
+        if key not in groups:
+            groups[key] = {
+                'topic': topic,
+                'architecture': architecture,
+                'family': str(q.get('family') or '').strip(),
+                'question_ids': [],
+                'question_count': 0,
+            }
+
+        groups[key]['question_ids'].append(str(q.get('id')))
+        groups[key]['question_count'] += 1
+
+    rows = sorted(
+        groups.values(),
+        key=lambda row: (
+            row['topic'].lower(),
+            row['architecture'].lower()
+        )
+    )
+
+    return {
+        'architectures': rows,
+        'architecture_count': len(rows),
+        'question_count': sum(
+            row['question_count']
+            for row in rows
+        )
+    }
+
+class BalancedQuestionPool(BaseModel):
+    label: str
+    within: str | None = None
+    any: list[str] = []
+
+
+class BalancedQuestionRequest(BaseModel):
+    pools: list[BalancedQuestionPool]
+    count: int = 10
+    exposure: list[str] = ['any']
+    history: dict[str, int] = {}
+
+
+def _exposure_matches(
+    q: dict,
+    exposure: list[str],
+    history: dict[str, int]
+) -> bool:
+    if not exposure or 'any' in exposure:
+        return True
+
+    seen = int(history.get(str(q.get('id')), 0) or 0)
+
+    if 'unseen' in exposure and seen == 0:
+        return True
+
+    if 'once' in exposure and seen == 1:
+        return True
+
+    if 'few' in exposure and 2 <= seen <= 3:
+        return True
+
+    if 'explored' in exposure and seen >= 4:
+        return True
+
+    return False
+
+
+def _balanced_pool_matches(
+    q: dict,
+    pool: BalancedQuestionPool
+) -> bool:
+    # Parent/topic constraint is AND.
+    if pool.within and not _scope_matches(q, pool.within):
+        return False
+
+    # Metadata scopes inside one clicked focus are OR.
+    if pool.any:
+        return any(
+            _scope_matches(q, scope)
+            for scope in pool.any
+        )
+
+    # A whole-topic selection has its topic in `any`.
+    return bool(pool.within)
+
+
+@app.post('/questions/select-balanced')
+def questions_select_balanced(
+    request: BalancedQuestionRequest
+):
+    count = max(1, min(int(request.count), 50))
+
+    if not request.pools:
+        raise HTTPException(
+            400,
+            'Choose at least one question pool'
+        )
+
+    qs = catalogue()
+    rng = random.Random()
+
+    pools = []
+
+    for requested in request.pools:
+        candidates = [
+            q for q in qs
+            if _balanced_pool_matches(q, requested)
+            and _exposure_matches(
+                q,
+                request.exposure,
+                request.history
+            )
+        ]
+
+        # Whole topics arrive as any=['topic:X'] and no within.
+        if not requested.within and requested.any:
+            candidates = [
+                q for q in qs
+                if any(
+                    _scope_matches(q, scope)
+                    for scope in requested.any
+                )
+                and _exposure_matches(
+                    q,
+                    request.exposure,
+                    request.history
+                )
+            ]
+
+        varied = _varied_from_pool(
+            candidates,
+            len(candidates),
+            rng
+        )
+
+        pools.append({
+            'label': requested.label,
+            'questions': varied
+        })
+
+    chosen = []
+    used = set()
+
+    # Round-robin across the USER'S SELECTED ITEMS, not their
+    # metadata scopes. If a pool empties, its remaining share is
+    # naturally redistributed amongst surviving pools.
+    while len(chosen) < count:
+        made_progress = False
+
+        for pool in pools:
+            questions = pool['questions']
+
+            while (
+                questions
+                and str(questions[0].get('id')) in used
+            ):
+                questions.pop(0)
+
+            if not questions:
+                continue
+
+            q = questions.pop(0)
+            qid = str(q.get('id'))
+
+            chosen.append(q)
+            used.add(qid)
+            made_progress = True
+
+            if len(chosen) >= count:
+                break
+
+        if not made_progress:
+            break
+
+    if not chosen:
+        raise HTTPException(
+            404,
+            'No questions match the selected pools'
+        )
+
+    return {
+        'question_count': len(chosen),
+        'questions': chosen,
+        'pools': [
+            {
+                'label': pool['label'],
+                'available': len(pool['questions'])
+            }
+            for pool in pools
+        ]
+    }
+
 class SimilarQuestionRequest(BaseModel):
     seed_ids:list[str]
     count:int=10

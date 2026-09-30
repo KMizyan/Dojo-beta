@@ -7,6 +7,23 @@ import { supabase } from '../../lib/supabase';
 type PaperArea = 'Pure' | 'Statistics' | 'Mechanics';
 type Level = 'A-level' | 'AS';
 type PastPaper = 'paper1' | 'paper2' | 'paper3';
+type PastPaperLog={
+  id:string;
+  level:Level;
+  paper:PastPaper;
+  year:number;
+  score:number;
+  available:number;
+  flagged:string[];
+  notes:string;
+};
+
+type LogDraft={
+  score:string;
+  available:string;
+  flagged:string;
+  notes:string;
+};
 
 const sampleYears = [2025, 2024, 2023, 2022, 2021, 2020];
 
@@ -24,6 +41,28 @@ export default function PapersPage() {
   const [freeNav, setFreeNav] = useState(true);
   const [savedPapers, setSavedPapers] = useState<any[]>([]);
   const [papersLoading, setPapersLoading] = useState(true);
+  const [pastPaperLogs,setPastPaperLogs]=
+    useState<PastPaperLog[]>([]);
+
+  const [logsLoading,setLogsLoading]=
+    useState(false);
+
+  const [editingLog,setEditingLog]=
+    useState<string|null>(null);
+
+  const [logDraft,setLogDraft]=
+    useState<LogDraft>({
+      score:'',
+      available:'',
+      flagged:'',
+      notes:''
+    });
+
+  const [logSaving,setLogSaving]=
+    useState(false);
+
+  const [logError,setLogError]=
+    useState('');
 
   useEffect(() => {
     let active = true;
@@ -101,6 +140,267 @@ export default function PapersPage() {
     };
   }, [section]);
 
+  useEffect(()=>{
+    let active=true;
+
+    async function loadPastPaperLogs(){
+      setLogsLoading(true);
+
+      const {data:auth}=await supabase.auth.getUser();
+
+      if(!auth.user){
+        if(active){
+          setPastPaperLogs([]);
+          setLogsLoading(false);
+        }
+        return;
+      }
+
+      const {data,error}=await supabase
+        .from('work_items')
+        .select('id,settings,updated_at')
+        .eq('user_id',auth.user.id)
+        .eq('kind','past_paper')
+        .order('updated_at',{ascending:false});
+
+      if(!active) return;
+
+      if(error){
+        console.error(error);
+        setPastPaperLogs([]);
+        setLogsLoading(false);
+        return;
+      }
+
+      const rows:PastPaperLog[]=(data ?? [])
+        .map((row:any)=>{
+          const settings=row.settings ?? {};
+
+          return {
+            id:String(row.id),
+            level:settings.level as Level,
+            paper:settings.paper as PastPaper,
+            year:Number(settings.year),
+            score:Number(settings.score),
+            available:Number(settings.available),
+            flagged:Array.isArray(settings.flagged)
+              ? settings.flagged.map(String)
+              : [],
+            notes:String(settings.notes ?? '')
+          };
+        })
+        .filter(
+          (row:PastPaperLog)=>
+            Boolean(row.level) &&
+            Boolean(row.paper) &&
+            Number.isFinite(row.year)
+        );
+
+      setPastPaperLogs(rows);
+      setLogsLoading(false);
+    }
+
+    loadPastPaperLogs();
+
+    return ()=>{
+      active=false;
+    };
+  },[]);
+
+  function logKey(
+    targetLevel:Level,
+    targetPaper:PastPaper,
+    year:number
+  ){
+    return `${targetLevel}-${targetPaper}-${year}`;
+  }
+
+  function findLog(
+    targetLevel:Level,
+    targetPaper:PastPaper,
+    year:number
+  ){
+    return pastPaperLogs.find(
+      row=>
+        row.level===targetLevel &&
+        row.paper===targetPaper &&
+        row.year===year
+    );
+  }
+
+  function beginLog(year:number){
+    const key=logKey(level,pastPaper,year);
+    const existing=findLog(level,pastPaper,year);
+
+    setEditingLog(key);
+    setLogError('');
+
+    setLogDraft({
+      score:existing ? String(existing.score) : '',
+      available:existing ? String(existing.available) : '',
+      flagged:existing
+        ? existing.flagged.join(', ')
+        : '',
+      notes:existing?.notes ?? ''
+    });
+  }
+
+  async function savePastPaperLog(year:number){
+    setLogError('');
+
+    const score=Number(logDraft.score);
+
+    const available=
+      level==='A-level'
+        ? 100
+        : Number(logDraft.available);
+
+    if(
+      !Number.isFinite(score) ||
+      !Number.isFinite(available) ||
+      score<0 ||
+      available<=0 ||
+      score>available
+    ){
+      setLogError(
+        level==='A-level'
+          ? 'Enter a valid score from 0 to 100.'
+          : 'Enter a valid score and total marks.'
+      );
+      return;
+    }
+
+    const flagged=logDraft.flagged
+      .split(',')
+      .map(value=>value.trim())
+      .filter(Boolean)
+      .map(value=>
+        /^q/i.test(value)
+          ? value.toUpperCase()
+          : `Q${value}`
+      );
+
+    const existing=findLog(
+      level,
+      pastPaper,
+      year
+    );
+
+    const {data:auth,error:authError}=
+      await supabase.auth.getUser();
+
+    if(authError || !auth.user){
+      setLogError(
+        'You must be logged in to save a paper result.'
+      );
+      return;
+    }
+
+    setLogSaving(true);
+
+    try{
+      const settings={
+        level,
+        paper:pastPaper,
+        year,
+        score,
+        available,
+        flagged,
+        notes:logDraft.notes.trim(),
+
+        // Grade calculation will be added when real
+        // boundaries are supplied.
+        grade:null
+      };
+
+      let saved:any;
+
+      if(existing){
+        const {data,error}=await supabase
+          .from('work_items')
+          .update({
+            title:`${level} ${year} ${
+              pastPaper==='paper1'
+                ? 'Paper 1'
+                : pastPaper==='paper2'
+                  ? 'Paper 2'
+                  : 'Paper 3'
+            }`,
+            status:'marked',
+            settings,
+            marked_at:new Date().toISOString(),
+            updated_at:new Date().toISOString()
+          })
+          .eq('id',existing.id)
+          .eq('user_id',auth.user.id)
+          .select('id,settings')
+          .single();
+
+        if(error) throw error;
+        saved=data;
+      }else{
+        const now=new Date().toISOString();
+
+        const {data,error}=await supabase
+          .from('work_items')
+          .insert({
+            user_id:auth.user.id,
+            kind:'past_paper',
+            title:`${level} ${year} ${
+              pastPaper==='paper1'
+                ? 'Paper 1'
+                : pastPaper==='paper2'
+                  ? 'Paper 2'
+                  : 'Paper 3'
+            }`,
+            status:'marked',
+            settings,
+            completed_at:now,
+            marked_at:now,
+            updated_at:now
+          })
+          .select('id,settings')
+          .single();
+
+        if(error) throw error;
+        saved=data;
+      }
+
+      const next:PastPaperLog={
+        id:String(saved.id),
+        level,
+        paper:pastPaper,
+        year,
+        score,
+        available,
+        flagged,
+        notes:logDraft.notes.trim()
+      };
+
+      setPastPaperLogs(current=>{
+        const without=current.filter(
+          row=>!(
+            row.level===level &&
+            row.paper===pastPaper &&
+            row.year===year
+          )
+        );
+
+        return [next,...without];
+      });
+
+      setEditingLog(null);
+    }catch(error:any){
+      console.error(error);
+
+      setLogError(
+        error?.message ??
+        'Could not save this paper result.'
+      );
+    }finally{
+      setLogSaving(false);
+    }
+  }
   return (
     <main className="papers-page">
       <div className="page-kicker">A-level Mathematics</div>
@@ -196,36 +496,318 @@ export default function PapersPage() {
           </div>
 
           <div className="past-paper-list">
-            {sampleYears.map((year) => (
-              <div
-                className="past-paper-row"
-                key={year}
-              >
-                <div className="paper-year">
-                  {year}
-                </div>
+            {sampleYears.map((year)=>{
+              const existing=
+                findLog(level,pastPaper,year);
 
-                <div className="paper-name">
-                  {level} -{' '}
-                  {pastPaper === 'paper1'
-                    ? 'Paper 1 - Pure'
-                    : pastPaper === 'paper2'
-                      ? 'Paper 2 - Pure'
-                      : 'Paper 3 - Statistics & Mechanics'}
-                </div>
+              const key=
+                logKey(level,pastPaper,year);
 
-                <a
-                  className="paper-open"
-                  href="https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/mathematics-2017.coursematerials.html"
-                  target="_blank"
-                  rel="noreferrer"
+              const editing=
+                editingLog===key;
+
+              return (
+                <div
+                  className="past-paper-row"
+                  key={year}
+                  style={{
+                    alignItems:'start',
+                    flexWrap:'wrap'
+                  }}
                 >
-                  Pearson / Edexcel
-                </a>
-              </div>
-            ))}
-          </div>
+                  <div className="paper-year">
+                    {year}
+                  </div>
 
+                  <div
+                    className="paper-name"
+                    style={{
+                      flex:'1 1 360px'
+                    }}
+                  >
+                    <strong>
+                      {level}
+                      {' - '}
+                      {pastPaper==='paper1'
+                        ? 'Paper 1 - Pure'
+                        : pastPaper==='paper2'
+                          ? 'Paper 2 - Pure'
+                          : 'Paper 3 - Statistics & Mechanics'}
+                    </strong>
+
+                    {logsLoading ? (
+                      <div
+                        style={{
+                          marginTop:'5px',
+                          opacity:.55,
+                          fontSize:'13px'
+                        }}
+                      >
+                        Loading record...
+                      </div>
+                    ) : existing ? (
+                      <div
+                        style={{
+                          marginTop:'6px',
+                          display:'flex',
+                          gap:'12px',
+                          flexWrap:'wrap',
+                          fontSize:'13px'
+                        }}
+                      >
+                        <span>
+                          {existing.score}
+                          /
+                          {existing.available}
+                          {' · '}
+                          {Math.round(
+                            (
+                              existing.score /
+                              existing.available
+                            ) * 100
+                          )}
+                          %
+                        </span>
+
+                        <span>
+                          Grade: N/A
+                        </span>
+
+                        {existing.flagged.length>0 && (
+                          <span>
+                            Flagged:{' '}
+                            {existing.flagged.join(', ')}
+                          </span>
+                        )}
+
+                        {existing.notes && (
+                          <span>
+                            Notes saved
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <div
+                        style={{
+                          marginTop:'5px',
+                          opacity:.55,
+                          fontSize:'13px'
+                        }}
+                      >
+                        No result logged
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    className="paper-open"
+                    onClick={()=>
+                      editing
+                        ? setEditingLog(null)
+                        : beginLog(year)
+                    }
+                  >
+                    {editing
+                      ? 'Cancel'
+                      : existing
+                        ? 'Edit log'
+                        : 'Log result'}
+                  </button>
+
+                  {editing && (
+                    <div
+                      style={{
+                        flexBasis:'100%',
+                        marginTop:'14px',
+                        padding:'18px',
+                        borderTop:
+                          '1px solid rgba(0,0,0,.08)',
+                        display:'grid',
+                        gap:'14px'
+                      }}
+                    >
+                      <div
+                        style={{
+                          display:'grid',
+                          gridTemplateColumns:
+                            level==='A-level'
+                              ? 'minmax(0,220px)'
+                              : 'repeat(2,minmax(0,180px))',
+                          gap:'12px'
+                        }}
+                      >
+                        <label
+                          style={{
+                            display:'grid',
+                            gap:'6px'
+                          }}
+                        >
+                          <strong>
+                            Your score
+                          </strong>
+
+                          <div
+                            style={{
+                              display:'flex',
+                              alignItems:'center',
+                              gap:'9px'
+                            }}
+                          >
+                            <input
+                              type="number"
+                              min="0"
+                              max={
+                                level==='A-level'
+                                  ? 100
+                                  : undefined
+                              }
+                              value={logDraft.score}
+                              onChange={event=>
+                                setLogDraft(current=>({
+                                  ...current,
+                                  score:event.target.value
+                                }))
+                              }
+                              style={{
+                                width:'110px',
+                                padding:'10px',
+                                font:'inherit'
+                              }}
+                            />
+
+                            {level==='A-level' && (
+                              <strong
+                                style={{
+                                  fontSize:'16px',
+                                  opacity:.65
+                                }}
+                              >
+                                / 100
+                              </strong>
+                            )}
+                          </div>
+                        </label>
+
+                        {level==='AS' && (
+                          <label
+                            style={{
+                              display:'grid',
+                              gap:'6px'
+                            }}
+                          >
+                            <strong>
+                              Paper total
+                            </strong>
+
+                            <input
+                              type="number"
+                              min="1"
+                              value={logDraft.available}
+                              onChange={event=>
+                                setLogDraft(current=>({
+                                  ...current,
+                                  available:event.target.value
+                                }))
+                              }
+                              style={{
+                                padding:'10px',
+                                font:'inherit'
+                              }}
+                            />
+                          </label>
+                        )}
+                      </div>
+                      <label
+                        style={{
+                          display:'grid',
+                          gap:'6px'
+                        }}
+                      >
+                        <strong>
+                          Flagged questions
+                        </strong>
+
+                        <input
+                          type="text"
+                          value={logDraft.flagged}
+                          placeholder="e.g. 4, 7, 12"
+                          onChange={event=>
+                            setLogDraft(current=>({
+                              ...current,
+                              flagged:event.target.value
+                            }))
+                          }
+                          style={{
+                            padding:'10px',
+                            font:'inherit'
+                          }}
+                        />
+
+                        <small style={{opacity:.55}}>
+                          Separate question numbers with commas.
+                        </small>
+                      </label>
+
+                      <label
+                        style={{
+                          display:'grid',
+                          gap:'6px'
+                        }}
+                      >
+                        <strong>Notes</strong>
+
+                        <textarea
+                          value={logDraft.notes}
+                          placeholder="Anything you want to remember about this paper..."
+                          onChange={event=>
+                            setLogDraft(current=>({
+                              ...current,
+                              notes:event.target.value
+                            }))
+                          }
+                          rows={4}
+                          style={{
+                            padding:'10px',
+                            resize:'vertical',
+                            font:'inherit'
+                          }}
+                        />
+                      </label>
+
+                      {logError && (
+                        <div
+                          style={{
+                            fontSize:'13px',
+                            fontWeight:700
+                          }}
+                        >
+                          {logError}
+                        </div>
+                      )}
+
+                      <div>
+                        <button
+                          type="button"
+                          className="primary-paper-action"
+                          disabled={logSaving}
+                          onClick={()=>
+                            savePastPaperLog(year)
+                          }
+                        >
+                          {logSaving
+                            ? 'Saving...'
+                            : existing
+                              ? 'Update result'
+                              : 'Save result'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
           <p className="quiet-note">
             For now these links go to Pearson&apos;s official
             course-materials page. DOJO can host or display papers

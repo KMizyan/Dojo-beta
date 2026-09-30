@@ -463,6 +463,17 @@ export default function PracticeSession({
   const storageKey=`dojo-session-${topic}-${startedAt}`;
 
   useEffect(()=>{
+    if(stage==='results'){
+      const activeRecovery =
+        localStorage.getItem('dojo-continue');
+
+      if(activeRecovery===storageKey){
+        localStorage.removeItem('dojo-continue');
+      }
+
+      localStorage.removeItem(storageKey);
+      return;
+    }
     const payload={
       id:storageKey,
       topic,
@@ -483,6 +494,9 @@ export default function PracticeSession({
     };
 
     localStorage.setItem(storageKey,JSON.stringify(payload));
+
+    // The newest active session is the ONLY Continue target.
+    localStorage.setItem('dojo-continue',storageKey);
 
     const ids=JSON.parse(
       localStorage.getItem('dojo-work-index')||'[]'

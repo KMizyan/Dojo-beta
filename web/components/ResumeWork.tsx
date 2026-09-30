@@ -322,17 +322,16 @@ function MarkSchemeView({q}:{q:any}) {
   );
 }
 function practiseSimilarHref(q:any) {
-  const primary =
-    q?.topic_metadata?.primary ||
-    q?.areas?.[0] ||
-    q?.topic ||
-    '';
+  const id=String(
+    q?.id ??
+    q?.question_id ??
+    q?.ref ??
+    ''
+  ).trim();
 
-  const topic = String(primary).trim();
-
-  return topic
-    ? `/question-sets?topics=${encodeURIComponent(topic)}&source=similar`
-    : '/question-sets';
+  return id
+    ? `/review/questions?seeds=${encodeURIComponent(id)}`
+    : '/review/questions';
 }
 function ReviewWork({
   work,

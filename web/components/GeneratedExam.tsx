@@ -80,9 +80,24 @@ function formatTime(seconds:number){
 }
 
 type PaperOptions={examMode:boolean;askDojo:boolean;solutions:boolean;timer:boolean;freeNav:boolean};
-export default function GeneratedExam({paper,options}:{paper:any;options?:Partial<PaperOptions>}){
+type ExamVariant='paper'|'question_set';
+
+type GeneratedExamProps={
+  paper:any;
+  options?:Partial<PaperOptions>;
+  variant?:ExamVariant;
+  questionSetTitle?:string;
+};
+
+export default function GeneratedExam({
+  paper,
+  options,
+  variant='paper',
+  questionSetTitle
+}:GeneratedExamProps){
   const router=useRouter();
   const workspace:PaperOptions={examMode:options?.examMode??true,askDojo:options?.askDojo??false,solutions:options?.solutions??false,timer:options?.timer??true,freeNav:options?.freeNav??false};
+  const isQuestionSet=variant==='question_set';
   const [started,setStarted]=useState(false);
   const [seconds,setSeconds]=useState(0);
   const [finished,setFinished]=useState(false);
@@ -103,16 +118,33 @@ export default function GeneratedExam({paper,options}:{paper:any;options?:Partia
         throw new Error('This paper has no saveable question IDs.');
       }
 
+      const timeTag=
+        workspace.timer
+          ? ` · ${formatTime(seconds)}`
+          : '';
+
+      const savedTitle=isQuestionSet
+        ? `${questionSetTitle || 'Question Set'} · Exam mode${timeTag}`
+        : `DOJO ${paper.level} ${paper.area} paper`;
+
       const work=await createWorkItem({
-        kind:'generated_paper',
-        title:`DOJO ${paper.level} ${paper.area} paper`,
+        kind:isQuestionSet
+          ? 'question_set'
+          : 'generated_paper',
+        title:savedTitle,
         question_ids:questionIds,
         settings:{
           paper,
           workspace,
+          mode:'exam',
+          examMode:true,
+          timer:workspace.timer,
           elapsedSeconds:seconds,
           totalMarks:paper.total_marks,
           requestedMarks:paper.requested_marks,
+          source:isQuestionSet
+            ? 'question_set_exam'
+            : 'generated_paper'
         },
       });
 
@@ -131,10 +163,21 @@ export default function GeneratedExam({paper,options}:{paper:any;options?:Partia
   };
 
   const leavePaper=()=>{
+    const noun=isQuestionSet
+      ? 'question set'
+      : 'paper';
+
     const ok=window.confirm(
-      'Leave this paper without saving? Your progress on this paper will be lost.'
+      `Leave this ${noun} without saving? Your progress will be lost.`
     );
-    if(ok)router.push('/papers');
+
+    if(ok){
+      router.push(
+        isQuestionSet
+          ? '/question-sets'
+          : '/papers'
+      );
+    }
   };
   useEffect(()=>{
     if(!workspace.timer||!started||finished||paused)return;
@@ -143,7 +186,11 @@ export default function GeneratedExam({paper,options}:{paper:any;options?:Partia
   },[workspace.timer,started,finished,paused]);
 
   const suggestedMinutes=useMemo(()=>Math.max(20,Math.round((paper.total_marks||paper.requested_marks)*1.2)),[paper]);
-  const title=paper.area==='Pure'?'Pure Mathematics':paper.area;
+  const title=isQuestionSet
+    ? (questionSetTitle || 'Question Set')
+    : paper.area==='Pure'
+      ? 'Pure Mathematics'
+      : paper.area;
 
   if(!started)return <main className="generatedExamPage"><div className="examCover">
     <div className="examCoverTop"><div className="examBrand">DOJO</div><div className="examGeneratedTag">GENERATED PAPER</div></div>

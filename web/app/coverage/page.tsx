@@ -1,504 +1,568 @@
 'use client';
 
+import {useEffect,useMemo,useState} from 'react';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
 
-type Exposure = 'unseen' | 'once' | 'few' | 'explored';
-type CourseArea = 'Pure' | 'Statistics' | 'Mechanics';
+import {getCoverageCatalogue} from '../../lib/api';
+import {supabase} from '../../lib/supabase';
 
-type Architecture = {
-  id: string;
-  name: string;
-  seen: number;
+type ArchitectureRow={
+  topic:string;
+  architecture:string;
+  family?:string;
+  question_ids:string[];
+  question_count:number;
 };
 
-type Subtopic = {
-  id: string;
-  name: string;
-  architectures: Architecture[];
+type CoverageCatalogue={
+  architectures:ArchitectureRow[];
+  architecture_count:number;
+  question_count:number;
 };
 
-type Topic = {
-  id: string;
-  name: string;
-  courseArea: CourseArea;
-  subtopics: Subtopic[];
-};
-
-const topics: Topic[] = [
-  {
-    id: 'proof',
-    name: 'Proof',
-    courseArea: 'Pure',
-    subtopics: [
-      {
-        id: 'proof',
-        name: 'Proof',
-        architectures: [
-          { id: 'odd_square_minus_one', name: 'Odd integer divisibility', seen: 3 },
-          { id: 'counterexample', name: 'Proof by counterexample', seen: 1 },
-          { id: 'contradiction', name: 'Proof by contradiction', seen: 0 },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'algebra-functions',
-    name: 'Algebra & Functions',
-    courseArea: 'Pure',
-    subtopics: [
-      {
-        id: 'factor-theorem',
-        name: 'Factor Theorem',
-        architectures: [
-          { id: 'factor_parameter', name: 'Parameter from a known factor', seen: 4 },
-          { id: 'factorise-polynomial', name: 'Factorise using the factor theorem', seen: 2 },
-        ],
-      },
-      {
-        id: 'quadratics',
-        name: 'Quadratics',
-        architectures: [
-          { id: 'quadratic-conditions', name: 'Conditions on roots', seen: 1 },
-          { id: 'quadratic-transform', name: 'Transforming a quadratic', seen: 0 },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'coordinate-geometry',
-    name: 'Coordinate Geometry',
-    courseArea: 'Pure',
-    subtopics: [
-      {
-        id: 'straight-lines',
-        name: 'Straight Lines',
-        architectures: [
-          { id: 'line_through_two_points', name: 'Line through two points', seen: 5 },
-          { id: 'perpendicular_triangle_area', name: 'Perpendicular line geometry', seen: 1 },
-        ],
-      },
-      {
-        id: 'circles',
-        name: 'Circles',
-        architectures: [
-          { id: 'circle-equation', name: 'Equation of a circle', seen: 3 },
-          { id: 'circle-tangent', name: 'Tangents to circles', seen: 2 },
-          { id: 'circle-intersection', name: 'Line-circle intersections', seen: 0 },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'sequences-series',
-    name: 'Sequences & Series',
-    courseArea: 'Pure',
-    subtopics: [
-      {
-        id: 'arithmetic',
-        name: 'Arithmetic Sequences',
-        architectures: [
-          { id: 'arithmetic_model', name: 'Arithmetic sequence modelling', seen: 3 },
-          { id: 'arithmetic-sum', name: 'Arithmetic series', seen: 1 },
-        ],
-      },
-      {
-        id: 'geometric',
-        name: 'Geometric Sequences',
-        architectures: [
-          { id: 'geometric-model', name: 'Geometric sequence modelling', seen: 2 },
-          { id: 'geometric-sum', name: 'Geometric series', seen: 0 },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'trigonometry',
-    name: 'Trigonometry',
-    courseArea: 'Pure',
-    subtopics: [
-      {
-        id: 'identities',
-        name: 'Trigonometric Identities',
-        architectures: [
-          { id: 'prove_identity', name: 'Proving identities', seen: 5 },
-          { id: 'r_form', name: 'R-form', seen: 2 },
-        ],
-      },
-      {
-        id: 'equations',
-        name: 'Trigonometric Equations',
-        architectures: [
-          { id: 'solve-trig-equation', name: 'Solving trig equations', seen: 3 },
-          { id: 'identity-then-solve', name: 'Identity then solve', seen: 1 },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'exp-logs',
-    name: 'Exponentials & Logarithms',
-    courseArea: 'Pure',
-    subtopics: [
-      {
-        id: 'laws-logs',
-        name: 'Laws of Logarithms',
-        architectures: [
-          { id: 'substitution_log_solve', name: 'Log substitution', seen: 4 },
-          { id: 'combine-logs', name: 'Combining logarithms', seen: 2 },
-        ],
-      },
-      {
-        id: 'exponential-equations',
-        name: 'Exponential Equations',
-        architectures: [
-          { id: 'exponential-solve', name: 'Solve exponential equations', seen: 1 },
-          { id: 'exponential-model', name: 'Exponential modelling', seen: 0 },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'integration',
-    name: 'Integration',
-    courseArea: 'Pure',
-    subtopics: [
-      {
-        id: 'basic-integration',
-        name: 'Basic Integration',
-        architectures: [
-          { id: 'mixed_power_direct_integral', name: 'Direct integration', seen: 5 },
-        ],
-      },
-      {
-        id: 'definite-integration',
-        name: 'Definite Integration',
-        architectures: [
-          { id: 'exact_integral', name: 'Exact definite integrals', seen: 3 },
-          { id: 'area-integral', name: 'Area using integration', seen: 1 },
-        ],
-      },
-      {
-        id: 'integration-techniques',
-        name: 'Integration Techniques',
-        architectures: [
-          { id: 'substitution', name: 'Integration by substitution', seen: 0 },
-          { id: 'parts', name: 'Integration by parts', seen: 0 },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'numerical-methods',
-    name: 'Numerical Methods',
-    courseArea: 'Pure',
-    subtopics: [
-      {
-        id: 'numerical-methods',
-        name: 'Numerical Methods',
-        architectures: [
-          { id: 'two_positive_roots_bracketing', name: 'Locating roots by sign change', seen: 2 },
-          { id: 'iteration', name: 'Iteration', seen: 1 },
-          { id: 'newton-raphson', name: 'Newton-Raphson', seen: 0 },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'vectors',
-    name: 'Vectors',
-    courseArea: 'Pure',
-    subtopics: [
-      {
-        id: 'vectors',
-        name: 'Vectors',
-        architectures: [
-          { id: 'triangle_chain_and_section', name: 'Vector chains & sections', seen: 4 },
-          { id: 'vector-lines', name: 'Vector line problems', seen: 2 },
-          { id: 'vector-geometry', name: 'Geometric vector reasoning', seen: 0 },
-        ],
-      },
-    ],
-  },
-];
-
-const exposureOptions: { id: Exposure; label: string }[] = [
-  { id: 'unseen', label: 'Not encountered' },
-  { id: 'once', label: 'Seen once' },
-  { id: 'few', label: 'Seen a few times' },
-  { id: 'explored', label: 'Well explored' },
-];
-
-function exposureFor(seen: number): Exposure {
-  if (seen === 0) return 'unseen';
-  if (seen === 1) return 'once';
-  if (seen <= 3) return 'few';
-  return 'explored';
+type AttemptMap=Record<string,number>;
+function pct(part:number,total:number){
+  if(!total) return 0;
+  return Math.round((part/total)*100);
 }
 
-function architectureCounts(topic: Topic) {
-  const architectures = topic.subtopics.flatMap((x) => x.architectures);
+export default function CoveragePage(){
+  const [catalogue,setCatalogue]=
+    useState<CoverageCatalogue|null>(null);
 
-  return {
-    encountered: architectures.filter((x) => x.seen > 0).length,
-    total: architectures.length,
-  };
-}
+  const [attempts,setAttempts]=
+    useState<AttemptMap>({});
 
-export default function CoveragePage() {
-  const [courseArea, setCourseArea] = useState<CourseArea>('Pure');
-  const [openTopic, setOpenTopic] = useState<string | null>('integration');
+  const [expanded,setExpanded]=
+    useState<Set<string>>(()=>new Set());
 
-  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
-  const [selectedExposure, setSelectedExposure] = useState<Exposure[]>([
-    'unseen',
-  ]);
+  const [loading,setLoading]=useState(true);
+  const [error,setError]=useState('');
 
-  const visibleTopics = useMemo(
-    () => topics.filter((topic) => topic.courseArea === courseArea),
-    [courseArea]
+  useEffect(()=>{
+    let cancelled=false;
+
+    async function load(){
+      try{
+        setLoading(true);
+        setError('');
+
+        const bank=await getCoverageCatalogue();
+
+        const {data:auth,error:authError}=
+          await supabase.auth.getUser();
+
+        if(authError) throw authError;
+
+        const history:AttemptMap={};
+
+        if(auth.user){
+          /*
+           * Coverage counts MARKED QUESTIONS only.
+           *
+           * A work item existing is not enough.
+           * A question being served is not enough.
+           * work_questions.marked_at is the encounter event.
+           */
+          const {data:workItems,error:workError}=
+            await supabase
+              .from('work_items')
+              .select(`
+                id,
+                user_id,
+                work_questions (
+                  question_id,
+                  marked_at
+                )
+              `)
+              .eq('user_id',auth.user.id);
+
+          if(workError) throw workError;
+
+          for(const work of workItems ?? []){
+            const questions=
+              Array.isArray(work.work_questions)
+                ? work.work_questions
+                : [];
+
+            for(const q of questions){
+              if(!q?.marked_at) continue;
+
+              const id=String(q.question_id||'');
+              if(!id) continue;
+
+              history[id]=(history[id]||0)+1;
+            }
+          }
+        }
+
+        if(cancelled) return;
+
+        setCatalogue(bank);
+        setAttempts(history);
+      }catch(err:any){
+        if(cancelled) return;
+
+        console.error(err);
+
+        setError(
+          err?.message ||
+          'Could not load coverage.'
+        );
+      }finally{
+        if(!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+
+    return ()=>{
+      cancelled=true;
+    };
+  },[]);
+
+
+  const rows=useMemo(()=>{
+    return (catalogue?.architectures ?? []).map(row=>{
+      const markedAttempts=row.question_ids.reduce(
+        (total,id)=>total+(attempts[id]||0),
+        0
+      );
+
+      const markedQuestions=row.question_ids.reduce(
+        (total,id)=>total+(attempts[id]>0 ? 1 : 0),
+        0
+      );
+
+      return {
+        ...row,
+        markedAttempts,
+        markedQuestions,
+        encountered:markedAttempts>0
+      };
+    });
+  },[catalogue,attempts]);
+
+
+  const topics=useMemo(()=>{
+    const map=new Map<string,typeof rows>();
+
+    for(const row of rows){
+      const current=map.get(row.topic) ?? [];
+      current.push(row);
+      map.set(row.topic,current);
+    }
+
+    return [...map.entries()]
+      .map(([name,architectures])=>({
+        name,
+        architectures,
+        total:architectures.length,
+        encountered:architectures.filter(
+          a=>a.encountered
+        ).length,
+        questionCount:architectures.reduce(
+          (n,a)=>n+a.question_count,
+          0
+        ),
+        attempts:architectures.reduce(
+          (n,a)=>n+a.markedAttempts,
+          0
+        )
+      }))
+      .sort((a,b)=>a.name.localeCompare(b.name));
+  },[rows]);
+
+
+  const totalArchitectures=rows.length;
+
+  const encounteredArchitectures=rows.filter(
+    row=>row.encountered
+  ).length;
+
+  const totalAttempts=rows.reduce(
+    (n,row)=>n+row.markedAttempts,
+    0
   );
 
-  function toggleTopic(topicName: string) {
-    setSelectedTopics((current) =>
-      current.includes(topicName)
-        ? current.filter((name) => name !== topicName)
-        : [...current, topicName]
+  const totalQuestions=rows.reduce(
+    (n,row)=>n+row.question_count,
+    0
+  );
+
+
+  function toggle(topic:string){
+    setExpanded(current=>{
+      const next=new Set(current);
+
+      if(next.has(topic)){
+        next.delete(topic);
+      }else{
+        next.add(topic);
+      }
+
+      return next;
+    });
+  }
+
+
+
+
+
+  if(loading){
+    return (
+      <main className="main">
+      
+
+        <div className="placeholder">
+          Loading real coverage…
+        </div>
+      </main>
     );
   }
 
-  function toggleExposure(exposure: Exposure) {
-    setSelectedExposure((current) =>
-      current.includes(exposure)
-        ? current.filter((item) => item !== exposure)
-        : [...current, exposure]
-    );
-  }
-
-  const canBuild = selectedTopics.length > 0 && selectedExposure.length > 0;
-
-  const questionSetHref = canBuild
-    ? `/question-sets?source=coverage&topics=${encodeURIComponent(
-        selectedTopics.join(',')
-      )}&exposure=${encodeURIComponent(selectedExposure.join(','))}`
-    : '#';
 
   return (
-    <main className="coverageV2Page">
-      <header className="coverageV2Header">
-        <div className="page-kicker">Your A-level Mathematics</div>
-        <h1>Coverage</h1>
-        <p>
-          See which kinds of questions you've encountered, then use the gaps
-          to decide what to practise next.
-        </p>
-      </header>
-
-      <section className="coverageSetLauncher">
-        <div className="coverageSetLauncherIntro">
-          <span className="coverageMiniLabel">Build from your coverage</span>
-          <h2>What do you want to practise?</h2>
-          <p>
-            Select some topics and the level of exposure you want DOJO to
-            pull from.
-          </p>
-        </div>
-
-        <div className="coverageLauncherControls">
-          <div>
-            <span className="coverageControlLabel">Question types</span>
-
-            <div className="coverageFilterRow">
-              {exposureOptions.map((option) => (
-                <button
-                  key={option.id}
-                  className={`coverageFilter ${
-                    selectedExposure.includes(option.id) ? 'active' : ''
-                  }`}
-                  onClick={() => toggleExposure(option.id)}
-                >
-                  <span className={`coverageFilterDot ${option.id}`} />
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="coverageLauncherBottom">
-            <div>
-              <span className="coverageControlLabel">Selected topics</span>
-              <div className="coverageSelectedSummary">
-                {selectedTopics.length
-                  ? selectedTopics.join(', ')
-                  : 'Select topics below'}
-              </div>
-            </div>
+    <main className="main">
+      <div className="crumb">
+        <Link href="/">Home</Link>
+        <span>/</span>
+        Coverage
+      </div>
 
             <Link
-              href={questionSetHref}
-              aria-disabled={!canBuild}
-              className={`coverageBuildButton ${
-                !canBuild ? 'disabled' : ''
-              }`}
-            >
-              Build question set →
-            </Link>
+        href="/coverage/papers"
+        className="card"
+        style={{
+          display:'grid',
+          gridTemplateColumns:'minmax(0,1fr) auto',
+          alignItems:'center',
+          gap:'20px',
+          padding:'22px 24px',
+          marginBottom:'24px',
+          textDecoration:'none',
+          color:'inherit',
+          cursor:'pointer'
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontSize:'12px',
+              fontWeight:800,
+              letterSpacing:'.12em',
+              textTransform:'uppercase',
+              opacity:.55,
+              marginBottom:'7px'
+            }}
+          >
+            Past papers
           </div>
+
+          <strong
+            style={{
+              display:'block',
+              fontSize:'20px',
+              marginBottom:'5px'
+            }}
+          >
+            Paper coverage
+          </strong>
+
+          <span
+            style={{
+              fontSize:'13px',
+              opacity:.65
+            }}
+          >
+            See completed papers, scores, grades,
+            flagged questions and notes.
+          </span>
+        </div>
+
+        <span
+          style={{
+            fontSize:'24px',
+            opacity:.55
+          }}
+        >
+          →
+        </span>
+      </Link>
+<section style={{marginBottom:'30px'}}>
+        <div
+          style={{
+            fontSize:'12px',
+            fontWeight:800,
+            letterSpacing:'.12em',
+            textTransform:'uppercase',
+            opacity:.55,
+            marginBottom:'8px'
+          }}
+        >
+          Coverage
+        </div>
+
+        <h1 style={{margin:'0 0 8px'}}>
+          Question architecture
+        </h1>
+
+        <p
+          style={{
+            margin:0,
+            maxWidth:'720px',
+            lineHeight:1.6,
+            opacity:.7
+          }}
+        >
+          Every architecture currently present in your
+          question bank, and which ones you have actually
+          marked.
+        </p>
+      </section>
+
+      {error && (
+        <div
+          className="placeholder"
+          style={{marginBottom:'20px'}}
+        >
+          {error}
+        </div>
+      )}
+
+      <section
+        style={{
+          display:'grid',
+          gridTemplateColumns:
+            'repeat(auto-fit,minmax(180px,1fr))',
+          gap:'12px',
+          marginBottom:'28px'
+        }}
+      >
+        <div className="card">
+          <small>Architecture coverage</small>
+          <h2 style={{margin:'6px 0'}}>
+            {encounteredArchitectures}
+            {' / '}
+            {totalArchitectures}
+          </h2>
+          <span>
+            {pct(
+              encounteredArchitectures,
+              totalArchitectures
+            )}% encountered
+          </span>
+        </div>
+
+        <div className="card">
+          <small>Questions in bank</small>
+          <h2 style={{margin:'6px 0'}}>
+            {totalQuestions}
+          </h2>
+          <span>
+            across {totalArchitectures} architectures
+          </span>
+        </div>
+
+        <div className="card">
+          <small>Marked attempts</small>
+          <h2 style={{margin:'6px 0'}}>
+            {totalAttempts}
+          </h2>
+          <span>
+            only actually marked questions count
+          </span>
         </div>
       </section>
 
-      <nav className="coverageCourseTabs" aria-label="Course area">
-        {(['Pure', 'Statistics', 'Mechanics'] as CourseArea[]).map((area) => (
-          <button
-            key={area}
-            className={courseArea === area ? 'active' : ''}
-            onClick={() => {
-              setCourseArea(area);
-              setOpenTopic(null);
-            }}
-          >
-            <strong>{area}</strong>
-            <span>
-              {area === 'Pure'
-                ? 'Explore topics'
-                : 'Question banks coming later'}
-            </span>
-          </button>
-        ))}
-      </nav>
+      <section
+        style={{
+          display:'grid',
+          gap:'12px'
+        }}
+      >
+        {topics.map(topic=>{
+          const open=expanded.has(topic.name);
+          const percentage=pct(
+            topic.encountered,
+            topic.total
+          );
 
-      {courseArea !== 'Pure' ? (
-        <section className="coverageEmptyCourse">
-          <span className="coverageMiniLabel">{courseArea}</span>
-          <h2>{courseArea} coverage will live here.</h2>
-          <p>
-            The Coverage structure already supports this branch. It will
-            populate when the {courseArea.toLowerCase()} question banks are
-            added.
-          </p>
-        </section>
-      ) : (
-        <section className="coverageExplorer">
-          <div className="coverageExplorerHeading">
-            <div>
-              <span className="coverageMiniLabel">Pure mathematics</span>
-              <h2>Explore your coverage</h2>
-            </div>
+          return (
+            <article
+              className="card"
+              key={topic.name}
+              style={{padding:0,overflow:'hidden'}}
+            >
+              <button
+                type="button"
+                onClick={()=>toggle(topic.name)}
+                style={{
+                  width:'100%',
+                  border:0,
+                  background:'transparent',
+                  padding:'18px 20px',
+                  display:'grid',
+                  gridTemplateColumns:
+                    'minmax(0,1fr) auto',
+                  gap:'20px',
+                  alignItems:'center',
+                  textAlign:'left',
+                  cursor:'pointer',
+                  font:'inherit'
+                }}
+              >
+                <div>
+                  <strong
+                    style={{
+                      display:'block',
+                      fontSize:'17px',
+                      marginBottom:'5px'
+                    }}
+                  >
+                    {topic.name}
+                  </strong>
 
-            <span className="coverageExplorerHint">
-              Select topics for practice or open them to explore
-            </span>
-          </div>
+                  <span
+                    style={{
+                      fontSize:'13px',
+                      opacity:.65
+                    }}
+                  >
+                    {topic.encountered}
+                    {' / '}
+                    {topic.total}
+                    {' architectures encountered · '}
+                    {topic.questionCount}
+                    {' bank questions · '}
+                    {topic.attempts}
+                    {' marked attempts'}
+                  </span>
+                </div>
 
-          <div className="coverageTopicList">
-            {visibleTopics.map((topic) => {
-              const counts = architectureCounts(topic);
-              const isOpen = openTopic === topic.id;
-              const isSelected = selectedTopics.includes(topic.name);
-
-              return (
-                <article
-                  key={topic.id}
-                  className={`coverageTopicRow ${isOpen ? 'open' : ''}`}
+                <div
+                  style={{
+                    display:'flex',
+                    alignItems:'center',
+                    gap:'14px'
+                  }}
                 >
-                  <div className="coverageTopicMain">
-                    <button
-                      className={`coverageTopicCheck ${
-                        isSelected ? 'selected' : ''
-                      }`}
-                      onClick={() => toggleTopic(topic.name)}
-                      aria-label={`Select ${topic.name} for practice`}
-                    >
-                      {isSelected ? '✓' : ''}
-                    </button>
+                  <strong>
+                    {percentage}%
+                  </strong>
 
-                    <button
-                      className="coverageTopicOpen"
-                      onClick={() =>
-                        setOpenTopic((current) =>
-                          current === topic.id ? null : topic.id
-                        )
-                      }
-                    >
-                      <div>
-                        <strong>{topic.name}</strong>
-                        <span>
-                          {counts.encountered} of {counts.total} question types
-                          encountered
-                        </span>
-                      </div>
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      fontSize:'18px',
+                      transform:open
+                        ? 'rotate(180deg)'
+                        : 'none'
+                    }}
+                  >
+                    ↓
+                  </span>
+                </div>
+              </button>
 
-                      <div className="coverageTopicRight">
-                        <span className="coverageFraction">
-                          {counts.encountered}/{counts.total}
-                        </span>
-                        <span className="coverageChevron">
-                          {isOpen ? '−' : '+'}
-                        </span>
-                      </div>
-                    </button>
-                  </div>
+              {open && (
+                <div
+                  style={{
+                    borderTop:'1px solid rgba(0,0,0,.08)'
+                  }}
+                >
+                  {topic.architectures.map(
+                    architecture=>(
+                      <div
+                        key={
+                          `${topic.name}::`+
+                          architecture.architecture
+                        }
+                        style={{
+                          display:'grid',
+                          gridTemplateColumns:
+                            'minmax(0,1fr) auto',
+                          gap:'20px',
+                          alignItems:'center',
+                          padding:'14px 20px',
+                          borderBottom:
+                            '1px solid rgba(0,0,0,.06)'
+                        }}
+                      >
+                        <div>
+                          <strong
+                            style={{
+                              display:'block',
+                              fontSize:'14px',
+                              marginBottom:'4px'
+                            }}
+                          >
+                            {architecture.architecture}
+                          </strong>
 
-                  {isOpen && (
-                    <div className="coverageTopicDetail">
-                      {topic.subtopics.map((subtopic) => (
-                        <div
-                          className="coverageSubtopic"
-                          key={subtopic.id}
-                        >
-                          <div className="coverageSubtopicHeading">
-                            <strong>{subtopic.name}</strong>
-                            <span>
-                              {
-                                subtopic.architectures.filter(
-                                  (architecture) => architecture.seen > 0
-                                ).length
-                              }
-                              /{subtopic.architectures.length}
+                          {architecture.family && (
+                            <span
+                              style={{
+                                fontSize:'12px',
+                                opacity:.55
+                              }}
+                            >
+                              {architecture.family}
                             </span>
-                          </div>
-
-                          <div className="coverageArchitectureList">
-                            {subtopic.architectures.map((architecture) => {
-                              const exposure = exposureFor(architecture.seen);
-
-                              return (
-                                <div
-                                  className={`coverageArchitectureRow ${exposure}`}
-                                  key={architecture.id}
-                                >
-                                  <span
-                                    className={`coverageArchitectureStatus ${exposure}`}
-                                  >
-                                    {architecture.seen === 0
-                                      ? '○'
-                                      : architecture.seen}
-                                  </span>
-
-                                  <div>
-                                    <strong>{architecture.name}</strong>
-                                    <span>
-                                      {architecture.seen === 0
-                                        ? 'Not encountered yet'
-                                        : architecture.seen === 1
-                                        ? 'Encountered once'
-                                        : `Encountered ${architecture.seen} times`}
-                                    </span>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
+                          )}
                         </div>
-                      ))}
-                    </div>
+
+                        <div
+                          style={{
+                            textAlign:'right',
+                            fontSize:'13px'
+                          }}
+                        >
+                          <strong
+                            style={{
+                              display:'block'
+                            }}
+                          >
+                            {
+                              architecture.markedAttempts
+                            }
+                            {' marked '}
+                            {
+                              architecture.markedAttempts===1
+                                ? 'attempt'
+                                : 'attempts'
+                            }
+                          </strong>
+
+                          <span style={{opacity:.6}}>
+                            {
+                              architecture.question_count
+                            }
+                            {' in bank · '}
+                            {
+                              architecture.markedQuestions
+                            }
+                            {' distinct marked'}
+                          </span>
+                        </div>
+                      </div>
+                    )
                   )}
-                </article>
-              );
-            })}
-          </div>
-        </section>
+                </div>
+              )}
+            </article>
+          );
+        })}
+      </section>
+
+      {!rows.length && !error && (
+        <div className="placeholder">
+          No question architectures were found in the
+          published banks.
+        </div>
       )}
+
+      
     </main>
   );
 }
