@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import {useEffect, useMemo, useState,Suspense} from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
   QuestionDisplay,
@@ -55,7 +55,7 @@ function metadata(q:any) {
     );
 }
 
-export default function ReviewQuestionsPage() {
+function ReviewQuestionsContent() {
   const searchParams=useSearchParams();
 
   const requestedSeeds=useMemo(
@@ -1407,3 +1407,15 @@ const styles=`
     }
   }
 `;
+
+export default function ReviewQuestionsPage(){
+  return (
+    <Suspense fallback={
+      <main>
+        <p>Loading questions...</p>
+      </main>
+    }>
+      <ReviewQuestionsContent />
+    </Suspense>
+  );
+}
