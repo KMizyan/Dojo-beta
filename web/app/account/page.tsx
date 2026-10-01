@@ -31,6 +31,10 @@ export default function AccountPage(){
   const [billingBusy,setBillingBusy]=useState(false);
   const [billingError,setBillingError]=useState<string|null>(null);
   const [checkoutMessage,setCheckoutMessage]=useState<string|null>(null);
+  const [betaCode,setBetaCode]=useState('');
+  const [betaBusy,setBetaBusy]=useState(false);
+  const [betaMessage,setBetaMessage]=useState<string|null>(null);
+  const [betaError,setBetaError]=useState<string|null>(null);
 
   useEffect(()=>{
     let active=true;
@@ -189,6 +193,94 @@ export default function AccountPage(){
       setBillingBusy(false);
     }
   }
+
+  async function redeemBetaCode(){
+    const code=betaCode.trim();
+
+    if(!code){
+      setBetaError('Enter a beta access code.');
+      return;
+    }
+
+    setBetaBusy(true);
+    setBetaError(null);
+    setBetaMessage(null);
+
+    try{
+      const {
+        data:{session},
+        error
+      }=await supabase.auth.getSession();
+
+      if(error || !session?.access_token){
+        window.location.href=
+          `/login?next=${encodeURIComponent('/account')}`;
+        return;
+      }
+
+      const response=await fetch(
+        `${API}/billing/redeem-beta`,
+        {
+          method:'POST',
+          headers:{
+            'Authorization':`Bearer ${session.access_token}`,
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({
+            code
+          })
+        }
+      );
+
+      let result:any=null;
+
+      try{
+        result=await response.json();
+      } catch {
+        result=null;
+      }
+
+      if(!response.ok){
+        throw new Error(
+          result?.detail ??
+          'DOJO could not activate beta access.'
+        );
+      }
+
+      setBetaMessage(
+        result?.message ?? 'Beta access activated.'
+      );
+
+      setMembership('member');
+      setBetaCode('');
+
+      const {data:membershipRow}=await supabase
+        .from('memberships')
+        .select(
+          'status,stripe_customer_id,stripe_subscription_id,' +
+          'stripe_price_id,current_period_end,cancel_at_period_end'
+        )
+        .maybeSingle();
+
+      setBilling(
+        membershipRow as BillingMembership|null
+      );
+    } catch(error){
+      console.error(
+        'Beta access redemption failed:',
+        error
+      );
+
+      setBetaError(
+        error instanceof Error
+          ? error.message
+          : 'DOJO could not activate beta access.'
+      );
+    } finally {
+      setBetaBusy(false);
+    }
+  }
+
 
   const stripeBackedMember=
     membership==='member' &&
@@ -377,6 +469,72 @@ export default function AccountPage(){
                   ? 'Opening checkout...'
                   : 'Join DOJO'}
               </button>
+
+              <div
+                style={{
+                  marginTop:24,
+                  paddingTop:20,
+                  borderTop:'1px solid #d7d7d7'
+                }}
+              >
+                <p>
+                  <strong>Have a beta access code?</strong>
+                </p>
+
+                <p>
+                  Enter it here to activate DOJO member access
+                  without starting a paid subscription.
+                </p>
+
+                <div
+                  style={{
+                    display:'flex',
+                    gap:8,
+                    flexWrap:'wrap'
+                  }}
+                >
+                  <input
+                    type="text"
+                    value={betaCode}
+                    disabled={betaBusy}
+                    onChange={(event)=>
+                      setBetaCode(event.target.value)
+                    }
+                    onKeyDown={(event)=>{
+                      if(event.key==='Enter' && !betaBusy){
+                        void redeemBetaCode();
+                      }
+                    }}
+                    placeholder="Beta access code"
+                    autoComplete="off"
+                    spellCheck={false}
+                  />
+
+                  <button
+                    type="button"
+                    disabled={betaBusy || !betaCode.trim()}
+                    onClick={()=>{
+                      void redeemBetaCode();
+                    }}
+                  >
+                    {betaBusy
+                      ? 'Activating...'
+                      : 'Activate'}
+                  </button>
+                </div>
+
+                {betaError && (
+                  <p role="alert">
+                    {betaError}
+                  </p>
+                )}
+
+                {betaMessage && (
+                  <p>
+                    {betaMessage}
+                  </p>
+                )}
+              </div>
             </div>
           </>
         )}

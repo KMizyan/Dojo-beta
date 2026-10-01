@@ -1065,6 +1065,10 @@ class BillingRequest(BaseModel):
     return_url: str
 
 
+class BetaCodeRequest(BaseModel):
+    code: str
+
+
 def _supabase_headers(
     bearer_token: str | None = None
 ) -> dict[str, str]:
@@ -1319,6 +1323,178 @@ def _stripe_customer_id_for_user(
     )
 
     return customer_id
+
+
+@app.post('/billing/redeem-beta')
+def redeem_beta_code(
+    body: BetaCodeRequest,
+    authorization: str | None = Header(
+        default=None
+    )
+):
+    user = _authenticated_user(
+        authorization
+    )
+
+    user_id = str(user['id'])
+    code = body.code.strip().upper()
+
+    if not code:
+        raise HTTPException(
+            400,
+            'Enter a beta access code.'
+        )
+
+    encoded_code = urllib.parse.quote(
+        code,
+        safe=''
+    )
+
+    rows = _supabase_request(
+        'GET',
+        (
+            '/rest/v1/beta_codes'
+            '?select=id,code,is_active,expires_at,max_redemptions'
+            '&code=eq.'
+            + encoded_code
+            + '&limit=1'
+        )
+    )
+
+    if not isinstance(rows, list) or not rows:
+        raise HTTPException(
+            400,
+            'That beta access code is not valid.'
+        )
+
+    beta_code = rows[0]
+
+    if not beta_code.get('is_active'):
+        raise HTTPException(
+            400,
+            'That beta access code is no longer active.'
+        )
+
+    expires_at = beta_code.get('expires_at')
+
+    if expires_at:
+        expiry = datetime.fromisoformat(
+            str(expires_at).replace(
+                'Z',
+                '+00:00'
+            )
+        )
+
+        if expiry <= datetime.now(timezone.utc):
+            raise HTTPException(
+                400,
+                'That beta access code has expired.'
+            )
+
+    existing = _supabase_request(
+        'GET',
+        (
+            '/rest/v1/beta_code_redemptions'
+            '?select=id,beta_code_id'
+            '&user_id=eq.'
+            + urllib.parse.quote(
+                user_id,
+                safe=''
+            )
+            + '&limit=1'
+        )
+    )
+
+    if isinstance(existing, list) and existing:
+        existing_code_id = str(
+            existing[0].get('beta_code_id')
+            or ''
+        )
+
+        if existing_code_id != str(
+            beta_code['id']
+        ):
+            raise HTTPException(
+                409,
+                'This account has already redeemed beta access.'
+            )
+    else:
+        max_redemptions = beta_code.get(
+            'max_redemptions'
+        )
+
+        if max_redemptions is not None:
+            redemptions = _supabase_request(
+                'GET',
+                (
+                    '/rest/v1/beta_code_redemptions'
+                    '?select=id'
+                    '&beta_code_id=eq.'
+                    + urllib.parse.quote(
+                        str(beta_code['id']),
+                        safe=''
+                    )
+                )
+            )
+
+            count = (
+                len(redemptions)
+                if isinstance(redemptions, list)
+                else 0
+            )
+
+            if count >= int(max_redemptions):
+                raise HTTPException(
+                    400,
+                    'That beta access code has reached its limit.'
+                )
+
+        _supabase_request(
+            'POST',
+            '/rest/v1/beta_code_redemptions',
+            payload={
+                'beta_code_id': str(
+                    beta_code['id']
+                ),
+                'user_id': user_id
+            }
+        )
+
+    membership = (
+        _membership_for_user(user_id)
+        or {}
+    )
+
+    if (
+        membership.get('status') == 'member'
+        and membership.get(
+            'stripe_subscription_id'
+        )
+    ):
+        return {
+            'ok': True,
+            'status': 'member',
+            'source': 'stripe',
+            'message': (
+                'This account already has an active '
+                'DOJO membership.'
+            )
+        }
+
+    _upsert_membership(
+        user_id,
+        {
+            'status': 'member',
+            'access_source': 'beta'
+        }
+    )
+
+    return {
+        'ok': True,
+        'status': 'member',
+        'source': 'beta',
+        'message': 'Beta access activated.'
+    }
 
 
 @app.post('/billing/checkout')
