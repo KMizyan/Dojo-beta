@@ -1577,10 +1577,14 @@ def _sync_stripe_subscription(
             'current_period_end': (
                 period_end_iso
             ),
+            # Stripe may represent a scheduled cancellation
+            # either with cancel_at_period_end or a concrete
+            # cancel_at timestamp.
             'cancel_at_period_end': bool(
                 subscription.get(
                     'cancel_at_period_end'
                 )
+                or subscription.get('cancel_at')
             )
         }
     )
