@@ -339,7 +339,7 @@ function AskDojo({q}:{q:any}) {
           {error && (
             <div className="dojoChatError">
               {error}
-            
+
               {membershipRequired && (
                 <div style={{marginTop:'8px'}}>
                   <Link href="/account">

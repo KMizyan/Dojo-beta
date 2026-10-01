@@ -1513,9 +1513,22 @@ def _sync_stripe_subscription(
         'past_due'
     }
 
+    items = (
+        subscription.get('items')
+        or {}
+    ).get('data') or []
+
     period_end = subscription.get(
         'current_period_end'
     )
+
+    # Newer Stripe subscription payloads can expose the
+    # billing period on the subscription item instead of
+    # the subscription itself.
+    if not period_end and items:
+        period_end = items[0].get(
+            'current_period_end'
+        )
 
     period_end_iso = None
 
@@ -1526,11 +1539,6 @@ def _sync_stripe_subscription(
                 tz=timezone.utc
             ).isoformat()
         )
-
-    items = (
-        subscription.get('items')
-        or {}
-    ).get('data') or []
 
     price_id = None
 
