@@ -38,6 +38,8 @@ export default function CoveragePage(){
 
   const [loading,setLoading]=useState(true);
   const [error,setError]=useState('');
+  const [loggedIn,setLoggedIn]=
+    useState<boolean|null>(null);
 
   useEffect(()=>{
     let cancelled=false;
@@ -52,7 +54,12 @@ export default function CoveragePage(){
         const {data:auth,error:authError}=
           await supabase.auth.getUser();
 
-        if(authError) throw authError;
+        if(authError && authError.name!=='AuthSessionMissingError'){
+          throw authError;
+        }
+
+        if(cancelled) return;
+        setLoggedIn(Boolean(auth.user));
 
         const history:AttemptMap={};
 
@@ -313,6 +320,73 @@ export default function CoveragePage(){
         </div>
       )}
 
+      {loggedIn===false && (
+        <div
+          className="card"
+          style={{
+            marginBottom:'20px',
+            padding:'18px 20px',
+            display:'flex',
+            justifyContent:'space-between',
+            alignItems:'center',
+            gap:'20px',
+            flexWrap:'wrap'
+          }}
+        >
+          <div>
+            <strong
+              style={{
+                display:'block',
+                marginBottom:'5px'
+              }}
+            >
+              See what your practice has covered
+            </strong>
+
+            <span
+              style={{
+                fontSize:'13px',
+                opacity:.68,
+                lineHeight:1.5
+              }}
+            >
+              DOJO tracks the question architectures you
+              actually mark and shows the gaps in your
+              practice. Create an account to build your
+              own coverage.
+            </span>
+          </div>
+
+          <div
+            style={{
+              display:'flex',
+              gap:'12px',
+              alignItems:'center'
+            }}
+          >
+            <Link
+              href="/login?next=%2Fcoverage"
+              style={{
+                fontWeight:700,
+                color:'inherit'
+              }}
+            >
+              Log in
+            </Link>
+
+            <Link
+              href="/signup?next=%2Fcoverage"
+              style={{
+                fontWeight:700,
+                color:'inherit'
+              }}
+            >
+              Create account →
+            </Link>
+          </div>
+        </div>
+      )}
+
       <section
         style={{
           display:'grid',
@@ -325,15 +399,17 @@ export default function CoveragePage(){
         <div className="card">
           <small>Architecture coverage</small>
           <h2 style={{margin:'6px 0'}}>
-            {encounteredArchitectures}
-            {' / '}
-            {totalArchitectures}
+            {loggedIn===false
+              ? '—'
+              : `${encounteredArchitectures} / ${totalArchitectures}`}
           </h2>
           <span>
-            {pct(
-              encounteredArchitectures,
-              totalArchitectures
-            )}% encountered
+            {loggedIn===false
+              ? 'Sign in to track your coverage'
+              : `${pct(
+                  encounteredArchitectures,
+                  totalArchitectures
+                )}% encountered`}
           </span>
         </div>
 
@@ -350,10 +426,12 @@ export default function CoveragePage(){
         <div className="card">
           <small>Marked attempts</small>
           <h2 style={{margin:'6px 0'}}>
-            {totalAttempts}
+            {loggedIn===false ? '—' : totalAttempts}
           </h2>
           <span>
-            only actually marked questions count
+            {loggedIn===false
+              ? 'Your marked attempts appear here'
+              : 'only actually marked questions count'}
           </span>
         </div>
       </section>
@@ -412,14 +490,25 @@ export default function CoveragePage(){
                       opacity:.65
                     }}
                   >
-                    {topic.encountered}
-                    {' / '}
-                    {topic.total}
-                    {' architectures encountered · '}
-                    {topic.questionCount}
-                    {' bank questions · '}
-                    {topic.attempts}
-                    {' marked attempts'}
+                    {loggedIn===false ? (
+                      <>
+                        {topic.total}
+                        {' architectures · '}
+                        {topic.questionCount}
+                        {' bank questions · sign in to track encounters'}
+                      </>
+                    ) : (
+                      <>
+                        {topic.encountered}
+                        {' / '}
+                        {topic.total}
+                        {' architectures encountered · '}
+                        {topic.questionCount}
+                        {' bank questions · '}
+                        {topic.attempts}
+                        {' marked attempts'}
+                      </>
+                    )}
                   </span>
                 </div>
 
@@ -431,7 +520,9 @@ export default function CoveragePage(){
                   }}
                 >
                   <strong>
-                    {percentage}%
+                    {loggedIn===false
+                      ? '—'
+                      : `${percentage}%`}
                   </strong>
 
                   <span
@@ -506,26 +597,25 @@ export default function CoveragePage(){
                               display:'block'
                             }}
                           >
-                            {
-                              architecture.markedAttempts
-                            }
-                            {' marked '}
-                            {
-                              architecture.markedAttempts===1
-                                ? 'attempt'
-                                : 'attempts'
-                            }
+                            {loggedIn===false
+                              ? 'Not tracked'
+                              : `${architecture.markedAttempts} marked ${
+                                  architecture.markedAttempts===1
+                                    ? 'attempt'
+                                    : 'attempts'
+                                }`}
                           </strong>
 
                           <span style={{opacity:.6}}>
-                            {
-                              architecture.question_count
-                            }
-                            {' in bank · '}
-                            {
-                              architecture.markedQuestions
-                            }
-                            {' distinct marked'}
+                            {architecture.question_count}
+                            {' in bank'}
+                            {loggedIn!==false && (
+                              <>
+                                {' · '}
+                                {architecture.markedQuestions}
+                                {' distinct marked'}
+                              </>
+                            )}
                           </span>
                         </div>
                       </div>

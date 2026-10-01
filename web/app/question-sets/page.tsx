@@ -1,9 +1,14 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useMemo, useState } from 'react';
+import Link from 'next/link';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { selectBalancedQuestionPools } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
+import {
+  consumeTrialEntitlement,
+  releaseTrialEntitlement
+} from '../../lib/entitlements';
 import {
   TOPIC_AREAS,
   focusGroups,
@@ -164,6 +169,29 @@ function QuestionSetsContent(){
   const [freeNav,setFreeNav]=useState(true);
   const [starting,setStarting]=useState(false);
   const [startError,setStartError]=useState('');
+  const [membershipRequired,setMembershipRequired]=
+    useState(false);
+  const [loggedIn,setLoggedIn]=useState<boolean|null>(null);
+
+  useEffect(()=>{
+    let cancelled=false;
+
+    supabase.auth.getUser()
+      .then(({data})=>{
+        if(!cancelled){
+          setLoggedIn(!!data.user);
+        }
+      })
+      .catch(()=>{
+        if(!cancelled){
+          setLoggedIn(false);
+        }
+      });
+
+    return ()=>{
+      cancelled=true;
+    };
+  },[]);
 
   const selectedItems=Object.values(selected);
 
@@ -267,6 +295,13 @@ function QuestionSetsContent(){
 
   const canStart=selectedItems.length>0;
 
+  const isAdvancedQuestionSet=
+    loggedIn===true &&
+    (
+      workspaceMode==='exam' ||
+      !exposures.includes('any')
+    );
+
   async function buildHistory(){
     const history:Record<string,number>={};
 
@@ -305,6 +340,19 @@ function QuestionSetsContent(){
 
     setStarting(true);
     setStartError('');
+    setMembershipRequired(false);
+
+    let entitlementKey:string|null=null;
+    let entitlementConsumed=false;
+
+    if(isAdvancedQuestionSet){
+      entitlementKey=
+        typeof crypto!=='undefined' && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `question-set-${Date.now()}-${Math.random()
+              .toString(36)
+              .slice(2)}`;
+    }
 
     try{
       /*
@@ -312,8 +360,11 @@ function QuestionSetsContent(){
        * calls the same /questions/select endpoint and means the
        * browser receives the exact IDs selected by the backend.
        */
+      const effectiveExposures:Exposure[]=
+        loggedIn===false ? ['any'] : exposures;
+
       const history=
-        exposures.includes('any')
+        effectiveExposures.includes('any')
           ? {}
           : await buildHistory();
 
@@ -326,7 +377,7 @@ function QuestionSetsContent(){
       const result=await selectBalancedQuestionPools(
         pools,
         setCount,
-        exposures,
+        effectiveExposures,
         history
       );
 
@@ -340,6 +391,29 @@ function QuestionSetsContent(){
         );
       }
 
+      if(isAdvancedQuestionSet){
+        if(!entitlementKey){
+          throw new Error(
+            'DOJO could not prepare this trial question set.'
+          );
+        }
+
+        const entitlement=
+          await consumeTrialEntitlement(
+            'advanced_question_set',
+            entitlementKey
+          );
+
+        if(!entitlement.allowed){
+          setMembershipRequired(true);
+          throw new Error(
+            `You've used your ${entitlement.allowance} advanced question set trial uses. Basic question sets are still available.`
+          );
+        }
+
+        entitlementConsumed=entitlement.consumed;
+      }
+
       const title=selectedItems
         .map(item=>item.label)
         .join(' + ');
@@ -349,14 +423,29 @@ function QuestionSetsContent(){
           title || 'Question Set'
         )}` +
         `&count=${setCount}` +
-        `&mode=${workspaceMode}` +
-        `&ask=${askDojo ? '1' : '0'}` +
+        `&mode=${loggedIn===false ? 'practice' : workspaceMode}` +
+        `&ask=${loggedIn===false ? '0' : askDojo ? '1' : '0'}` +
         `&solutions=${solutions ? '1' : '0'}` +
-        `&timer=${timer ? '1' : '0'}` +
+        `&timer=${loggedIn===false ? '0' : timer ? '1' : '0'}` +
         `&freeNav=${freeNav ? '1' : '0'}` +
         `&ids=${encodeURIComponent(ids.join(','))}`
       );
+      entitlementConsumed=false;
     }catch(error:any){
+      if(entitlementConsumed && entitlementKey){
+        try{
+          await releaseTrialEntitlement(
+            'advanced_question_set',
+            entitlementKey
+          );
+        }catch(releaseError){
+          console.error(
+            'Could not release Question Set trial use:',
+            releaseError
+          );
+        }
+      }
+
       setStartError(
         error?.message ||
         'Could not build this question set.'
@@ -689,6 +778,38 @@ function QuestionSetsContent(){
             </div>
           </div>
 
+          {loggedIn===false && (
+            <div
+              style={{
+                margin:'0 0 14px',
+                padding:'13px 14px',
+                border:'1px solid #dfe5e1',
+                borderRadius:'9px',
+                background:'#f7f9f7',
+                fontSize:'12px',
+                lineHeight:1.5
+              }}
+            >
+              <strong style={{display:'block',marginBottom:'3px'}}>
+                Personalise sets using your history
+              </strong>
+
+              <span style={{color:'#69716c'}}>
+                A Trial account lets DOJO build sets from questions
+                you have not seen, seen once, or already explored.
+              </span>
+
+              <div style={{marginTop:'8px'}}>
+                <Link
+                  href="/signup?next=%2Fquestion-sets"
+                  style={{fontWeight:700,color:'inherit'}}
+                >
+                  Create Trial account →
+                </Link>
+              </div>
+            </div>
+          )}
+
           <div className="questionSetExposureGrid">
             {exposureChoices.map(choice=>{
               const active=
@@ -697,10 +818,13 @@ function QuestionSetsContent(){
               return (
                 <button
                   type="button"
+                  disabled={loggedIn===false && choice.id!=='any'}
                   key={choice.id}
                   className={active ? 'active' : ''}
                   onClick={()=>
-                    toggleExposure(choice.id)
+                    loggedIn===false
+                      ? setExposures(['any'])
+                      : toggleExposure(choice.id)
                   }
                 >
                   <span
@@ -768,6 +892,38 @@ function QuestionSetsContent(){
             </div>
           </div>
 
+          {loggedIn===false && (
+            <div
+              style={{
+                margin:'0 0 16px',
+                padding:'13px 14px',
+                border:'1px solid #dfe5e1',
+                borderRadius:'9px',
+                background:'#f7f9f7',
+                fontSize:'12px',
+                lineHeight:1.5
+              }}
+            >
+              <strong style={{display:'block',marginBottom:'3px'}}>
+                More ways to work
+              </strong>
+
+              <span style={{color:'#69716c'}}>
+                Create a Trial account to use Exam mode, Ask DOJO
+                and the personalised workspace options.
+              </span>
+
+              <div style={{marginTop:'8px'}}>
+                <Link
+                  href="/signup?next=%2Fquestion-sets"
+                  style={{fontWeight:700,color:'inherit'}}
+                >
+                  Create Trial account →
+                </Link>
+              </div>
+            </div>
+          )}
+
           <div
             className="questionSetCountRow"
             style={{marginBottom:'18px'}}
@@ -788,13 +944,14 @@ function QuestionSetsContent(){
 
             <button
               type="button"
+              disabled={loggedIn===false}
               className={
                 workspaceMode==='exam'
                   ? 'active'
                   : ''
               }
               onClick={()=>
-                setWorkspaceMode('exam')
+                loggedIn!==false && setWorkspaceMode('exam')
               }
             >
               Exam mode
@@ -816,6 +973,7 @@ function QuestionSetsContent(){
                 <button
                   type="button"
                   className={askDojo ? 'active' : ''}
+                  disabled={loggedIn===false}
                   onClick={()=>setAskDojo(v=>!v)}
                 >
                   Ask DOJO: {askDojo ? 'On' : 'Off'}
@@ -824,6 +982,7 @@ function QuestionSetsContent(){
                 <button
                   type="button"
                   className={solutions ? 'active' : ''}
+                  disabled={loggedIn===false}
                   onClick={()=>setSolutions(v=>!v)}
                 >
                   Solutions: {solutions ? 'On' : 'Off'}
@@ -832,6 +991,7 @@ function QuestionSetsContent(){
                 <button
                   type="button"
                   className={timer ? 'active' : ''}
+                  disabled={loggedIn===false}
                   onClick={()=>setTimer(v=>!v)}
                 >
                   Timer: {timer ? 'On' : 'Off'}
@@ -840,6 +1000,7 @@ function QuestionSetsContent(){
                 <button
                   type="button"
                   className={freeNav ? 'active' : ''}
+                  disabled={loggedIn===false}
                   onClick={()=>setFreeNav(v=>!v)}
                 >
                   Free navigation: {freeNav ? 'On' : 'Off'}
@@ -872,6 +1033,20 @@ function QuestionSetsContent(){
           <span className="questionSetMiniLabel">
             Your set
           </span>
+
+          {loggedIn===false && (
+            <small style={{display:'block',marginTop:'3px'}}>
+              Basic set · not saved to your account
+            </small>
+          )}
+
+          {loggedIn===true && (
+            <small style={{display:'block',marginTop:'3px'}}>
+              {isAdvancedQuestionSet
+                ? 'Advanced set · uses a trial generation'
+                : 'Basic set'}
+            </small>
+          )}
 
           <strong>
             {selectedItems.length
@@ -916,6 +1091,13 @@ function QuestionSetsContent(){
           {startError && (
             <small className="questionSetStartError">
               {startError}
+          {membershipRequired && (
+            <p style={{marginTop:'10px'}}>
+              <Link href="/account">
+                View membership →
+              </Link>
+            </p>
+          )}
             </small>
           )}
         </div>

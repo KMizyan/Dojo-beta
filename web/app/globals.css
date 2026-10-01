@@ -1499,3 +1499,91 @@
     text-align: center;
   }
 }
+
+/* DOJO work-item archive menu */
+.dashboardRecentItem {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.dashboardRecentItem > .dashboardRecentRow {
+  flex: 1;
+  min-width: 0;
+}
+
+.workItemMenu,
+.paperItemMenu {
+  position: relative;
+  align-self: center;
+}
+
+.workItemMenu summary,
+.paperItemMenu summary {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  border: 0;
+  background: transparent;
+  padding: 8px 10px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.workItemMenu summary::-webkit-details-marker,
+.paperItemMenu summary::-webkit-details-marker {
+  display: none;
+}
+
+.workItemMenuPopup,
+.paperItemMenuPopup {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 160px;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+}
+
+.workItemMenuPopup button,
+.paperItemMenuPopup button {
+  width: 100%;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  padding: 9px 10px;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.workItemMenuPopup button:hover,
+.paperItemMenuPopup button:hover {
+  background: #f4f4f4;
+}
+/* DOJO papers archive tabs */
+.paperArchiveTabs {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0 14px;
+}
+
+.paperArchiveTabs button {
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  padding: 6px 11px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+}
+
+.paperArchiveTabs button.active {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}

@@ -123,6 +123,8 @@ export default function ReviewPage() {
   const [flags, setFlags] = useState<any[]>([]);
   const [papers, setPapers] = useState<PaperRecord[]>([]);
   const [error, setError] = useState('');
+  const [loggedIn, setLoggedIn] =
+    useState<boolean|null>(null);
   const [paperFilter, setPaperFilter] =
     useState<PaperFilter>('all');
 
@@ -135,10 +137,16 @@ export default function ReviewPage() {
           await supabase.auth.getUser();
 
         if (authError || !auth.user) {
-          throw new Error(
-            'You must be logged in to view Review.'
-          );
+          if (!active) return;
+
+          setLoggedIn(false);
+          setFlags([]);
+          setPapers([]);
+          setError('');
+          return;
         }
+
+        setLoggedIn(true);
 
         const [flagRows, workResult] =
           await Promise.all([
@@ -333,6 +341,157 @@ export default function ReviewPage() {
         <p className="loadingText">
           Loading your review...
         </p>
+      ) : loggedIn === false ? (
+        <>
+          <section className="reviewSection">
+            <div className="sectionHeading">
+              <div>
+                <span className="sectionLabel">
+                  Questions
+                </span>
+
+                <h2>Questions to revisit</h2>
+
+                <p>
+                  Flag important questions while marking
+                  and DOJO keeps them here for review.
+                </p>
+              </div>
+
+              <div className="flagCount">
+                <strong>—</strong>
+                <span>saved</span>
+              </div>
+            </div>
+
+            <div className="flaggedSummary">
+              <div>
+                <strong>
+                  Build a personal review queue
+                </strong>
+
+                <span>
+                  Reopen exact questions, check their
+                  solutions and use them as seeds for
+                  fresh Practise Similar sets.
+                </span>
+              </div>
+
+              <Link
+                href="/signup?next=%2Freview"
+                className="primaryAction"
+              >
+                Create account →
+              </Link>
+            </div>
+          </section>
+
+          <section className="reviewSection paperSection">
+            <div className="sectionHeading">
+              <div>
+                <span className="sectionLabel">
+                  Papers
+                </span>
+
+                <h2>Paper record</h2>
+
+                <p>
+                  Your marked past papers and DOJO papers
+                  build a record here automatically.
+                </p>
+              </div>
+            </div>
+
+            <div className="paperFilters">
+              <button type="button" className="active">
+                All
+              </button>
+              <button type="button" disabled>
+                Pure
+              </button>
+              <button type="button" disabled>
+                Statistics & Mechanics
+              </button>
+              <button type="button" disabled>
+                DOJO
+              </button>
+            </div>
+
+            <div className="emptyState">
+              <strong>
+                Keep your paper history in one place
+              </strong>
+
+              <p>
+                Log scores from past papers and keep
+                generated-paper results so you can return
+                to them from Review.
+              </p>
+            </div>
+          </section>
+
+          <div
+            style={{
+              marginTop:'18px',
+              padding:'16px 18px',
+              border:'1px solid #d9dedb',
+              borderRadius:'12px',
+              background:'#f7f9f7',
+              display:'flex',
+              justifyContent:'space-between',
+              alignItems:'center',
+              gap:'18px',
+              flexWrap:'wrap'
+            }}
+          >
+            <div>
+              <strong
+                style={{
+                  display:'block',
+                  marginBottom:'4px'
+                }}
+              >
+                Your Review builds as you use DOJO
+              </strong>
+
+              <span
+                style={{
+                  color:'#667069',
+                  fontSize:'12px'
+                }}
+              >
+                Create a free account to save flags,
+                paper results and personalised review.
+              </span>
+            </div>
+
+            <div
+              style={{
+                display:'flex',
+                gap:'12px',
+                alignItems:'center'
+              }}
+            >
+              <Link
+                href="/login?next=%2Freview"
+                style={{
+                  color:'#365441',
+                  fontWeight:700,
+                  textDecoration:'none'
+                }}
+              >
+                Log in
+              </Link>
+
+              <Link
+                href="/signup?next=%2Freview"
+                className="primaryAction"
+              >
+                Create account →
+              </Link>
+            </div>
+          </div>
+        </>
       ) : (
         <>
           <section className="reviewSection">

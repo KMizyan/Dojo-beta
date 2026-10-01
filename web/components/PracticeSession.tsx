@@ -2,6 +2,10 @@
 
 import Link from 'next/link';
 import {
+  consumeTrialEntitlement,
+  releaseTrialEntitlement
+} from '../lib/entitlements';
+import {
   createWorkItem,
   updateWorkProgress,
   saveQuestionMark,
@@ -16,6 +20,7 @@ import {
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
+import { supabase } from '../lib/supabase';
 
 type WorkspaceOptions = { askDojo: boolean; solutions: boolean; timer: boolean; freeNav: boolean };
 type Props = {
@@ -181,6 +186,8 @@ function AskDojo({q}:{q:any}) {
   const [input,setInput]=useState('');
   const [busy,setBusy]=useState(false);
   const [error,setError]=useState('');
+  const [membershipRequired,setMembershipRequired]=
+    useState(false);
 
   useEffect(()=>{
     setMessages([]);
@@ -194,6 +201,13 @@ function AskDojo({q}:{q:any}) {
     const prompt=input.trim();
     if(!prompt||busy) return;
 
+    const questionKey=String(q.id ?? '');
+
+    if(!questionKey){
+      setError('Ask DOJO could not identify this question.');
+      return;
+    }
+
     const next=[
       ...messages,
       {role:'user' as const,content:prompt}
@@ -203,8 +217,26 @@ function AskDojo({q}:{q:any}) {
     setInput('');
     setBusy(true);
     setError('');
+    setMembershipRequired(false);
+
+    let entitlementConsumed=false;
 
     try {
+      const entitlement=
+        await consumeTrialEntitlement(
+          'ask_dojo_question',
+          questionKey
+        );
+
+      if(!entitlement.allowed){
+        setMembershipRequired(true);
+        throw new Error(
+          `You've used Ask DOJO on ${entitlement.allowance} unique questions during your trial. You can still continue Ask DOJO conversations on questions you've already used it on.`
+        );
+      }
+
+      entitlementConsumed=entitlement.consumed;
+
       const r=await fetch(
         (process.env.NEXT_PUBLIC_API_URL ?? 'http://127.0.0.1:8000') + '/ask-dojo',
         {
@@ -227,6 +259,18 @@ function AskDojo({q}:{q:any}) {
         );
       }
 
+      if(!data.text){
+        throw new Error(
+          'Ask DOJO returned an empty response.'
+        );
+      }
+
+      /*
+        The AI successfully assisted this canonical question.
+        Keep the entitlement usage row.
+      */
+      entitlementConsumed=false;
+
       setMessages([
         ...next,
         {
@@ -236,6 +280,26 @@ function AskDojo({q}:{q:any}) {
       ]);
 
     } catch(err:any) {
+      /*
+        Only refund when THIS request created the entitlement row
+        and the AI request subsequently failed.
+
+        Existing usage for the same question is never deleted.
+      */
+      if(entitlementConsumed){
+        try{
+          await releaseTrialEntitlement(
+            'ask_dojo_question',
+            questionKey
+          );
+        }catch(releaseError){
+          console.error(
+            'Could not release Ask DOJO trial use:',
+            releaseError
+          );
+        }
+      }
+
       setError(
         err.message || 'Ask DOJO could not respond.'
       );
@@ -275,7 +339,14 @@ function AskDojo({q}:{q:any}) {
           {error && (
             <div className="dojoChatError">
               {error}
-            </div>
+            
+              {membershipRequired && (
+                <div style={{marginTop:'8px'}}>
+                  <Link href="/account">
+                    View membership →
+                  </Link>
+                </div>
+              )}</div>
           )}
 
         </div>
@@ -298,7 +369,6 @@ function AskDojo({q}:{q:any}) {
     </div>
   );
 }
-
 function SolutionTools({
   q,
   tab,
@@ -369,10 +439,30 @@ export default function PracticeSession({
 }:Props) {
   const [workId,setWorkId]=useState<string|null>(existingWorkId ?? null);
   const workCreationRef=useRef<Promise<string>|null>(null);
+  const [loggedIn,setLoggedIn]=useState<boolean|null>(null);
+  const [authNotice,setAuthNotice]=useState('');
+
+  useEffect(()=>{
+    let cancelled=false;
+
+    supabase.auth.getUser()
+      .then(({data})=>{
+        if(!cancelled) setLoggedIn(Boolean(data.user));
+      })
+      .catch(()=>{
+        if(!cancelled) setLoggedIn(false);
+      });
+
+    return()=>{ cancelled=true; };
+  },[]);
+
+  const requireAccount=(message:string)=>{
+    setAuthNotice(message);
+  };
 
   const ensureWorkItem=async():Promise<string|null>=>{
     if(workId) return workId;
-    if(!persistWork || !questions.length) return null;
+    if(loggedIn!==true || !persistWork || !questions.length) return null;
 
     if(!workCreationRef.current){
       workCreationRef.current=createWorkItem({
@@ -543,6 +633,11 @@ export default function PracticeSession({
   };
 
   const saveAndExit=async()=>{
+    if(loggedIn===false){
+      requireAccount('Create a free account to save this work and continue it later.');
+      return;
+    }
+
     try {
       const id=await ensureWorkItem();
       if(!id) return;
@@ -556,6 +651,11 @@ export default function PracticeSession({
 
  const toggleQuestionFlag=async()=>{
   const questionId=String(q?.id ?? q?.question_id ?? q?.ref ?? '');
+
+  if(loggedIn===false){
+    requireAccount('Create a free account to flag questions and return to them later.');
+    return;
+  }
 
   if(!questionId || flagBusy===questionId) return;
 
@@ -641,7 +741,9 @@ export default function PracticeSession({
         </div>
 
         <p>
-          Your question-by-question marks have been saved to My Work.
+          {loggedIn
+            ? 'Your question-by-question marks have been saved to My Work.'
+            : 'This result is not saved. Create a free account to save future work and build your DOJO history.'}
         </p>
 
         <div className="resultQuestions">
@@ -667,12 +769,21 @@ export default function PracticeSession({
             Practise again
           </Link>
 
-          <Link
-            className="secondarySessionButton"
-            href="/my-work"
-          >
-            Go to My Work
-          </Link>
+          {loggedIn===false ? (
+            <Link
+              className="secondarySessionButton"
+              href="/signup?next=%2Fmy-work"
+            >
+              Create free account
+            </Link>
+          ) : (
+            <Link
+              className="secondarySessionButton"
+              href="/my-work"
+            >
+              Go to My Work
+            </Link>
+          )}
         </div>
       </section>
     );
@@ -702,7 +813,6 @@ export default function PracticeSession({
             className="secondarySessionButton"
             type="button"
             onClick={saveAndExit}
-            disabled={!persistWork && !workId}
           >
             Save & exit
           </button>
@@ -733,6 +843,28 @@ export default function PracticeSession({
           </div>
         </div>
       </header>
+
+      {authNotice && (
+        <div
+          style={{
+            margin:'0 0 18px',
+            padding:'14px 16px',
+            border:'1px solid #d9d9d9',
+            borderRadius:'8px',
+            background:'#fff',
+            display:'flex',
+            alignItems:'center',
+            justifyContent:'space-between',
+            gap:'16px'
+          }}
+        >
+          <span>{authNotice}</span>
+          <span style={{display:'flex',gap:'12px',flexShrink:0}}>
+            <Link href="/login" style={{fontWeight:700}}>Log in</Link>
+            <Link href="/signup" style={{fontWeight:700}}>Create account →</Link>
+          </span>
+        </div>
+      )}
 
            <div className="questionWorkspace">
         <div className="questionColumn">
@@ -881,14 +1013,33 @@ export default function PracticeSession({
           )}
         </div>
 
-        {options.askDojo && mode==='practice' && (
+        {(options.askDojo || loggedIn===false) && mode==='practice' && (
           <aside className="dojoColumn">
             <div className="dojoColumnHeading">
               <b>Ask DOJO</b>
               <span>Question {index+1}</span>
             </div>
 
-            <AskDojo q={q}/>
+            {loggedIn===false ? (
+              <div
+                style={{
+                  padding:'20px',
+                  border:'1px solid #ddd',
+                  borderRadius:'8px',
+                  background:'#fff'
+                }}
+              >
+                <b>Get help with this question</b>
+                <p style={{margin:'8px 0 14px',color:'#666'}}>
+                  Ask DOJO for hints, explanations and help with individual steps.
+                </p>
+                <Link href="/signup" style={{fontWeight:700}}>
+                  Create free account →
+                </Link>
+              </div>
+            ) : options.askDojo ? (
+              <AskDojo q={q}/>
+            ) : null}
           </aside>
         )}
       </div>
@@ -931,6 +1082,10 @@ export default function PracticeSession({
                 setIndex(0);
                 setTab('answer');
                 setStage('marking');
+
+                if(loggedIn===false){
+                  return;
+                }
 
                 try {
                   const id=await ensureWorkItem();

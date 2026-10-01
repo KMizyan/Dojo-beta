@@ -40,6 +40,9 @@ export default function PapersPage() {
   const [timer, setTimer] = useState(false);
   const [freeNav, setFreeNav] = useState(true);
   const [savedPapers, setSavedPapers] = useState<any[]>([]);
+
+  const [paperHistoryView,setPaperHistoryView]=
+    useState<'active'|'archived'>('active');
   const [papersLoading, setPapersLoading] = useState(true);
   const [pastPaperLogs,setPastPaperLogs]=
     useState<PastPaperLog[]>([]);
@@ -64,6 +67,36 @@ export default function PapersPage() {
   const [logError,setLogError]=
     useState('');
 
+  const [loggedIn,setLoggedIn]=
+    useState<boolean|null>(null);
+
+  const [authNotice,setAuthNotice]=
+    useState('');
+
+  useEffect(()=>{
+    let active=true;
+
+    supabase.auth.getUser()
+      .then(({data})=>{
+        if(active){
+          setLoggedIn(Boolean(data.user));
+        }
+      })
+      .catch(()=>{
+        if(active){
+          setLoggedIn(false);
+        }
+      });
+
+    return()=>{
+      active=false;
+    };
+  },[]);
+
+  function requireAccount(message:string){
+    setAuthNotice(message);
+  }
+
   useEffect(() => {
     let active = true;
 
@@ -80,11 +113,18 @@ export default function PapersPage() {
         return;
       }
 
-      const { data, error } = await supabase
+      let savedPapersQuery = supabase
         .from('work_items')
-        .select('id,title,status,settings,created_at,updated_at,completed_at,marked_at')
+        .select('id,title,status,settings,created_at,updated_at,completed_at,marked_at,archived_at')
         .eq('user_id', auth.user.id)
-        .eq('kind', 'generated_paper')
+        .eq('kind', 'generated_paper');
+
+      savedPapersQuery =
+        paperHistoryView === 'archived'
+          ? savedPapersQuery.not('archived_at', 'is', null)
+          : savedPapersQuery.is('archived_at', null);
+
+      const { data, error } = await savedPapersQuery
         .order('updated_at', { ascending: false })
         .limit(3);
 
@@ -138,7 +178,51 @@ export default function PapersPage() {
     return () => {
       active = false;
     };
-  }, [section]);
+  }, [section, paperHistoryView]);
+
+  async function archiveSavedPaper(id:string){
+    const {data:auth}=await supabase.auth.getUser();
+
+    if(!auth.user) return;
+
+    const {error}=await supabase
+      .from('work_items')
+      .update({
+        archived_at:new Date().toISOString()
+      })
+      .eq('id',id)
+      .eq('user_id',auth.user.id);
+
+    if(error){
+      console.error('Could not remove paper from view:',error);
+      return;
+    }
+
+    setSavedPapers(current =>
+      current.filter(paper => paper.id !== id)
+    );
+  }
+
+  async function restoreSavedPaper(id:string){
+    const {data:auth}=await supabase.auth.getUser();
+
+    if(!auth.user) return;
+
+    const {error}=await supabase
+      .from('work_items')
+      .update({archived_at:null})
+      .eq('id',id)
+      .eq('user_id',auth.user.id);
+
+    if(error){
+      console.error('Could not restore paper:',error);
+      return;
+    }
+
+    setSavedPapers(current =>
+      current.filter(paper => paper.id !== id)
+    );
+  }
 
   useEffect(()=>{
     let active=true;
@@ -229,6 +313,13 @@ export default function PapersPage() {
   }
 
   function beginLog(year:number){
+    if(loggedIn===false){
+      requireAccount(
+        'Create an account to log paper results, flags and notes.'
+      );
+      return;
+    }
+
     const key=logKey(level,pastPaper,year);
     const existing=findLog(level,pastPaper,year);
 
@@ -411,6 +502,47 @@ export default function PapersPage() {
         Sit a past paper or generate a fresh exam-style paper.
       </p>
 
+      {authNotice && (
+        <div
+          style={{
+            margin:'18px 0',
+            padding:'14px 16px',
+            border:'1px solid #d9d9d9',
+            borderRadius:'8px',
+            background:'#fff',
+            display:'flex',
+            justifyContent:'space-between',
+            alignItems:'center',
+            gap:'16px',
+            flexWrap:'wrap'
+          }}
+        >
+          <span>{authNotice}</span>
+
+          <span
+            style={{
+              display:'flex',
+              gap:'12px',
+              flexShrink:0
+            }}
+          >
+            <Link
+              href="/login?next=%2Fpapers"
+              style={{fontWeight:700,color:'inherit'}}
+            >
+              Log in
+            </Link>
+
+            <Link
+              href="/signup?next=%2Fpapers"
+              style={{fontWeight:700,color:'inherit'}}
+            >
+              Create account →
+            </Link>
+          </span>
+        </div>
+      )}
+
       {!section && (
         <div className="paper-entry-grid">
           <button
@@ -494,6 +626,23 @@ export default function PapersPage() {
               </button>
             ))}
           </div>
+
+          {loggedIn===false && (
+            <div
+              style={{
+                margin:'0 0 14px',
+                padding:'12px 14px',
+                border:'1px solid #e1e1e1',
+                borderRadius:'8px',
+                background:'#fafafa',
+                fontSize:'13px',
+                color:'#666'
+              }}
+            >
+              Past papers are open to browse. Create an account
+              to log scores, flagged questions and notes.
+            </div>
+          )}
 
           <div className="past-paper-list">
             {sampleYears.map((year)=>{
@@ -1009,38 +1158,123 @@ export default function PapersPage() {
             </div>
           )}
 
-          <Link
-            className="primary-paper-action"
-            href={`/papers/generated?level=${encodeURIComponent(
-              level
-            )}&area=${encodeURIComponent(area)}&marks=${
-              marks === 'Full paper'
-                ? '100'
-                : marks.split(' ')[0]
-            }&examMode=${examMode ? '1' : '0'}&askDojo=${
-              !examMode && askDojo ? '1' : '0'
-            }&solutions=${
-              !examMode && solutions ? '1' : '0'
-            }&timer=${
-              !examMode && timer ? '1' : '0'
-            }&freeNav=${
-              !examMode && freeNav ? '1' : '0'
-            }`}
-          >
-            Generate {level} {area} paper
-          </Link>
+          {loggedIn===false ? (
+            <button
+              type="button"
+              className="primary-paper-action"
+              onClick={()=>
+                requireAccount(
+                  'Create an account to start your DOJO trial, including 3 generated papers.'
+                )
+              }
+            >
+              Generate {level} {area} paper
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="primary-paper-action"
+              onClick={(event) => {
+                event.currentTarget.disabled = true;
+                const generationId =
+                  typeof crypto !== 'undefined' &&
+                  typeof crypto.randomUUID === 'function'
+                    ? crypto.randomUUID()
+                    : `${Date.now()}-${Math.random()
+                        .toString(36)
+                        .slice(2)}`;
+
+                const params = new URLSearchParams({
+                  level,
+                  area,
+                  marks:
+                    marks === 'Full paper'
+                      ? '100'
+                      : marks.split(' ')[0],
+                  examMode: examMode ? '1' : '0',
+                  askDojo:
+                    !examMode && askDojo ? '1' : '0',
+                  solutions:
+                    !examMode && solutions ? '1' : '0',
+                  timer:
+                    !examMode && timer ? '1' : '0',
+                  freeNav:
+                    !examMode && freeNav ? '1' : '0',
+                  generationId,
+                });
+
+                window.location.assign(
+                  `/papers/generated?${params.toString()}`
+                );
+              }}
+            >
+              Generate {level} {area} paper
+            </button>
+          )}
 
           <div className="paper-history">
             <div className="history-heading">
               <h3>Your papers</h3>
-              <Link href="/papers/history">View all papers</Link>
+              {loggedIn===false ? (
+                <Link href="/signup?next=%2Fpapers">
+                  Create account →
+                </Link>
+              ) : (
+                <Link href="/papers/history">
+                  View all papers
+                </Link>
+              )}
             </div>
 
-            {papersLoading ? (
+            {loggedIn !== false && (
+              <div className="paperArchiveTabs">
+                <button
+                  type="button"
+                  className={paperHistoryView === 'active' ? 'active' : ''}
+                  onClick={() => setPaperHistoryView('active')}
+                >
+                  Active
+                </button>
+
+                <button
+                  type="button"
+                  className={paperHistoryView === 'archived' ? 'active' : ''}
+                  onClick={() => setPaperHistoryView('archived')}
+                >
+                  Archived
+                </button>
+              </div>
+            )}
+
+            {loggedIn===false ? (
+              <div
+                style={{
+                  padding:'16px 0',
+                  color:'#666',
+                  fontSize:'14px',
+                  lineHeight:1.5
+                }}
+              >
+                <strong
+                  style={{
+                    display:'block',
+                    color:'#111',
+                    marginBottom:'4px'
+                  }}
+                >
+                  Keep your generated papers and results
+                </strong>
+
+                Create an account to save generated papers,
+                mark them later and keep your results in DOJO.
+              </div>
+            ) : papersLoading ? (
               <p className="empty-history">Loading papers...</p>
             ) : savedPapers.length === 0 ? (
               <p className="empty-history">
-                Generated papers and results will appear here as you use DOJO.
+                {paperHistoryView === 'archived'
+                  ? 'No archived papers.'
+                  : 'Generated papers and results will appear here as you use DOJO.'}
               </p>
             ) : (
               <div className="past-paper-list">
@@ -1090,6 +1324,28 @@ export default function PapersPage() {
                             ? 'Continue marking'
                             : 'Mark paper'}
                       </Link>
+                      <details className="paperItemMenu">
+                        <summary
+                          aria-label="Paper options"
+                          title="Options"
+                        >
+                          ⋯
+                        </summary>
+                        <div className="paperItemMenuPopup">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              paperHistoryView === 'archived'
+                                ? restoreSavedPaper(paper.id)
+                                : archiveSavedPaper(paper.id)
+                            }
+                          >
+                            {paperHistoryView === 'archived'
+                              ? 'Restore to view'
+                              : 'Remove from view'}
+                          </button>
+                        </div>
+                      </details>
                     </div>
                   );
                 })}

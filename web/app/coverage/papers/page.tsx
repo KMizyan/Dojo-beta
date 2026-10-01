@@ -80,6 +80,9 @@ export default function PaperCoveragePage(){
   const [error,setError]=
     useState('');
 
+  const [loggedIn,setLoggedIn]=
+    useState<boolean|null>(null);
+
   useEffect(()=>{
     let active=true;
 
@@ -91,10 +94,15 @@ export default function PaperCoveragePage(){
 
       if(!auth.user){
         if(active){
+          setLoggedIn(false);
           setResults([]);
           setLoading(false);
         }
         return;
+      }
+
+      if(active){
+        setLoggedIn(true);
       }
 
       const {data,error}=await supabase
@@ -220,9 +228,76 @@ export default function PaperCoveragePage(){
             lineHeight:1.6
           }}
         >
-          Your saved results, flagged questions and notes.
+          {loggedIn===false
+            ? 'Track your paper results, flagged questions and notes.'
+            : 'Your saved results, flagged questions and notes.'}
         </p>
       </section>
+
+      {loggedIn===false && (
+        <div
+          className="card"
+          style={{
+            marginBottom:'20px',
+            padding:'18px 20px',
+            display:'flex',
+            justifyContent:'space-between',
+            alignItems:'center',
+            gap:'20px',
+            flexWrap:'wrap'
+          }}
+        >
+          <div>
+            <strong
+              style={{
+                display:'block',
+                marginBottom:'5px'
+              }}
+            >
+              Build your paper record
+            </strong>
+
+            <span
+              style={{
+                fontSize:'13px',
+                opacity:.68,
+                lineHeight:1.5
+              }}
+            >
+              Save scores, flagged questions and notes so
+              DOJO can keep your paper history in one place.
+            </span>
+          </div>
+
+          <div
+            style={{
+              display:'flex',
+              gap:'12px',
+              alignItems:'center'
+            }}
+          >
+            <Link
+              href="/login?next=%2Fcoverage%2Fpapers"
+              style={{
+                fontWeight:700,
+                color:'inherit'
+              }}
+            >
+              Log in
+            </Link>
+
+            <Link
+              href="/signup?next=%2Fcoverage%2Fpapers"
+              style={{
+                fontWeight:700,
+                color:'inherit'
+              }}
+            >
+              Create account →
+            </Link>
+          </div>
+        </div>
+      )}
 
       <div
         style={{
@@ -321,11 +396,13 @@ export default function PaperCoveragePage(){
               : 0;
 
           const completionLabel=
-            completed===0
-              ? 'Not started'
-              : completed===papers.length
-                ? 'Complete'
-                : `${completed} of ${papers.length} completed`;
+            loggedIn===false
+              ? 'Sign in to track completion'
+              : completed===0
+                ? 'Not started'
+                : completed===papers.length
+                  ? 'Complete'
+                  : `${completed} of ${papers.length} completed`;
 
           return (
             <section
@@ -334,11 +411,17 @@ export default function PaperCoveragePage(){
               style={{
                 padding:0,
                 overflow:'hidden',
-                opacity:completed===0 ? .58 : 1,
+                opacity:
+                  loggedIn===false
+                    ? 1
+                    : completed===0
+                      ? .58
+                      : 1,
                 border:
+                  loggedIn!==false &&
                   completed===papers.length
                     ? '2px solid currentColor'
-                    : completed>0
+                    : loggedIn!==false && completed>0
                       ? '1px solid rgba(0,0,0,.28)'
                       : '1px solid rgba(0,0,0,.10)'
               }}
@@ -393,14 +476,16 @@ export default function PaperCoveragePage(){
                           : completionLabel}
                       </strong>
 
-                      {!loading && completed>0 && (
-                        <span style={{opacity:.55}}>
-                          {completed}/{papers.length}
-                        </span>
-                      )}
+                      {!loading &&
+                        loggedIn!==false &&
+                        completed>0 && (
+                          <span style={{opacity:.55}}>
+                            {completed}/{papers.length}
+                          </span>
+                        )}
                     </div>
 
-                    {!loading && (
+                    {!loading && loggedIn!==false && (
                       <div
                         style={{
                           height:'5px',
@@ -453,7 +538,12 @@ export default function PaperCoveragePage(){
                       <div
                         key={key}
                         style={{
-                          opacity:done ? 1 : .45,
+                          opacity:
+                            loggedIn===false
+                              ? 1
+                              : done
+                                ? 1
+                                : .45,
                           borderBottom:
                             '1px solid rgba(0,0,0,.06)'
                         }}
@@ -493,9 +583,11 @@ export default function PaperCoveragePage(){
                                 fontSize:'12px'
                               }}
                             >
-                              {done
-                                ? '✓ Completed'
-                                : 'Not attempted'}
+                              {loggedIn===false
+                                ? 'Result not tracked'
+                                : done
+                                  ? '✓ Completed'
+                                  : 'Not attempted'}
                             </div>
                           </div>
 
@@ -677,18 +769,25 @@ export default function PaperCoveragePage(){
                                     fontSize:'13px'
                                   }}
                                 >
-                                  No result has been logged for
-                                  this paper yet.
+                                  {loggedIn===false
+                                    ? 'Sign in to track your result for this paper.'
+                                    : 'No result has been logged for this paper yet.'}
                                 </p>
 
                                 <Link
-                                  href="/papers"
+                                  href={
+                                    loggedIn===false
+                                      ? '/signup?next=%2Fcoverage%2Fpapers'
+                                      : '/papers'
+                                  }
                                   style={{
                                     fontSize:'13px',
                                     fontWeight:700
                                   }}
                                 >
-                                  Go to Papers to log it
+                                  {loggedIn===false
+                                    ? 'Create an account to track it'
+                                    : 'Go to Papers to log it'}
                                 </Link>
                               </div>
                             )}

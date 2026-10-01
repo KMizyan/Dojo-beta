@@ -1,52 +1,54 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import Link from 'next/link';
+import { FormEvent, useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 
-export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
+function safeNext(value:string|null){
+  if(
+    value &&
+    value.startsWith('/') &&
+    !value.startsWith('//')
+  ){
+    return value;
+  }
 
-  async function signIn(e: FormEvent) {
+  return '/';
+}
+
+export default function LoginPage(){
+  const [next,setNext]=useState('/');
+  const [email,setEmail]=useState('');
+  const [password,setPassword]=useState('');
+  const [message,setMessage]=useState('');
+  const [loading,setLoading]=useState(false);
+
+  useEffect(()=>{
+    const params=new URLSearchParams(window.location.search);
+    setNext(safeNext(params.get('next')));
+  },[]);
+
+  async function signIn(e:FormEvent){
     e.preventDefault();
     setLoading(true);
     setMessage('');
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const {error}=await supabase.auth.signInWithPassword({
       email,
-      password,
+      password
     });
 
-    setLoading(false);
-
-    if (error) {
+    if(error){
+      setLoading(false);
       setMessage(error.message);
       return;
     }
 
-    window.location.href = '/';
+    window.location.href=next;
   }
 
-  async function signUp() {
-    setLoading(true);
-    setMessage('');
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    setLoading(false);
-
-    if (error) {
-      setMessage(error.message);
-      return;
-    }
-
-    setMessage('Account created. Check your email to confirm your account.');
-  }
+  const signupHref=
+    `/signup?next=${encodeURIComponent(next)}`;
 
   return (
     <main className="page">
@@ -54,38 +56,50 @@ export default function LoginPage() {
 
       <form onSubmit={signIn}>
         <div>
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
           <br />
           <input
+            id="email"
             type="email"
+            autoComplete="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e=>setEmail(e.target.value)}
             required
           />
         </div>
 
         <div>
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
           <br />
           <input
+            id="password"
             type="password"
+            autoComplete="current-password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e=>setPassword(e.target.value)}
             required
-            minLength={6}
           />
         </div>
 
         <button type="submit" disabled={loading}>
-          {loading ? 'Please wait...' : 'Log in'}
-        </button>
-
-        <button type="button" onClick={signUp} disabled={loading}>
-          Sign up
+          {loading ? 'Logging in...' : 'Log in'}
         </button>
       </form>
 
       {message && <p>{message}</p>}
+
+      <p>
+        <Link href="/forgot-password">
+          Forgot password?
+        </Link>
+      </p>
+
+      <p>
+        New to DOJO?{' '}
+        <Link href={signupHref}>
+          Create an account
+        </Link>
+      </p>
     </main>
   );
 }

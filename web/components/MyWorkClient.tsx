@@ -129,6 +129,7 @@ export default function MyWorkPage() {
   const [work, setWork] = useState<WorkItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [flaggedCount, setFlaggedCount] = useState(0);
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
 
   const [recovery,setRecovery] =
     useState<RecoverySession|null>(null);
@@ -182,12 +183,15 @@ async function loadWork() {
         await supabase.auth.getUser();
 
       if (!auth.user) {
+        setLoggedIn(false);
         setWork([]);
         setLoading(false);
         return;
       }
 
-      const [
+      setLoggedIn(true);
+
+      let [
         flagsResult,
         workResult
       ] = await Promise.all([
@@ -218,11 +222,53 @@ async function loadWork() {
               marked_at
             )
           `)
+          .is('archived_at', null)
           .order('created_at',{
             ascending:false
           })
           .limit(50)
       ]);
+
+      /*
+       * A hard refresh can occasionally coincide with
+       * Supabase restoring its persisted auth session.
+       * Retry My Work once before treating it as failed.
+       */
+      if(workResult.error){
+        await new Promise(resolve =>
+          window.setTimeout(resolve,250)
+        );
+
+        const { data: retryAuth } =
+          await supabase.auth.getUser();
+
+        if(retryAuth.user){
+          workResult = await supabase
+            .from('work_items')
+            .select(`
+              id,
+              title,
+              kind,
+              status,
+              created_at,
+              completed_at,
+              marked_at,
+              settings,
+              work_questions (
+                question_id,
+                position,
+                marks_awarded,
+                marks_available,
+                marked_at
+              )
+            `)
+            .is('archived_at', null)
+            .order('created_at',{
+              ascending:false
+            })
+            .limit(50);
+        }
+      }
 
       if(flagsResult.error){
         console.warn(
@@ -236,8 +282,8 @@ async function loadWork() {
       }
 
       if(workResult.error){
-        console.error(
-          'Could not load My Work:',
+        console.warn(
+          'Could not load My Work after retry:',
           workResult.error
         );
 
@@ -260,21 +306,47 @@ async function loadWork() {
    * is empty rather than falling back to an older abandoned item.
    */
 
+  async function archiveWorkItem(id: string) {
+    const { data: auth } = await supabase.auth.getUser();
+
+    if (!auth.user) return;
+
+    const archivedAt = new Date().toISOString();
+
+    const { error } = await supabase
+      .from('work_items')
+      .update({ archived_at: archivedAt })
+      .eq('id', id)
+      .eq('user_id', auth.user.id);
+
+    if (error) {
+      console.error('Could not remove work from view:', error);
+      return;
+    }
+
+    setWork(current =>
+      current.filter(item => item.id !== id)
+    );
+  }
+
   const filteredRecent = useMemo(() => {
     return work.filter(item => {
       if (item.settings?.draft === true) {
         return false;
       }
 
-      const isUnfinished =
+      const isInProgress =
         item.status === 'in_progress' ||
-        item.status === 'completed' ||
         item.status === 'marking';
 
+      const isLatest =
+        item.status === 'completed' ||
+        item.status === 'marked';
+
       if (recentView === 'in_progress') {
-        if (!isUnfinished) return false;
+        if (!isInProgress) return false;
       } else {
-        if (item.status !== 'marked') return false;
+        if (!isLatest) return false;
       }
 
       if (filter === 'papers') {
@@ -566,67 +638,130 @@ async function loadWork() {
             </div>
 
             <div className="dashboardRecentList">
-              {visibleRecent.length === 0 && (
-                <p className="empty-history">
-                  No work here yet.
-                </p>
+              {loggedIn === false ? (
+                <div className="accountFeaturePreview">
+                  <div className="previewRows" aria-hidden="true">
+                    <div className="previewWorkRow">
+                      <div>
+                        <strong>Integration practice</strong>
+                        <span>Question Set · Today</span>
+                      </div>
+
+                      <span className="previewScore">8/10</span>
+                    </div>
+
+                    <div className="previewWorkRow faded">
+                      <div>
+                        <strong>Generated Paper</strong>
+                        <span>Paper · Yesterday</span>
+                      </div>
+
+                      <span className="previewScore">62/75</span>
+                    </div>
+                  </div>
+
+                  <div className="previewMessage">
+                    <strong>Your work, saved in one place</strong>
+
+                    <p>
+                      Create a free account to save your work,
+                      pick up where you left off and review your results.
+                    </p>
+
+                    <Link href="/signup?next=%2F">
+                      Create free account →
+                    </Link>
+
+                    <span>
+                      Already have an account?{' '}
+                      <Link href="/login?next=%2F">Log in</Link>
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {visibleRecent.length === 0 && (
+                    <p className="empty-history">
+                      No work here yet.
+                    </p>
+                  )}
+
+                  {visibleRecent.map(item => {
+                    const {
+                      awarded,
+                      available,
+                      hasResult,
+                    } = scoreFor(item);
+
+                    return (
+                      <div className="dashboardRecentItem" key={item.id}>
+                      <Link
+                        href={`/practice?work=${encodeURIComponent(
+                          item.id
+                        )}`}
+                        className="dashboardRecentRow"
+                      >
+                        <div>
+                          <strong>{item.title}</strong>
+
+                          <span>
+                            {workTypeLabel(item)}
+                            {' · '}
+                            {dateLabel(
+                              item.marked_at ??
+                                item.completed_at ??
+                                item.created_at
+                            )}
+                          </span>
+                        </div>
+
+                        <div className="dashboardRecentResult">
+                          {hasResult ? (
+                            <span className="scoreBadge">
+                              <strong>{awarded}</strong>
+                              <small>/{available}</small>
+                            </span>
+                          ) : (
+                            <span
+                              className={`statusBadge status-${item.status}`}
+                            >
+                              {item.status === 'in_progress'
+                                ? 'In progress'
+                                : item.status === 'marking'
+                                ? 'Marking'
+                                : item.status === 'completed'
+                                ? 'Ready to mark'
+                                : 'Completed'}
+                            </span>
+                          )}
+
+                          <span className="recentArrow">→</span>
+                        </div>
+                      </Link>
+                        <details className="workItemMenu">
+                          <summary
+                            aria-label="Work item options"
+                            title="Options"
+                          >
+                            ⋯
+                          </summary>
+                          <div className="workItemMenuPopup">
+                            <button
+                              type="button"
+                              onClick={() => archiveWorkItem(item.id)}
+                            >
+                              Remove from view
+                            </button>
+                          </div>
+                        </details>
+                      </div>
+                    );
+                  })}
+                </>
               )}
-
-              {visibleRecent.map(item => {
-                const {
-                  awarded,
-                  available,
-                  hasResult,
-                } = scoreFor(item);
-
-                return (
-                  <Link
-                    href={`/practice?work=${encodeURIComponent(
-                      item.id
-                    )}`}
-                    className="dashboardRecentRow"
-                    key={item.id}
-                  >
-                    <div>
-                      <strong>{item.title}</strong>
-
-                      <span>
-                        {workTypeLabel(item)}
-                        {' · '}
-                        {dateLabel(
-                          item.marked_at ??
-                            item.completed_at ??
-                            item.created_at
-                        )}
-                      </span>
-                    </div>
-
-                    <div className="dashboardRecentResult">
-                      {hasResult ? (
-                        <span className="scoreBadge">
-                          <strong>{awarded}</strong>
-                          <small>/{available}</small>
-                        </span>
-                      ) : (
-                        <span className={`statusBadge status-${item.status}`}>
-                          {item.status === 'in_progress'
-                            ? 'In progress'
-                            : item.status === 'marking'
-                            ? 'Marking'
-                            : item.status === 'completed'
-                            ? 'Ready to mark'
-                            : 'Completed'}
-                        </span>
-                      )}
-
-                      <span className="recentArrow">→</span>
-                    </div>
-                  </Link>
-                );
-              })}
             </div>
 
-            {filteredRecent.length > 3 && (
+            {loggedIn !== false && filteredRecent.length > 3 && (
               <button
                 className="dashboardShowMore"
                 onClick={() =>
@@ -656,7 +791,76 @@ async function loadWork() {
             </div>
 
             <div className="coverageDashboardBody">
-              <CoverageSnapshot />
+              {loggedIn === false ? (
+                <div className="coveragePreview">
+                  <div
+                    className="previewCoverageHeader"
+                    aria-hidden="true"
+                  >
+                    <div>
+                      <span className="dashboardLabel">
+                        Architecture coverage
+                      </span>
+
+                      <strong>
+                        Track what you've encountered
+                      </strong>
+                    </div>
+
+                    <span>— / —</span>
+                  </div>
+
+                  <div
+                    className="previewCoverageTrack"
+                    aria-hidden="true"
+                  >
+                    <div />
+                  </div>
+
+                  <div
+                    className="previewCoverageRows"
+                    aria-hidden="true"
+                  >
+                    <div>
+                      <span>Trigonometry</span>
+                      <div>
+                        <i style={{width:'68%'}} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <span>Integration</span>
+                      <div>
+                        <i style={{width:'42%'}} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <span>Vectors</span>
+                      <div>
+                        <i style={{width:'24%'}} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="previewMessage coveragePreviewMessage">
+                    <strong>
+                      See where your practice is taking you
+                    </strong>
+
+                    <p>
+                      DOJO tracks the question types you've encountered
+                      and shows the gaps in your coverage as you work.
+                    </p>
+
+                    <Link href="/signup?next=%2Fcoverage">
+                      Create free account →
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <CoverageSnapshot />
+              )}
             </div>
           </section>
         </div>
@@ -1225,6 +1429,174 @@ async function loadWork() {
         .coverageDashboardBody {
           padding-top: 16px;
           border-top: 1px solid rgba(22, 33, 26, 0.08);
+        }
+
+
+        /* Logged-out DOJO previews */
+
+        .previewRows {
+          display: grid;
+          gap: 8px;
+          opacity: 0.46;
+          pointer-events: none;
+          user-select: none;
+        }
+
+        .previewWorkRow {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          min-height: 66px;
+          padding: 12px 14px;
+          border: 1px solid rgba(22, 33, 26, 0.09);
+          border-radius: 11px;
+          background: #fff;
+        }
+
+        .previewWorkRow.faded {
+          opacity: 0.68;
+        }
+
+        .previewWorkRow strong {
+          display: block;
+          font-size: 13px;
+        }
+
+        .previewWorkRow span {
+          display: block;
+          margin-top: 5px;
+          color: #858b87;
+          font-size: 11px;
+        }
+
+        .previewWorkRow .previewScore {
+          margin: 0;
+          padding: 7px 9px;
+          border: 1px solid #cbd6ce;
+          border-radius: 9px;
+          background: #f1f5f2;
+          color: #294534;
+          font-size: 12px;
+          font-weight: 800;
+        }
+
+        .previewMessage {
+          margin-top: 18px;
+          padding-top: 17px;
+          border-top: 1px solid rgba(22, 33, 26, 0.09);
+        }
+
+        .previewMessage > strong {
+          display: block;
+          margin-bottom: 6px;
+          font-size: 14px;
+        }
+
+        .previewMessage p {
+          max-width: 500px;
+          margin: 0 0 12px;
+          color: #707772;
+          font-size: 12px;
+          line-height: 1.5;
+        }
+
+        .previewMessage > a {
+          display: inline-block;
+          padding: 8px 11px;
+          border: 1px solid rgba(22, 33, 26, 0.14);
+          border-radius: 9px;
+          background: #fff;
+          color: #263b2e;
+          text-decoration: none;
+          font-size: 12px;
+          font-weight: 800;
+        }
+
+        .previewMessage > a:hover {
+          border-color: #496251;
+          background: #f2f6f3;
+        }
+
+        .previewMessage > span {
+          display: block;
+          margin-top: 10px;
+          color: #858b87;
+          font-size: 11px;
+        }
+
+        .previewMessage > span a {
+          color: #445a4b;
+          font-weight: 700;
+        }
+
+        .previewCoverageHeader {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 16px;
+          opacity: 0.48;
+        }
+
+        .previewCoverageHeader strong {
+          display: block;
+          margin-top: 6px;
+          font-size: 18px;
+        }
+
+        .previewCoverageHeader > span {
+          font-size: 14px;
+          font-weight: 800;
+        }
+
+        .previewCoverageTrack {
+          height: 6px;
+          margin-top: 15px;
+          overflow: hidden;
+          border-radius: 999px;
+          background: #e8ece9;
+          opacity: 0.55;
+        }
+
+        .previewCoverageTrack > div {
+          width: 38%;
+          height: 100%;
+          border-radius: inherit;
+          background: #73877a;
+        }
+
+        .previewCoverageRows {
+          display: grid;
+          gap: 11px;
+          margin-top: 18px;
+          opacity: 0.42;
+          pointer-events: none;
+          user-select: none;
+        }
+
+        .previewCoverageRows > div > span {
+          display: block;
+          margin-bottom: 5px;
+          font-size: 11px;
+          font-weight: 700;
+        }
+
+        .previewCoverageRows > div > div {
+          height: 4px;
+          overflow: hidden;
+          border-radius: 999px;
+          background: #e5e9e6;
+        }
+
+        .previewCoverageRows i {
+          display: block;
+          height: 100%;
+          border-radius: inherit;
+          background: #667a6d;
+        }
+
+        .coveragePreviewMessage {
+          margin-top: 20px;
         }
 
       `}</style>

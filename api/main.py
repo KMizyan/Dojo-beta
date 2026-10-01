@@ -1,14 +1,40 @@
 from __future__ import annotations
 import json, os, random, sqlite3, uuid
+import stripe
 from pathlib import Path
 from functools import lru_cache
 from typing import Any
 from datetime import datetime, timezone
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request, Header
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 app=FastAPI(title='DOJO API')
+
+# --- Billing configuration ---------------------------------------------------
+#
+# Secrets are supplied through environment variables in local development
+# and Render. Nothing sensitive is stored in source control.
+#
+STRIPE_SECRET_KEY=os.getenv('STRIPE_SECRET_KEY','').strip()
+STRIPE_WEBHOOK_SECRET=os.getenv('STRIPE_WEBHOOK_SECRET','').strip()
+DOJO_STRIPE_PRICE_ID=os.getenv(
+    'DOJO_STRIPE_PRICE_ID',
+    ''
+).strip()
+
+SUPABASE_URL=os.getenv(
+    'SUPABASE_URL',
+    ''
+).strip().rstrip('/')
+
+SUPABASE_SERVICE_ROLE_KEY=os.getenv(
+    'SUPABASE_SERVICE_ROLE_KEY',
+    ''
+).strip()
+
+if STRIPE_SECRET_KEY:
+    stripe.api_key=STRIPE_SECRET_KEY
 ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.getenv(
@@ -1032,10 +1058,586 @@ def coverage():
       "questions_completed":len(attempted),"topics":result,
       "note":"Coverage measures breadth encountered, not mathematical mastery."}
 
+
+# --- Billing ----------------------------------------------------------------
+
+class BillingRequest(BaseModel):
+    return_url: str
+
+
+def _supabase_headers(
+    bearer_token: str | None = None
+) -> dict[str, str]:
+    if not SUPABASE_URL or not SUPABASE_SERVICE_ROLE_KEY:
+        raise HTTPException(
+            503,
+            'Supabase server configuration is not set.'
+        )
+
+    return {
+        'apikey': SUPABASE_SERVICE_ROLE_KEY,
+        'Authorization': (
+            'Bearer '
+            + (
+                bearer_token
+                if bearer_token
+                else SUPABASE_SERVICE_ROLE_KEY
+            )
+        ),
+        'Content-Type': 'application/json'
+    }
+
+
+def _supabase_request(
+    method: str,
+    path: str,
+    *,
+    bearer_token: str | None = None,
+    payload: Any = None,
+    extra_headers: dict[str, str] | None = None
+) -> Any:
+    data = None
+
+    if payload is not None:
+        data = json.dumps(payload).encode('utf-8')
+
+    headers = _supabase_headers(bearer_token)
+
+    if extra_headers:
+        headers.update(extra_headers)
+
+    req = urllib.request.Request(
+        SUPABASE_URL + path,
+        data=data,
+        method=method,
+        headers=headers
+    )
+
+    try:
+        with urllib.request.urlopen(
+            req,
+            timeout=20
+        ) as response:
+            raw = response.read().decode('utf-8')
+
+            if not raw:
+                return None
+
+            return json.loads(raw)
+
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode(
+            'utf-8',
+            errors='replace'
+        )
+
+        raise HTTPException(
+            exc.code,
+            'Supabase request failed: ' + detail[:500]
+        )
+
+
+def _bearer_token(
+    authorization: str | None
+) -> str:
+    value = str(authorization or '').strip()
+
+    if not value.lower().startswith('bearer '):
+        raise HTTPException(
+            401,
+            'Authentication required.'
+        )
+
+    token = value[7:].strip()
+
+    if not token:
+        raise HTTPException(
+            401,
+            'Authentication required.'
+        )
+
+    return token
+
+
+def _authenticated_user(
+    authorization: str | None
+) -> dict:
+    token = _bearer_token(authorization)
+
+    user = _supabase_request(
+        'GET',
+        '/auth/v1/user',
+        bearer_token=token
+    )
+
+    if (
+        not isinstance(user, dict)
+        or not user.get('id')
+    ):
+        raise HTTPException(
+            401,
+            'Authentication required.'
+        )
+
+    return user
+
+
+def _membership_for_user(
+    user_id: str
+) -> dict | None:
+    encoded = urllib.parse.quote(
+        user_id,
+        safe=''
+    )
+
+    rows = _supabase_request(
+        'GET',
+        (
+            '/rest/v1/memberships'
+            '?select=*'
+            '&user_id=eq.'
+            + encoded
+            + '&limit=1'
+        )
+    )
+
+    if isinstance(rows, list) and rows:
+        return rows[0]
+
+    return None
+
+
+def _upsert_membership(
+    user_id: str,
+    values: dict
+) -> None:
+    payload = {
+        'user_id': user_id,
+        **values,
+        'updated_at': datetime.now(
+            timezone.utc
+        ).isoformat()
+    }
+
+    _supabase_request(
+        'POST',
+        '/rest/v1/memberships?on_conflict=user_id',
+        payload=payload,
+        extra_headers={
+            'Prefer': 'resolution=merge-duplicates'
+        }
+    )
+
+
+def _stripe_ready(
+    *,
+    webhook: bool = False
+) -> None:
+    if not STRIPE_SECRET_KEY:
+        raise HTTPException(
+            503,
+            'Stripe is not configured.'
+        )
+
+    if (
+        not DOJO_STRIPE_PRICE_ID
+        and not webhook
+    ):
+        raise HTTPException(
+            503,
+            'DOJO Stripe price is not configured.'
+        )
+
+    if (
+        webhook
+        and not STRIPE_WEBHOOK_SECRET
+    ):
+        raise HTTPException(
+            503,
+            'Stripe webhook is not configured.'
+        )
+
+
+def _safe_return_url(
+    value: str
+) -> str:
+    url = str(value or '').strip()
+
+    if not url:
+        raise HTTPException(
+            400,
+            'Return URL is required.'
+        )
+
+    for origin in ALLOWED_ORIGINS:
+        clean = origin.rstrip('/')
+
+        if (
+            url == clean
+            or url.startswith(clean + '/')
+        ):
+            return url
+
+    raise HTTPException(
+        400,
+        'Return URL is not allowed.'
+    )
+
+
+def _stripe_customer_id_for_user(
+    user: dict
+) -> str:
+    user_id = str(user['id'])
+    membership = _membership_for_user(
+        user_id
+    )
+
+    existing = str(
+        (membership or {}).get(
+            'stripe_customer_id'
+        )
+        or ''
+    ).strip()
+
+    if existing:
+        return existing
+
+    customer = stripe.Customer.create(
+        email=user.get('email'),
+        metadata={
+            'dojo_user_id': user_id
+        }
+    )
+
+    customer_id = str(customer['id'])
+
+    _upsert_membership(
+        user_id,
+        {
+            'stripe_customer_id': customer_id
+        }
+    )
+
+    return customer_id
+
+
+@app.post('/billing/checkout')
+def billing_checkout(
+    body: BillingRequest,
+    authorization: str | None = Header(
+        default=None
+    )
+):
+    _stripe_ready()
+
+    user = _authenticated_user(
+        authorization
+    )
+
+    user_id = str(user['id'])
+
+    membership = _membership_for_user(
+        user_id
+    )
+
+    if (
+        membership
+        and membership.get('status') == 'member'
+        and membership.get(
+            'stripe_subscription_id'
+        )
+    ):
+        raise HTTPException(
+            409,
+            'This account already has a DOJO membership.'
+        )
+
+    customer_id = (
+        _stripe_customer_id_for_user(user)
+    )
+
+    return_url = _safe_return_url(
+        body.return_url
+    )
+
+    session = (
+        stripe.checkout.Session.create(
+            mode='subscription',
+            customer=customer_id,
+            line_items=[
+                {
+                    'price': DOJO_STRIPE_PRICE_ID,
+                    'quantity': 1
+                }
+            ],
+            success_url=(
+                return_url
+                + '?checkout=success'
+            ),
+            cancel_url=(
+                return_url
+                + '?checkout=cancelled'
+            ),
+            client_reference_id=user_id,
+            subscription_data={
+                'metadata': {
+                    'dojo_user_id': user_id
+                }
+            },
+            allow_promotion_codes=False
+        )
+    )
+
+    return {
+        'url': session.url
+    }
+
+
+@app.post('/billing/portal')
+def billing_portal(
+    body: BillingRequest,
+    authorization: str | None = Header(
+        default=None
+    )
+):
+    _stripe_ready()
+
+    user = _authenticated_user(
+        authorization
+    )
+
+    membership = _membership_for_user(
+        str(user['id'])
+    )
+
+    customer_id = str(
+        (membership or {}).get(
+            'stripe_customer_id'
+        )
+        or ''
+    ).strip()
+
+    if not customer_id:
+        raise HTTPException(
+            404,
+            'No Stripe billing account exists yet.'
+        )
+
+    return_url = _safe_return_url(
+        body.return_url
+    )
+
+    session = (
+        stripe.billing_portal.Session.create(
+            customer=customer_id,
+            return_url=return_url
+        )
+    )
+
+    return {
+        'url': session.url
+    }
+
+
+def _stripe_user_id(
+    subscription: dict
+) -> str | None:
+    metadata = (
+        subscription.get('metadata')
+        or {}
+    )
+
+    user_id = str(
+        metadata.get('dojo_user_id')
+        or ''
+    ).strip()
+
+    if user_id:
+        return user_id
+
+    customer_id = str(
+        subscription.get('customer')
+        or ''
+    ).strip()
+
+    if not customer_id:
+        return None
+
+    encoded = urllib.parse.quote(
+        customer_id,
+        safe=''
+    )
+
+    rows = _supabase_request(
+        'GET',
+        (
+            '/rest/v1/memberships'
+            '?select=user_id'
+            '&stripe_customer_id=eq.'
+            + encoded
+            + '&limit=1'
+        )
+    )
+
+    if isinstance(rows, list) and rows:
+        value = str(
+            rows[0].get('user_id')
+            or ''
+        )
+
+        return value or None
+
+    return None
+
+
+def _sync_stripe_subscription(
+    subscription: dict
+) -> None:
+    user_id = _stripe_user_id(
+        subscription
+    )
+
+    if not user_id:
+        raise RuntimeError(
+            'Stripe subscription has no DOJO user.'
+        )
+
+    stripe_status = str(
+        subscription.get('status')
+        or ''
+    )
+
+    has_access = stripe_status in {
+        'active',
+        'trialing',
+        'past_due'
+    }
+
+    period_end = subscription.get(
+        'current_period_end'
+    )
+
+    period_end_iso = None
+
+    if period_end:
+        period_end_iso = (
+            datetime.fromtimestamp(
+                int(period_end),
+                tz=timezone.utc
+            ).isoformat()
+        )
+
+    items = (
+        subscription.get('items')
+        or {}
+    ).get('data') or []
+
+    price_id = None
+
+    if items:
+        price_id = str(
+            (items[0].get('price') or {})
+            .get('id')
+            or ''
+        ) or None
+
+    _upsert_membership(
+        user_id,
+        {
+            'status': (
+                'member'
+                if has_access
+                else 'trial'
+            ),
+            'stripe_customer_id': (
+                str(
+                    subscription.get(
+                        'customer'
+                    )
+                    or ''
+                )
+                or None
+            ),
+            'stripe_subscription_id': (
+                str(
+                    subscription.get('id')
+                    or ''
+                )
+                or None
+            ),
+            'stripe_price_id': price_id,
+            'current_period_end': (
+                period_end_iso
+            ),
+            'cancel_at_period_end': bool(
+                subscription.get(
+                    'cancel_at_period_end'
+                )
+            )
+        }
+    )
+
+
+@app.post('/billing/webhook')
+async def billing_webhook(
+    request: Request
+):
+    _stripe_ready(webhook=True)
+
+    payload = await request.body()
+
+    signature = request.headers.get(
+        'stripe-signature'
+    )
+
+    if not signature:
+        raise HTTPException(
+            400,
+            'Missing Stripe signature.'
+        )
+
+    try:
+        event = (
+            stripe.Webhook.construct_event(
+                payload,
+                signature,
+                STRIPE_WEBHOOK_SECRET
+            )
+        )
+    except Exception:
+        raise HTTPException(
+            400,
+            'Invalid Stripe webhook.'
+        )
+
+    event_type = str(
+        event.get('type')
+        or ''
+    )
+
+    if event_type in {
+        'customer.subscription.created',
+        'customer.subscription.updated',
+        'customer.subscription.deleted'
+    }:
+        subscription = dict(
+            event['data']['object']
+        )
+
+        _sync_stripe_subscription(
+            subscription
+        )
+
+    return {
+        'received': True
+    }
+
+
 # --- Ask DOJO ---------------------------------------------------------------
 from pydantic import BaseModel
 import urllib.request
 import urllib.error
+import urllib.parse
 
 class AskDojoMessage(BaseModel):
     role:str
@@ -1135,7 +1737,7 @@ def _complexity(q:dict)->float:
     return min(float(q.get('marks') or 4),12)/12 + min(len(q.get('techniques') or []),4)*0.12
 
 def _build_pure_paper(target:int,seed:str|None=None)->list[dict]:
-    rng=random.Random(seed); pool=catalogue(); rng.shuffle(pool)
+    rng=random.Random(seed); pool=list(catalogue()); rng.shuffle(pool)
     chosen=[]; used_types=set(); topic_counts={}; total=0
     for phase in PURE_PHASES:
         phase_goal=round(target*phase['share']); phase_start=total

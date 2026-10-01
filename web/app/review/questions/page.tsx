@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { supabase } from '../../../lib/supabase';
 import {useEffect, useMemo, useState,Suspense} from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
@@ -102,11 +103,28 @@ function ReviewQuestionsContent() {
   const [error,setError] =
     useState('');
 
+  const [loggedIn,setLoggedIn]=
+    useState<boolean|null>(null);
+
   useEffect(()=>{
     let active=true;
 
     async function load(){
       try{
+        const {data:auth}=
+          await supabase.auth.getUser();
+
+        if(!active) return;
+
+        if(!auth.user){
+          setLoggedIn(false);
+          setQuestions([]);
+          setLoading(false);
+          return;
+        }
+
+        setLoggedIn(true);
+
         if(requestedSeeds.length){
           const loaded=(
             await getQuestionsBulk(
@@ -705,6 +723,107 @@ function ReviewQuestionsContent() {
                   ? 'Creating...'
                   : 'Create new practice set →'}
               </button>
+            </div>
+          </div>
+        </section>
+
+        <style jsx>{styles}</style>
+      </main>
+    );
+  }
+
+  if(loggedIn===false){
+    return (
+      <main className="reviewQuestions">
+        <div className="topbar">
+          <Link href="/">
+            ← Home
+          </Link>
+        </div>
+
+        <header className="pageHeader">
+          <span>Review</span>
+          <h1>Turn marked work into your next practice</h1>
+          <p>
+            DOJO keeps the questions you flag and lets you
+            return to them, review the solution and build
+            fresh practice from similar questions.
+          </p>
+        </header>
+
+        <section className="seedPanel">
+          <div
+            style={{
+              display:'grid',
+              gap:'10px'
+            }}
+          >
+            <div className="seedRow">
+              <input
+                type="checkbox"
+                checked
+                readOnly
+                aria-label="Example flagged question"
+              />
+
+              <div>
+                <strong>Flag questions while you work</strong>
+                <span>
+                  Questions you want to revisit appear here
+                  with their mark scheme and worked solution.
+                </span>
+              </div>
+            </div>
+
+            <div className="seedRow">
+              <input
+                type="checkbox"
+                checked
+                readOnly
+                aria-label="Example similar practice"
+              />
+
+              <div>
+                <strong>Practise similar</strong>
+                <span>
+                  Use one or more reviewed questions as seeds
+                  for a fresh DOJO practice set.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="similarBar">
+            <div>
+              <strong>Your Review builds as you use DOJO</strong>
+              <span>
+                Create a free account to save flags, review
+                questions and use them to create new practice.
+              </span>
+            </div>
+
+            <div
+              style={{
+                display:'flex',
+                gap:'10px',
+                alignItems:'center',
+                flexWrap:'wrap'
+              }}
+            >
+              <Link
+                href="/login?next=%2Freview%2Fquestions"
+                style={{fontWeight:700,color:'#365441'}}
+              >
+                Log in
+              </Link>
+
+              <Link
+                href="/signup?next=%2Freview%2Fquestions"
+                className="primaryAction"
+                style={{textDecoration:"none"}}
+              >
+                Create account →
+              </Link>
             </div>
           </div>
         </section>
