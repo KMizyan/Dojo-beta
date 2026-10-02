@@ -1,4 +1,4 @@
-*{box-sizing:border-box}body{margin:0;background:#f7f7f5;color:#161616;font-family:Arial,Helvetica,sans-serif}a{color:inherit;text-decoration:none}.shell{min-height:100vh}.nav{height:70px;background:white;border-bottom:1px solid #e5e5e0;display:flex;align-items:center;padding:0 6vw;gap:34px;position:sticky;top:0;z-index:5}.brand{font-size:24px;font-weight:900;letter-spacing:-1px;margin-right:auto}.nav a{font-weight:600;color:#555}.nav a:hover{color:#111}.main{max-width:1120px;margin:auto;padding:64px 28px 100px}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:800;color:#6a6a65}.hero{font-size:54px;line-height:1.02;letter-spacing:-2.5px;max-width:720px;margin:10px 0 16px}.pageTitle{font-size:46px;letter-spacing:-1.8px;margin:10px 0 10px}.lede{font-size:19px;color:#666;max-width:640px;line-height:1.55}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:42px}.card{background:white;border:1px solid #e2e2dd;border-radius:18px;padding:26px;min-height:190px;transition:.15s}.card:hover,.areaCard:hover,.topicLink:hover,.subtopic:hover{transform:translateY(-2px);box-shadow:0 8px 28px #0000000d}.card h2{margin:0 0 10px;font-size:24px}.card p,.areaCard p{color:#6a6a65;line-height:1.5}.arrow{font-weight:800;margin-top:28px}.muted{color:#777}.areaGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:38px}.areaCard{background:#fff;border:1px solid #e2e2dd;border-radius:18px;padding:28px;min-height:190px;transition:.15s}.areaCard h2{font-size:27px;margin:0 0 8px}.areaCard span{display:block;margin-top:35px;font-weight:800}.crumb{display:flex;gap:9px;align-items:center;color:#777;font-size:14px;margin-bottom:28px}.crumb a{color:#333}.topicList{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:34px;max-width:850px}.topicLink{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #e2e2dd;border-radius:14px;padding:21px 22px;font-size:17px;font-weight:700;transition:.15s}.historyStrip{margin-top:30px;background:#fff;border:1px solid #e2e2dd;border-radius:15px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px}.historyStrip p{margin:5px 0 0;color:#777;font-size:14px}.historyEmpty{font-size:13px;color:#888;white-space:nowrap}.practiceBox{margin-top:18px;background:#fff;border:1px solid #dcdcd6;border-radius:18px;padding:26px}.practiceTop{display:flex;justify-content:space-between;gap:30px;align-items:flex-end}.practiceTop h2{font-size:27px;margin:7px 0}.practiceTop p{margin:0;color:#777}.quickControls{display:flex;align-items:flex-end;gap:12px}.quickControls label{font-size:12px;font-weight:700;color:#666;display:flex;flex-direction:column;gap:7px}.quickControls select{height:44px;padding:0 34px 0 12px;border:1px solid #d4d4ce;border-radius:10px;background:white;font-size:15px}.primary{height:44px;border:0;border-radius:10px;background:#171717;color:white;padding:0 22px;font-weight:800;cursor:pointer}.primary:disabled{background:#aaa;cursor:default}.advancedToggle{border:0;background:transparent;padding:18px 0 0;color:#555;font-weight:700;cursor:pointer}.advancedPanel{border-top:1px solid #ecece7;margin-top:16px;padding-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:30px}.advancedPanel>div{display:flex;gap:15px;align-items:center;flex-wrap:wrap}.advancedPanel label{color:#555;font-size:14px}.subSection{margin-top:52px}.subSection h2{font-size:28px;margin:7px 0}.subtopicGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:22px}.subtopic{background:#fff;border:1px solid #e2e2dd;border-radius:12px;padding:18px 19px;display:flex;justify-content:space-between;font-weight:650;transition:.15s}@media(max-width:800px){.grid,.areaGrid,.topicList,.subtopicGrid{grid-template-columns:1fr}.hero{font-size:40px}.pageTitle{font-size:38px}.nav{gap:16px;padding:0 20px}.main{padding:40px 20px}.practiceTop,.historyStrip{align-items:flex-start;flex-direction:column}.quickControls{width:100%;flex-wrap:wrap}.advancedPanel{grid-template-columns:1fr}}
+*{box-sizing:border-box}body{margin:0;background:#f7f7f5;color:#161616;font-family:var(--font-manrope),Arial,Helvetica,sans-serif}a{color:inherit;text-decoration:none}.shell{min-height:100vh}.nav{height:70px;background:white;border-bottom:1px solid #e5e5e0;display:flex;align-items:center;padding:0 6vw;gap:34px;position:sticky;top:0;z-index:5}.brand{font-size:24px;font-weight:900;letter-spacing:-1px;margin-right:auto}.nav a{font-weight:600;color:#555}.nav a:hover{color:#111}.main{max-width:1120px;margin:auto;padding:64px 28px 100px}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:800;color:#6a6a65}.hero{font-size:54px;line-height:1.02;letter-spacing:-2.5px;max-width:720px;margin:10px 0 16px}.pageTitle{font-size:46px;letter-spacing:-1.8px;margin:10px 0 10px}.lede{font-size:19px;color:#666;max-width:640px;line-height:1.55}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:42px}.card{background:white;border:1px solid #e2e2dd;border-radius:18px;padding:26px;min-height:190px;transition:.15s}.card:hover,.areaCard:hover,.topicLink:hover,.subtopic:hover{transform:translateY(-2px);box-shadow:0 8px 28px #0000000d}.card h2{margin:0 0 10px;font-size:24px}.card p,.areaCard p{color:#6a6a65;line-height:1.5}.arrow{font-weight:800;margin-top:28px}.muted{color:#777}.areaGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:38px}.areaCard{background:#fff;border:1px solid #e2e2dd;border-radius:18px;padding:28px;min-height:190px;transition:.15s}.areaCard h2{font-size:27px;margin:0 0 8px}.areaCard span{display:block;margin-top:35px;font-weight:800}.crumb{display:flex;gap:9px;align-items:center;color:#777;font-size:14px;margin-bottom:28px}.crumb a{color:#333}.topicList{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:34px;max-width:850px}.topicLink{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #e2e2dd;border-radius:14px;padding:21px 22px;font-size:17px;font-weight:700;transition:.15s}.historyStrip{margin-top:30px;background:#fff;border:1px solid #e2e2dd;border-radius:15px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px}.historyStrip p{margin:5px 0 0;color:#777;font-size:14px}.historyEmpty{font-size:13px;color:#888;white-space:nowrap}.practiceBox{margin-top:18px;background:#fff;border:1px solid #dcdcd6;border-radius:18px;padding:26px}.practiceTop{display:flex;justify-content:space-between;gap:30px;align-items:flex-end}.practiceTop h2{font-size:27px;margin:7px 0}.practiceTop p{margin:0;color:#777}.quickControls{display:flex;align-items:flex-end;gap:12px}.quickControls label{font-size:12px;font-weight:700;color:#666;display:flex;flex-direction:column;gap:7px}.quickControls select{height:44px;padding:0 34px 0 12px;border:1px solid #d4d4ce;border-radius:10px;background:white;font-size:15px}.primary{height:44px;border:0;border-radius:10px;background:#171717;color:white;padding:0 22px;font-weight:800;cursor:pointer}.primary:disabled{background:#aaa;cursor:default}.advancedToggle{border:0;background:transparent;padding:18px 0 0;color:#555;font-weight:700;cursor:pointer}.advancedPanel{border-top:1px solid #ecece7;margin-top:16px;padding-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:30px}.advancedPanel>div{display:flex;gap:15px;align-items:center;flex-wrap:wrap}.advancedPanel label{color:#555;font-size:14px}.subSection{margin-top:52px}.subSection h2{font-size:28px;margin:7px 0}.subtopicGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:22px}.subtopic{background:#fff;border:1px solid #e2e2dd;border-radius:12px;padding:18px 19px;display:flex;justify-content:space-between;font-weight:650;transition:.15s}@media(max-width:800px){.grid,.areaGrid,.topicList,.subtopicGrid{grid-template-columns:1fr}.hero{font-size:40px}.pageTitle{font-size:38px}.nav{gap:16px;padding:0 20px}.main{padding:40px 20px}.practiceTop,.historyStrip{align-items:flex-start;flex-direction:column}.quickControls{width:100%;flex-wrap:wrap}.advancedPanel{grid-template-columns:1fr}}
 .questionStack{display:grid;gap:16px;margin-top:34px}.questionCard{background:#fff;border:1px solid #e2e2dd;border-radius:16px;padding:24px;line-height:1.6}.questionHead{display:flex;justify-content:space-between;border-bottom:1px solid #ecece7;padding-bottom:14px;margin-bottom:18px}.questionHead span{color:#777;font-size:14px}.mathLine{font-family:Georgia,'Times New Roman',serif;font-size:18px;margin:10px 0}
 
 
@@ -1587,3 +1587,620 @@
   background: #111;
   color: #fff;
 }
+
+
+/* DOJO HOMEPAGE PRIMARY CARDS — GLOBAL */
+
+body .dojoHome .homeStartGrid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+  margin: 0 0 32px !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+body .dojoHome .homeStartGrid > a.homeStartCard {
+  box-sizing: border-box !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 185px !important;
+
+  padding: 24px !important;
+
+  border: 1px solid #d0d2cc !important;
+  border-radius: 16px !important;
+
+  background: #faf9f5 !important;
+  color: #101312 !important;
+
+  text-decoration: none !important;
+  overflow: hidden !important;
+
+  box-shadow:
+    0 1px 2px rgba(16,19,18,.025) !important;
+
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    background 140ms ease !important;
+}
+
+body .dojoHome .homeStartGrid > a.homeStartCard > div {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+
+  width: 100% !important;
+}
+
+body .dojoHome .homeStartGrid > a.homeStartCard .dashboardLabel {
+  display: block !important;
+
+  margin: 0 0 24px !important;
+
+  color: #737a75 !important;
+
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+}
+
+body .dojoHome .homeStartGrid > a.homeStartCard h2 {
+  margin: 0 0 10px !important;
+
+  color: #101312 !important;
+
+  font-size: 23px !important;
+  font-weight: 650 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -.03em !important;
+}
+
+body .dojoHome .homeStartGrid > a.homeStartCard p {
+  max-width: 235px !important;
+  margin: 0 !important;
+
+  color: #656c67 !important;
+
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+body .dojoHome .homeStartGrid > a.homeStartCard:hover {
+  border-color: #315cf5 !important;
+  background: #ffffff !important;
+
+  transform: translateY(-2px) !important;
+
+  box-shadow:
+    0 10px 28px rgba(32, 48, 92, .08) !important;
+}
+
+body .dojoHome .homeStartGrid > a.homeStartCard:hover .dashboardLabel {
+  color: #315cf5 !important;
+}
+
+body .dojoHome .homeStartGrid .homeStartArrow {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  body .dojoHome .homeStartGrid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  body .dojoHome .homeStartGrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  body .dojoHome .homeStartGrid > a.homeStartCard {
+    min-height: 155px !important;
+  }
+}
+
+/* END DOJO HOMEPAGE PRIMARY CARDS — GLOBAL */
+
+
+/* DOJO COVERAGE READABILITY — GLOBAL */
+
+/*
+ * The Coverage panel itself remains dark.
+ * Its white inset gets an explicit light colour scheme.
+ */
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) {
+  color: #111412 !important;
+}
+
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) * {
+  color: #626964 !important;
+}
+
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) strong,
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) h1,
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) h2,
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) h3 {
+  color: #151816 !important;
+}
+
+/* Small uppercase labels */
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) .dashboardLabel,
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) small {
+  color: #777e79 !important;
+}
+
+/* Progress tracks */
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) [class*="Bar"],
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) [class*="bar"],
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) [class*="Track"],
+body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) [class*="track"] {
+  color: #111412 !important;
+}
+
+/* END DOJO COVERAGE READABILITY — GLOBAL */
+
+
+
+
+
+
+/* DOJO HOMEPAGE HERO / ACTION SPACING */
+body .dojoHome > .homeHeader {
+  margin-bottom: 52px !important;
+}
+
+body .dojoHome > .homeStartGrid {
+  margin-top: 0 !important;
+}
+/* END DOJO HOMEPAGE HERO / ACTION SPACING */
+
+
+/* DOJO typography */
+body {
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-weight: 450;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.nav {
+  font-size: 14px;
+}
+
+.nav a:not(.brand) {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: -0.055em;
+}
+
+.eyebrow,
+.page-kicker,
+.sessionEyebrow,
+.practice-area,
+.coverageEyebrow,
+.coverageMiniLabel,
+.coverageControlLabel {
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.hero {
+  font-weight: 750;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.card p,
+.areaCard p,
+.lede {
+  line-height: 1.55;
+}
+
+/* Preserve authentic exam-paper typography */
+.edexcelPaper,
+.edexcelPaper .questionBody,
+.paperQuestionNumber,
+.paperMarks,
+.continuousPaper,
+.examQuestion,
+.examQuestionContent {
+  font-family: "Times New Roman", Times, serif;
+}
+
+
+/* =========================================================
+   DOJO IDENTITY
+   ========================================================= */
+
+body .dojoHome > .homeHeader {
+  position: relative;
+}
+
+body .dojoHome .dojoDefinition {
+  margin-top: 10px;
+}
+
+body .dojoHome .dojoDefinitionHeading {
+  display: flex;
+  align-items: baseline;
+  gap: 13px;
+  flex-wrap: wrap;
+}
+
+body .dojoHome .dojoDefinition h1 {
+  margin: 0;
+  font-size: clamp(3.8rem, 6vw, 5.2rem);
+  line-height: .95;
+  font-weight: 780;
+  letter-spacing: -0.065em;
+  text-transform: lowercase;
+}
+
+body .dojoHome .dojoPronunciation {
+  color: #69706b;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+body .dojoHome .dojoWordClass {
+  color: #69706b;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 550;
+}
+
+body .dojoHome .dojoDefinition > p {
+  max-width: 680px;
+  margin: 15px 0 0;
+  color: #414743;
+  font-size: 18px;
+  line-height: 1.55;
+  letter-spacing: -0.015em;
+}
+
+/*
+ * Abstract torii / pi mark.
+ * Intentionally geometric rather than illustrative.
+ */
+body .dojoHome .dojoHomeMark {
+  position: absolute;
+  left: -31px;
+  top: 5px;
+  width: 19px;
+  height: 35px;
+}
+
+body .dojoHome .dojoHomeMark span {
+  position: absolute;
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: #315cf5;
+}
+
+body .dojoHome .dojoHomeMark .dojoMarkTop {
+  left: 0;
+  top: 0;
+  width: 19px;
+  height: 3px;
+  border-radius: 1px;
+}
+
+body .dojoHome .dojoHomeMark .dojoMarkLeft {
+  left: 3px;
+  top: 3px;
+  width: 3px;
+  height: 32px;
+}
+
+body .dojoHome .dojoHomeMark .dojoMarkRight {
+  right: 3px;
+  top: 3px;
+  width: 3px;
+  height: 32px;
+}
+
+@media (max-width: 700px) {
+  body .dojoHome .dojoHomeMark {
+    position: relative;
+    left: 0;
+    top: 0;
+    margin-bottom: 17px;
+  }
+
+  body .dojoHome .dojoDefinition h1 {
+    font-size: 3.6rem;
+  }
+
+  body .dojoHome .dojoDefinition > p {
+    font-size: 16px;
+  }
+}
+
+/* END DOJO IDENTITY */
+
+
+/* DOJO HERO REFINEMENT */
+body .dojoHome .dojoDefinition h1 {
+  text-transform: none !important;
+}
+
+body .dojoHome .dojoDefinition > p {
+  max-width: 760px !important;
+  margin-top: 17px !important;
+  color: #202421 !important;
+  font-size: 21px !important;
+  font-weight: 550 !important;
+  line-height: 1.5 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* Retire the experimental torii/pi hero mark */
+body .dojoHome .dojoHomeMark {
+  display: none !important;
+}
+/* END DOJO HERO REFINEMENT */
+
+
+/* =========================================================
+   PROJECT DOJO BRAND
+   ========================================================= */
+
+.nav .brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  color: inherit;
+  line-height: 1;
+}
+
+.nav .brandMain {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.nav .brandProject {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.nav .brandDojo {
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  font-weight: 850;
+  letter-spacing: -0.055em;
+}
+
+.nav .brandSubject {
+  margin-top: 4px;
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  opacity: 0.52;
+  white-space: nowrap;
+}
+
+/* END PROJECT DOJO BRAND */
+
+
+/* =========================================================
+   PROJECT DOJO — BRAND HIERARCHY
+   ========================================================= */
+
+.nav .brandLockup {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  min-width: 0;
+}
+
+.nav .brandLockup .brand {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 7px;
+  margin-right: 0;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.nav .brandProject {
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  transform: translateY(-1px);
+}
+
+.nav .brandDojo {
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  font-weight: 850;
+  letter-spacing: -0.055em;
+}
+
+.nav .brandSubject {
+  position: relative;
+  display: block;
+  margin-left: 19px;
+  padding-left: 19px;
+  color: rgba(255,255,255,.48);
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+  font-size: 8px;
+  font-weight: 750;
+  letter-spacing: 0.15em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* quiet divider: parent brand | current subject */
+.nav .brandSubject::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -4px;
+  width: 1px;
+  height: 16px;
+  background: rgba(255,255,255,.18);
+}
+
+@media (max-width: 700px) {
+  .nav .brandSubject {
+    display: none;
+  }
+}
+
+/* END PROJECT DOJO — BRAND HIERARCHY */
+
+
+/* PROJECT DOJO — SUBJECT IDENTIFIER REFINEMENT */
+
+.nav .brandSubject {
+  margin-left: 28px !important;
+  padding-left: 28px !important;
+
+  color: rgba(255,255,255,.78) !important;
+
+  font-size: 10px !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.13em !important;
+}
+
+.nav .brandSubject::before {
+  left: 0 !important;
+  top: -5px !important;
+  height: 19px !important;
+  background: rgba(255,255,255,.24) !important;
+}
+
+/* END PROJECT DOJO — SUBJECT IDENTIFIER REFINEMENT */
+
+
+/* PROJECT DOJO — SUBJECT IDENTIFIER REFINEMENT */
+
+.nav .brandSubject {
+  margin-left: 28px !important;
+  padding-left: 28px !important;
+
+  color: rgba(255,255,255,.78) !important;
+
+  font-size: 10px !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.13em !important;
+}
+
+.nav .brandSubject::before {
+  left: 0 !important;
+  top: -5px !important;
+  height: 19px !important;
+  background: rgba(255,255,255,.24) !important;
+}
+
+/* END PROJECT DOJO — SUBJECT IDENTIFIER REFINEMENT */
+
+
+/* A-LEVEL MATHEMATICS NAV LABEL — FINAL POSITION */
+body .nav .brandSubject {
+  margin-left: 42px !important;
+  padding-left: 32px !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 12px !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.10em !important;
+  opacity: 1 !important;
+}
+
+body .nav .brandSubject::before {
+  left: 0 !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+/* END A-LEVEL MATHEMATICS NAV LABEL */
+
+
+/* DOJO HERO — SIZE REFINEMENT */
+body .dojoHome .dojoDefinition h1 {
+  font-size: clamp(3rem, 4vw, 3.8rem) !important;
+}
+/* END DOJO HERO — SIZE REFINEMENT */
+
+
+/* DOJO HERO — SIZE REFINEMENT */
+body .dojoHome .dojoDefinition h1 {
+  font-size: clamp(3rem, 4vw, 3.8rem) !important;
+}
+/* END DOJO HERO — SIZE REFINEMENT */
+
+
+/* DOJO DEFINITION — COMPACT BRAND MESSAGE */
+body .dojoHome .dojoDefinition h1 {
+  font-size: 42px !important;
+  line-height: 1 !important;
+  letter-spacing: -0.05em !important;
+}
+
+body .dojoHome .dojoDefinitionHeading {
+  gap: 11px !important;
+}
+
+body .dojoHome .dojoDefinition > p {
+  margin-top: 12px !important;
+  font-size: 18px !important;
+  line-height: 1.45 !important;
+}
+/* END DOJO DEFINITION — COMPACT BRAND MESSAGE */
+
+
+/* DOJO DEFINITION — COMPACT BRAND MESSAGE */
+body .dojoHome .dojoDefinition h1 {
+  font-size: 42px !important;
+  line-height: 1 !important;
+  letter-spacing: -0.05em !important;
+}
+
+body .dojoHome .dojoDefinitionHeading {
+  gap: 11px !important;
+}
+
+body .dojoHome .dojoDefinition > p {
+  margin-top: 12px !important;
+  font-size: 18px !important;
+  line-height: 1.45 !important;
+}
+/* END DOJO DEFINITION — COMPACT BRAND MESSAGE */

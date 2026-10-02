@@ -125,7 +125,11 @@ function progressFor(item: WorkItem) {
   };
 }
 
-export default function MyWorkPage() {
+type Props = {
+  home?: boolean;
+};
+
+export default function MyWorkPage({ home = false }: Props) {
   const [work, setWork] = useState<WorkItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [flaggedCount, setFlaggedCount] = useState(0);
@@ -366,14 +370,33 @@ async function loadWork() {
     : filteredRecent.slice(0, 3);
 
   return (
-    <main className="work-page">
+    <main className={`work-page${home ? ' dojoHome' : ''}`}>
       <div className="homeHeader">
-        <div className="page-kicker">
-          A-level Mathematics
-        </div>
-        <p>
-          Choose what you want to work on or pick up where you left off.
-        </p>
+        {home ? (
+          <>
+            <div className="dojoDefinition">
+              <div className="dojoDefinitionHeading">
+                <h1>DOJO</h1>
+                <span className="dojoPronunciation">/ˈdəʊ.dʒəʊ/</span>
+                <span className="dojoWordClass">noun</span>
+              </div>
+
+              <p>
+                A place devoted to disciplined practice, learning and improvement.
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="page-kicker">
+              My Work
+            </div>
+            <h1>Your work</h1>
+            <p>
+              Pick up where you left off or review what you've done.
+            </p>
+          </>
+        )}
       </div>
 
       <section className="homeStartGrid">
@@ -393,9 +416,6 @@ async function loadWork() {
             </p>
           </div>
 
-          <span className="homeStartArrow">
-            →
-          </span>
         </Link>
 
         <Link
@@ -414,9 +434,6 @@ async function loadWork() {
             </p>
           </div>
 
-          <span className="homeStartArrow">
-            →
-          </span>
         </Link>
 
         <Link
@@ -435,9 +452,6 @@ async function loadWork() {
             </p>
           </div>
 
-          <span className="homeStartArrow">
-            →
-          </span>
         </Link>
 
         <Link
@@ -459,11 +473,9 @@ async function loadWork() {
             </p>
           </div>
 
-          <span className="homeStartArrow">
-            →
-          </span>
         </Link>
       </section>
+      
 
       {!loading && recovery && (
         <section className="myWorkPanel continuePanel">
@@ -702,7 +714,7 @@ async function loadWork() {
                         className="dashboardRecentRow"
                       >
                         <div>
-                          <strong>{item.title}</strong>
+                          <strong>{item.title}</strong>{' '}
 
                           <span>
                             {workTypeLabel(item)}
@@ -1598,6 +1610,1417 @@ async function loadWork() {
         .coveragePreviewMessage {
           margin-top: 20px;
         }
+
+
+
+        /* DOJO HOME — DARK DIRECTION */
+
+        :global(body:has(.dojoHome)) {
+          background: #151816;
+          color: #ecece5;
+        }
+
+        :global(body:has(.dojoHome) .nav) {
+          background: #151816;
+          border-bottom-color: #2b302c;
+        }
+
+        :global(body:has(.dojoHome) .nav a) {
+          color: #a8ada7;
+        }
+
+        :global(body:has(.dojoHome) .nav a:hover),
+        :global(body:has(.dojoHome) .nav .brand) {
+          color: #f1f1ea;
+        }
+
+        .dojoHome {
+          --dojo-ink: #efefe8;
+          --dojo-muted: #969c96;
+          --dojo-green: #5f806a;
+          --dojo-green-dark: #789680;
+          --dojo-line: #343934;
+          --dojo-paper: #151816;
+          --dojo-surface: #1b1f1c;
+
+          color: var(--dojo-ink);
+        }
+
+        .dojoHome .page-kicker,
+        .dojoHome .dashboardLabel {
+          color: #7f8e83;
+        }
+
+        .dojoHome .dojoHomeMark span {
+          background: #688773;
+        }
+
+        .dojoHome .homeHeader p {
+          color: #9da39d;
+        }
+
+        .dojoHome .homeStartGrid {
+          border-color: #373c38;
+        }
+
+        .dojoHome .homeStartCard {
+          border-color: #373c38;
+          background: transparent;
+          color: #efefe8;
+        }
+
+        .dojoHome .homeStartCard:hover {
+          border-color: #373c38;
+          background: #202b23;
+          color: #f4f4ed;
+        }
+
+        .dojoHome .homeStartCard p {
+          color: #969c96;
+        }
+
+        .dojoHome .homeStartArrow {
+          color: #789680;
+        }
+
+        .dojoHome .homeStartCard:hover p,
+        .dojoHome .homeStartCard:hover .dashboardLabel {
+          color: #abb7ae;
+        }
+
+        .dojoHome .myWorkPanel {
+          border-color: #343934;
+          background: #1a1e1b;
+        }
+
+        .dojoHome .continuePanel {
+          border-left-color: #688773;
+        }
+
+        .dojoHome .dashboardPanelHeading h2,
+        .dojoHome .dashboardRecentRow strong {
+          color: #efefe8;
+        }
+
+        .dojoHome .dashboardPanelHeading p {
+          color: #8f9690;
+        }
+
+        .dojoHome .dashboardPrimaryAction {
+          color: #b5c8ba;
+          border-bottom-color: #607b68;
+        }
+
+        .dojoHome .dashboardPrimaryAction:hover {
+          color: #e4ebe5;
+          border-bottom-color: #9bb09f;
+        }
+
+        .dojoHome .continueProgress {
+          background: #303530;
+        }
+
+        .dojoHome .continueProgress > div {
+          background: #6d8c77;
+        }
+
+        .dojoHome .dashboardFilters button {
+          border-color: #3a403b;
+          background: transparent;
+          color: #969c96;
+        }
+
+        .dojoHome .dashboardFilters button:hover {
+          border-color: #59635b;
+          color: #d8dbd7;
+        }
+
+        .dojoHome .dashboardFilters button.active {
+          border-color: #dfe3dd;
+          background: #dfe3dd;
+          color: #182019;
+        }
+
+        .dojoHome .dashboardRecentRow {
+          border-color: #303531;
+        }
+
+        .dojoHome .dashboardRecentRow:hover {
+          background: #202521;
+        }
+
+        .dojoHome .coveragePanel {
+          border-color: #405247;
+          background: #223329;
+          color: #f0f2ed;
+        }
+
+        .dojoHome .coveragePanel .dashboardLabel,
+        .dojoHome .coveragePanel p,
+        .dojoHome .coveragePanel span,
+        .dojoHome .coveragePanel small {
+          color: #9eada2;
+        }
+
+        .dojoHome .coveragePanel h2,
+        .dojoHome .coveragePanel strong,
+        .dojoHome .coveragePanel a {
+          color: #f1f2ed;
+        }
+
+        .dojoHome .previewMessage {
+          background: #202521;
+          color: #e7e9e5;
+        }
+
+        .dojoHome .previewMessage > a {
+          border-color: #424a43;
+          background: transparent;
+          color: #c4d0c6;
+        }
+
+        .dojoHome .previewMessage > a:hover {
+          border-color: #718477;
+          background: #273029;
+        }
+
+
+
+        /* =====================================================
+           DOJO HOME — PREMIUM DARK OVERRIDE
+           ===================================================== */
+
+        :global(body:has(.dojoHome)) {
+          background: #090b0a !important;
+          color: #f2f3ef !important;
+        }
+
+        :global(body:has(.dojoHome) .nav) {
+          background: rgba(9, 11, 10, .96) !important;
+          border-bottom: 1px solid #1e221f !important;
+          box-shadow: 0 1px 0 rgba(255,255,255,.015);
+        }
+
+        :global(body:has(.dojoHome) .nav a) {
+          color: #969d97 !important;
+        }
+
+        :global(body:has(.dojoHome) .nav a:hover) {
+          color: #f3f4f0 !important;
+        }
+
+        :global(body:has(.dojoHome) .nav .brand) {
+          color: #f3f4f0 !important;
+        }
+
+        .dojoHome {
+          --dojo-ink: #f2f3ef;
+          --dojo-muted: #8d958f;
+          --dojo-green: #426b50;
+          --dojo-green-dark: #74a181;
+          --dojo-line: #262b27;
+          --dojo-paper: #090b0a;
+          --dojo-surface: #101310;
+
+          color: #f2f3ef !important;
+        }
+
+        .dojoHome .dojoHomeMark span {
+          background: #4c7659 !important;
+        }
+
+        .dojoHome .page-kicker,
+        .dojoHome .dashboardLabel {
+          color: #747e77 !important;
+        }
+
+        .dojoHome .homeHeader h1 {
+          color: #f4f5f1 !important;
+          text-shadow: 0 1px 18px rgba(255,255,255,.025);
+        }
+
+        .dojoHome .homeHeader p {
+          color: #929a94 !important;
+        }
+
+        .dojoHome .homeStartGrid {
+          border-color: #292e2a !important;
+        }
+
+        .dojoHome .homeStartCard {
+          border-color: #292e2a !important;
+          background: #090b0a !important;
+          color: #f1f2ee !important;
+        }
+
+        .dojoHome .homeStartCard h2 {
+          color: #eceee9 !important;
+        }
+
+        .dojoHome .homeStartCard p {
+          color: #818983 !important;
+        }
+
+        .dojoHome .homeStartArrow {
+          color: #5f876b !important;
+        }
+
+        .dojoHome .homeStartCard:hover {
+          background: #111612 !important;
+          color: #fff !important;
+          box-shadow:
+            inset 0 1px rgba(255,255,255,.025),
+            inset 0 -1px rgba(255,255,255,.01) !important;
+        }
+
+        .dojoHome .homeStartCard:hover h2 {
+          color: #fff !important;
+        }
+
+        .dojoHome .homeStartCard:hover p {
+          color: #9ba49d !important;
+        }
+
+        .dojoHome .homeStartCard:hover .dashboardLabel {
+          color: #7e9183 !important;
+        }
+
+        .dojoHome .homeStartCard:hover .homeStartArrow {
+          color: #8eae96 !important;
+        }
+
+        .dojoHome .myWorkPanel,
+        .dojoHome .continuePanel,
+        .dojoHome .dashboardRecent,
+        .dojoHome .coveragePanel {
+          border: 1px solid #282d29 !important;
+          border-radius: 4px !important;
+          background:
+            linear-gradient(
+              180deg,
+              rgba(255,255,255,.018),
+              rgba(255,255,255,.004)
+            ),
+            #101310 !important;
+          color: #eef0eb !important;
+          box-shadow:
+            0 18px 45px rgba(0,0,0,.16),
+            inset 0 1px rgba(255,255,255,.025) !important;
+        }
+
+        .dojoHome .continuePanel {
+          border-left: 2px solid #52765c !important;
+        }
+
+        .dojoHome .dashboardPanelHeading h2,
+        .dojoHome .dashboardRecentRow strong,
+        .dojoHome .coveragePanel h2,
+        .dojoHome .coveragePanel strong {
+          color: #f0f2ed !important;
+        }
+
+        .dojoHome .dashboardPanelHeading p,
+        .dojoHome .dashboardRecentRow p,
+        .dojoHome .dashboardRecentRow span,
+        .dojoHome .dashboardRecentList,
+        .dojoHome .coveragePanel p,
+        .dojoHome .coveragePanel span,
+        .dojoHome .coveragePanel small {
+          color: #858e87 !important;
+        }
+
+        .dojoHome .dashboardPrimaryAction,
+        .dojoHome .coveragePanel a {
+          color: #b9c9bd !important;
+        }
+
+        .dojoHome .dashboardPrimaryAction {
+          border-color: #4b6251 !important;
+          background: transparent !important;
+        }
+
+        .dojoHome .dashboardPrimaryAction:hover {
+          color: #f0f3ef !important;
+          border-color: #819b87 !important;
+        }
+
+        .dojoHome .continueProgress {
+          background: #252a26 !important;
+        }
+
+        .dojoHome .continueProgress > div {
+          background: #62806a !important;
+        }
+
+        .dojoHome .dashboardFilters button {
+          border: 1px solid #303631 !important;
+          background: #141815 !important;
+          color: #858d87 !important;
+        }
+
+        .dojoHome .dashboardFilters button:hover {
+          border-color: #4b534d !important;
+          background: #181d19 !important;
+          color: #d5d9d5 !important;
+        }
+
+        .dojoHome .dashboardFilters button.active {
+          border-color: #445c4b !important;
+          background: #26382c !important;
+          color: #e9eeea !important;
+        }
+
+        .dojoHome .dashboardRecentRow {
+          border-color: #252a26 !important;
+        }
+
+        .dojoHome .dashboardRecentRow:hover {
+          background: #151a16 !important;
+        }
+
+        .dojoHome .coveragePanel {
+          border-color: #2d3830 !important;
+        }
+
+        .dojoHome .coveragePanel .dashboardLabel {
+          color: #728779 !important;
+        }
+
+        .dojoHome .coveragePanel a {
+          color: #c1cec4 !important;
+        }
+
+        .dojoHome .coveragePanel :global(.coverage-snapshot) {
+          color: #dfe4df !important;
+          background: transparent !important;
+        }
+
+        .dojoHome .coveragePanel :global(.coverage-snapshot *) {
+          border-color: #29302b;
+        }
+
+        .dojoHome .coveragePanel :global(.coverageTrack),
+        .dojoHome .coveragePanel :global(.coverage-track) {
+          background: #262d28 !important;
+        }
+
+        .dojoHome .coveragePanel :global(.coverageFill),
+        .dojoHome .coveragePanel :global(.coverage-fill) {
+          background: #698472 !important;
+        }
+
+        .dojoHome .previewMessage {
+          border: 1px solid #292f2a !important;
+          background: #131713 !important;
+          color: #e5e8e4 !important;
+        }
+
+        .dojoHome .previewMessage p,
+        .dojoHome .previewMessage span {
+          color: #858d87 !important;
+        }
+
+        .dojoHome .previewMessage > a {
+          border-color: #39423b !important;
+          border-radius: 3px !important;
+          background: #171c18 !important;
+          color: #c5d0c7 !important;
+        }
+
+        .dojoHome .previewMessage > a:hover {
+          border-color: #617367 !important;
+          background: #1b211c !important;
+        }
+
+
+
+        /* =====================================================
+           DOJO HOME — LIGHT / DARK / BLUE DIRECTION
+           ===================================================== */
+
+        :global(body:has(.dojoHome)) {
+          background: #f4f3ee !important;
+          color: #101312 !important;
+        }
+
+        /*
+         * Keep the DOJO/navigation strip dark.
+         * The product itself opens into the lighter workspace.
+         */
+        :global(body:has(.dojoHome) .nav) {
+          background: #0d100f !important;
+          border-bottom: 1px solid #202522 !important;
+          box-shadow: none !important;
+        }
+
+        :global(body:has(.dojoHome) .nav .brand) {
+          color: #ffffff !important;
+        }
+
+        :global(body:has(.dojoHome) .nav a) {
+          color: #aeb4b0 !important;
+        }
+
+        :global(body:has(.dojoHome) .nav a:hover) {
+          color: #ffffff !important;
+        }
+
+        .dojoHome {
+          --dojo-ink: #111412;
+          --dojo-muted: #666d68;
+          --dojo-blue: #315cf5;
+          --dojo-blue-dark: #2349cf;
+          --dojo-line: #d7d8d2;
+          --dojo-paper: #f4f3ee;
+          --dojo-surface: #faf9f5;
+
+          color: var(--dojo-ink) !important;
+        }
+
+        .dojoHome .dojoHomeMark span {
+          background: var(--dojo-blue) !important;
+        }
+
+        .dojoHome .page-kicker,
+        .dojoHome .dashboardLabel {
+          color: #747a76 !important;
+        }
+
+        .dojoHome .homeHeader h1 {
+          color: #101312 !important;
+          text-shadow: none !important;
+        }
+
+        .dojoHome .homeHeader p {
+          color: #656c67 !important;
+        }
+
+        /*
+         * Practice routes: flat, architectural, no edtech cards.
+         */
+        .dojoHome .homeStartGrid {
+          border-color: #cfd1cb !important;
+        }
+
+        .dojoHome .homeStartCard {
+          border-color: #cfd1cb !important;
+          background: transparent !important;
+          color: #101312 !important;
+          box-shadow: none !important;
+        }
+
+        .dojoHome .homeStartCard h2 {
+          color: #111412 !important;
+        }
+
+        .dojoHome .homeStartCard p {
+          color: #666d68 !important;
+        }
+
+        .dojoHome .homeStartArrow {
+          color: var(--dojo-blue) !important;
+        }
+
+        .dojoHome .homeStartCard:hover {
+          border-color: #cfd1cb !important;
+          background: #ffffff !important;
+          color: #101312 !important;
+          transform: none !important;
+          box-shadow: inset 0 -3px var(--dojo-blue) !important;
+        }
+
+        .dojoHome .homeStartCard:hover h2 {
+          color: #101312 !important;
+        }
+
+        .dojoHome .homeStartCard:hover p {
+          color: #5e6560 !important;
+        }
+
+        .dojoHome .homeStartCard:hover .dashboardLabel {
+          color: #737a75 !important;
+        }
+
+        .dojoHome .homeStartCard:hover .homeStartArrow {
+          color: var(--dojo-blue) !important;
+        }
+
+        /*
+         * Work surfaces stay light and precise.
+         */
+        .dojoHome .myWorkPanel,
+        .dojoHome .continuePanel,
+        .dojoHome .dashboardRecent,
+        .dojoHome .coveragePanel {
+          border: 1px solid #d4d5cf !important;
+          border-radius: 4px !important;
+          background: #faf9f5 !important;
+          color: #111412 !important;
+          box-shadow: none !important;
+        }
+
+        .dojoHome .myWorkPanel.continuePanel {
+          border: 1px solid #c8cac5 !important;
+          border-left: 1px solid #c8cac5 !important;
+          background: #e4e5e1 !important;
+          color: #111412 !important;
+        }
+
+        .dojoHome .dashboardPanelHeading h2,
+        .dojoHome .dashboardRecentRow strong,
+        .dojoHome .coveragePanel h2,
+        .dojoHome .coveragePanel strong {
+          color: #111412 !important;
+        }
+
+        .dojoHome .dashboardPanelHeading p,
+        .dojoHome .dashboardRecentRow p,
+        .dojoHome .dashboardRecentRow span,
+        .dojoHome .dashboardRecentList,
+        .dojoHome .coveragePanel p,
+        .dojoHome .coveragePanel span,
+        .dojoHome .coveragePanel small {
+          color: #737a75 !important;
+        }
+
+        /*
+         * Blue is an action colour, not decoration.
+         */
+        .dojoHome .dashboardPrimaryAction,
+        .dojoHome .coveragePanel a {
+          color: var(--dojo-blue-dark) !important;
+        }
+
+        .dojoHome .dashboardPrimaryAction {
+          border: 0 !important;
+          border-bottom: 1px solid #8da4f8 !important;
+          border-radius: 0 !important;
+          background: transparent !important;
+        }
+
+        .dojoHome .dashboardPrimaryAction:hover {
+          color: var(--dojo-blue) !important;
+          border-color: var(--dojo-blue) !important;
+          background: transparent !important;
+        }
+
+        .dojoHome .continueProgress {
+          background: #e1e2dc !important;
+        }
+
+        .dojoHome .continueProgress > div {
+          background: var(--dojo-blue) !important;
+        }
+
+        .dojoHome .dashboardFilters button {
+          border: 1px solid #d0d2cc !important;
+          border-radius: 3px !important;
+          background: transparent !important;
+          color: #646b66 !important;
+        }
+
+        .dojoHome .dashboardFilters button:hover {
+          border-color: #9ca19c !important;
+          background: #fff !important;
+          color: #171a18 !important;
+        }
+
+        .dojoHome .dashboardFilters button.active {
+          border-color: var(--dojo-blue) !important;
+          background: var(--dojo-blue) !important;
+          color: #fff !important;
+        }
+
+        .dojoHome .dashboardRecentRow {
+          border-color: #dedfd9 !important;
+        }
+
+        .dojoHome .dashboardRecentRow:hover {
+          background: #f2f2ed !important;
+        }
+
+        /*
+         * Coverage is no longer the giant green block.
+         */
+        .dojoHome .coveragePanel {
+          background: #111412 !important;
+          border-color: #111412 !important;
+          color: #f4f5f1 !important;
+        }
+
+        .dojoHome .coveragePanel h2,
+        .dojoHome .coveragePanel strong {
+          color: #f4f5f1 !important;
+        }
+
+        .dojoHome .coveragePanel .dashboardLabel {
+          color: #8e9690 !important;
+        }
+
+        .dojoHome .coveragePanel p,
+        .dojoHome .coveragePanel span,
+        .dojoHome .coveragePanel small {
+          color: #929a94 !important;
+        }
+
+        .dojoHome .coveragePanel a {
+          color: #ffffff !important;
+        }
+
+        .dojoHome .coveragePanel :global(.coverage-snapshot) {
+          background: transparent !important;
+          color: #e9ece8 !important;
+        }
+
+        .dojoHome .coveragePanel :global(.coverage-snapshot *) {
+          border-color: #303632;
+        }
+
+        .dojoHome .coveragePanel :global(.coverageTrack),
+        .dojoHome .coveragePanel :global(.coverage-track) {
+          background: #303632 !important;
+        }
+
+        .dojoHome .coveragePanel :global(.coverageFill),
+        .dojoHome .coveragePanel :global(.coverage-fill) {
+          background: #4d73f6 !important;
+        }
+
+        .dojoHome .previewMessage {
+          border: 1px solid #d6d7d1 !important;
+          border-radius: 3px !important;
+          background: #ffffff !important;
+          color: #151816 !important;
+        }
+
+        .dojoHome .previewMessage p,
+        .dojoHome .previewMessage span {
+          color: #747b76 !important;
+        }
+
+        .dojoHome .previewMessage > a {
+          border-color: var(--dojo-blue) !important;
+          border-radius: 3px !important;
+          background: var(--dojo-blue) !important;
+          color: #fff !important;
+        }
+
+        .dojoHome .previewMessage > a:hover {
+          border-color: var(--dojo-blue-dark) !important;
+          background: var(--dojo-blue-dark) !important;
+        }
+
+
+
+        /* =====================================================
+           DOJO HOME — PRIMARY ACTION BUTTONS
+           ===================================================== */
+
+        .dojoHome .homeStartGrid {
+          display: grid !important;
+          grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+          gap: 14px !important;
+
+          margin-bottom: 34px !important;
+
+          border-top: 0 !important;
+          border-bottom: 0 !important;
+        }
+
+        .dojoHome .homeStartCard {
+          min-height: 190px !important;
+
+          display: flex !important;
+          flex-direction: column !important;
+
+          padding: 24px !important;
+
+          border: 1px solid #d4d5cf !important;
+          border-radius: 14px !important;
+
+          background: #faf9f5 !important;
+          color: #111412 !important;
+
+          box-shadow:
+            0 1px 0 rgba(16,19,18,.025) !important;
+
+          transition:
+            border-color 140ms ease,
+            background 140ms ease,
+            box-shadow 140ms ease,
+            transform 140ms ease !important;
+        }
+
+        .dojoHome .homeStartCard .dashboardLabel {
+          display: none !important;
+        }
+
+        .dojoHome .homeStartCard h2 {
+          margin: 0 0 10px !important;
+
+          color: #111412 !important;
+
+          font-size: 23px !important;
+          font-weight: 650 !important;
+          line-height: 1.08 !important;
+          letter-spacing: -.035em !important;
+        }
+
+        .dojoHome .homeStartCard p {
+          max-width: 220px !important;
+          margin: 0 !important;
+
+          color: #6a716c !important;
+
+          font-size: 13px !important;
+          line-height: 1.5 !important;
+        }
+
+        .dojoHome .homeStartArrow {
+          width: 34px !important;
+          height: 34px !important;
+
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+
+          margin-top: auto !important;
+
+          border: 1px solid #d0d2cc !important;
+          border-radius: 9px !important;
+
+          background: #f4f3ee !important;
+          color: #315cf5 !important;
+
+          font-size: 17px !important;
+          line-height: 1 !important;
+
+          transition:
+            background 140ms ease,
+            border-color 140ms ease,
+            color 140ms ease,
+            transform 140ms ease !important;
+        }
+
+        .dojoHome .homeStartCard:hover {
+          border-color: #315cf5 !important;
+          background: #ffffff !important;
+
+          transform: translateY(-2px) !important;
+
+          box-shadow:
+            0 10px 28px rgba(20,31,60,.075) !important;
+        }
+
+        .dojoHome .homeStartCard:hover h2 {
+          color: #111412 !important;
+        }
+
+        .dojoHome .homeStartCard:hover p {
+          color: #5e6560 !important;
+        }
+
+        .dojoHome .homeStartCard:hover .homeStartArrow {
+          border-color: #315cf5 !important;
+          background: #315cf5 !important;
+          color: #ffffff !important;
+
+          transform: translateX(2px) !important;
+        }
+
+        @media (max-width: 900px) {
+          .dojoHome .homeStartGrid {
+            grid-template-columns:
+              repeat(2, minmax(0, 1fr)) !important;
+          }
+
+          .dojoHome .homeStartCard {
+            border: 1px solid #d4d5cf !important;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .dojoHome .homeStartGrid {
+            grid-template-columns: 1fr !important;
+          }
+
+          .dojoHome .homeStartCard {
+            min-height: 155px !important;
+            border: 1px solid #d4d5cf !important;
+          }
+        }
+
+
+
+        /* DOJO HOME — FULL PRIMARY BUTTONS */
+
+        .dojoHome .homeStartGrid {
+          display: grid !important;
+          grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+          gap: 16px !important;
+          margin-bottom: 34px !important;
+          border: 0 !important;
+        }
+
+        .dojoHome .homeStartCard {
+          min-height: 180px !important;
+          width: 100% !important;
+
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: flex-start !important;
+
+          padding: 24px !important;
+
+          border: 1px solid #d2d4ce !important;
+          border-radius: 16px !important;
+
+          background: #faf9f5 !important;
+          color: #111412 !important;
+
+          box-shadow:
+            0 2px 8px rgba(17,20,18,.025) !important;
+
+          transition:
+            border-color 140ms ease,
+            background 140ms ease,
+            box-shadow 140ms ease,
+            transform 140ms ease !important;
+        }
+
+        .dojoHome .homeStartCard .dashboardLabel {
+          display: block !important;
+          margin-bottom: 18px !important;
+          color: #777e79 !important;
+        }
+
+        .dojoHome .homeStartCard h2 {
+          margin: 0 0 10px !important;
+          color: #111412 !important;
+          font-size: 23px !important;
+          font-weight: 650 !important;
+          line-height: 1.1 !important;
+          letter-spacing: -.035em !important;
+        }
+
+        .dojoHome .homeStartCard p {
+          max-width: 220px !important;
+          margin: 0 !important;
+          color: #686f6a !important;
+          font-size: 13px !important;
+          line-height: 1.5 !important;
+        }
+
+        .dojoHome .homeStartArrow {
+          display: none !important;
+        }
+
+        .dojoHome .homeStartCard:hover {
+          border-color: #315cf5 !important;
+          background: #ffffff !important;
+          color: #111412 !important;
+          transform: translateY(-2px) !important;
+
+          box-shadow:
+            0 10px 26px rgba(27,43,90,.08) !important;
+        }
+
+        .dojoHome .homeStartCard:hover h2 {
+          color: #111412 !important;
+        }
+
+        .dojoHome .homeStartCard:hover p {
+          color: #5f6661 !important;
+        }
+
+        .dojoHome .homeStartCard:hover .dashboardLabel {
+          color: #315cf5 !important;
+        }
+
+        @media (max-width: 900px) {
+          .dojoHome .homeStartGrid {
+            grid-template-columns:
+              repeat(2, minmax(0, 1fr)) !important;
+          }
+
+          .dojoHome .homeStartCard {
+            border: 1px solid #d2d4ce !important;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .dojoHome .homeStartGrid {
+            grid-template-columns: 1fr !important;
+          }
+
+          .dojoHome .homeStartCard {
+            min-height: 155px !important;
+            border: 1px solid #d2d4ce !important;
+          }
+        }
+
+
+        /* =====================================================
+           DOJO HOME — DESIGN V1
+           Homepage-only visual prototype
+           ===================================================== */
+
+        .dojoHome {
+          --dojo-ink: #182019;
+          --dojo-muted: #687069;
+          --dojo-green: #294b38;
+          --dojo-green-dark: #1d3829;
+          --dojo-line: #d7d8d0;
+          --dojo-paper: #f2f1eb;
+          --dojo-surface: #f8f7f2;
+
+          max-width: 1180px;
+          padding-top: 72px;
+          color: var(--dojo-ink);
+        }
+
+        .dojoHome .homeHeader {
+          position: relative;
+          max-width: 760px;
+          margin: 0 0 54px;
+          padding-left: 30px;
+        }
+
+        .dojoHome .dojoHomeMark {
+          position: absolute;
+          left: 0;
+          top: 2px;
+          width: 10px;
+          height: 68px;
+          display: flex;
+          gap: 2px;
+        }
+
+        .dojoHome .dojoHomeMark span {
+          display: block;
+          width: 2px;
+          height: 100%;
+          background: var(--dojo-green);
+        }
+
+        .dojoHome .dojoHomeMark span:nth-child(2) {
+          height: 78%;
+        }
+
+        .dojoHome .dojoHomeMark span:nth-child(3) {
+          height: 48%;
+        }
+
+        .dojoHome .page-kicker,
+        .dojoHome .dashboardLabel {
+          color: #6f766f;
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: .15em;
+          text-transform: uppercase;
+        }
+
+        .dojoHome .homeHeader h1 {
+          max-width: 700px;
+          margin: 11px 0 12px;
+          font-size: clamp(46px, 6vw, 72px);
+          font-weight: 650;
+          line-height: .98;
+          letter-spacing: -.055em;
+        }
+
+        .dojoHome .homeHeader p {
+          max-width: 520px;
+          color: var(--dojo-muted);
+          font-size: 16px;
+          line-height: 1.55;
+        }
+
+        .dojoHome .homeStartGrid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 0;
+          margin: 0 0 34px;
+          border-top: 1px solid var(--dojo-line);
+          border-bottom: 1px solid var(--dojo-line);
+        }
+
+        .dojoHome .homeStartCard {
+          min-height: 218px;
+          padding: 25px 24px 21px;
+          border: 0;
+          border-right: 1px solid var(--dojo-line);
+          border-radius: 0;
+          background: transparent;
+          box-shadow: none;
+          transition:
+            background 120ms ease,
+            color 120ms ease;
+        }
+
+        .dojoHome .homeStartCard:last-child {
+          border-right: 0;
+        }
+
+        .dojoHome .homeStartCard:hover {
+          border-color: var(--dojo-line);
+          background: var(--dojo-green);
+          color: #f8f7f2;
+          transform: none;
+          box-shadow: none;
+        }
+
+        .dojoHome .homeStartCard h2 {
+          margin: 12px 0 9px;
+          font-size: 24px;
+          font-weight: 650;
+          letter-spacing: -.035em;
+        }
+
+        .dojoHome .homeStartCard p {
+          max-width: 220px;
+          margin: 0;
+          color: var(--dojo-muted);
+          font-size: 13px;
+          line-height: 1.55;
+        }
+
+        .dojoHome .homeStartCard:hover p,
+        .dojoHome .homeStartCard:hover .dashboardLabel {
+          color: rgba(255,255,255,.66);
+        }
+
+        .dojoHome .homeStartArrow {
+          margin-top: auto;
+          color: var(--dojo-green);
+          font-size: 19px;
+        }
+
+        .dojoHome .homeStartCard:hover .homeStartArrow {
+          color: white;
+          transform: translateX(4px);
+        }
+
+        .dojoHome .myWorkPanel {
+          border: 1px solid var(--dojo-line);
+          border-radius: 3px;
+          background: rgba(248,247,242,.7);
+          box-shadow: none;
+        }
+
+        .dojoHome .continuePanel {
+          position: relative;
+          margin: 0 0 18px;
+          padding: 23px 25px 20px 29px;
+          border-left: 3px solid var(--dojo-green);
+        }
+
+        .dojoHome .dashboardPanelHeading h2 {
+          margin-top: 7px;
+          color: var(--dojo-ink);
+          font-weight: 650;
+          letter-spacing: -.025em;
+        }
+
+        .dojoHome .dashboardPanelHeading p {
+          color: var(--dojo-muted);
+        }
+
+        .dojoHome .dashboardPrimaryAction {
+          padding: 9px 0;
+          border: 0;
+          border-bottom: 1px solid var(--dojo-green);
+          border-radius: 0;
+          background: transparent;
+          color: var(--dojo-green-dark);
+          font-size: 12px;
+          font-weight: 800;
+        }
+
+        .dojoHome .dashboardPrimaryAction:hover {
+          border-color: var(--dojo-green-dark);
+          background: transparent;
+        }
+
+        .dojoHome .continueProgress {
+          height: 3px;
+          border-radius: 0;
+          background: #dedfd8;
+        }
+
+        .dojoHome .continueProgress > div {
+          border-radius: 0;
+          background: var(--dojo-green);
+        }
+
+        .dojoHome .myWorkDashboardGrid {
+          gap: 18px;
+        }
+
+        .dojoHome .dashboardRecent,
+        .dojoHome .coveragePanel {
+          border-radius: 3px;
+        }
+
+        .dojoHome .dashboardFilters button {
+          border-radius: 3px;
+          border-color: var(--dojo-line);
+          background: transparent;
+          color: #5e665f;
+        }
+
+        .dojoHome .dashboardFilters button.active {
+          border-color: var(--dojo-green);
+          background: var(--dojo-green);
+          color: white;
+        }
+
+        .dojoHome .dashboardRecentRow {
+          border-color: #e1e1db;
+        }
+
+        .dojoHome .dashboardRecentRow:hover {
+          background: #f3f3ed;
+        }
+
+        .dojoHome .dashboardRecentRow strong {
+          color: var(--dojo-ink);
+        }
+
+        .dojoHome .coveragePanel {
+          background: var(--dojo-green);
+          color: #f8f7f2;
+          border-color: var(--dojo-green);
+        }
+
+        .dojoHome .coveragePanel .dashboardLabel,
+        .dojoHome .coveragePanel p,
+        .dojoHome .coveragePanel span,
+        .dojoHome .coveragePanel small {
+          color: rgba(255,255,255,.62);
+        }
+
+        .dojoHome .coveragePanel h2,
+        .dojoHome .coveragePanel strong {
+          color: #fff;
+        }
+
+        .dojoHome .coveragePanel a {
+          color: #fff;
+        }
+
+        .dojoHome .coveragePanel :global(.coverageTrack),
+        .dojoHome .coveragePanel :global(.coverage-track) {
+          background: rgba(255,255,255,.14);
+        }
+
+        .dojoHome .coveragePanel :global(.coverageFill),
+        .dojoHome .coveragePanel :global(.coverage-fill) {
+          background: #e6eadf;
+        }
+
+        .dojoHome .previewMessage {
+          border-radius: 2px;
+          background: #f4f3ed;
+        }
+
+        .dojoHome .previewMessage > a {
+          border-radius: 2px;
+          border-color: var(--dojo-line);
+          background: transparent;
+          color: var(--dojo-green-dark);
+        }
+
+        .dojoHome .previewMessage > a:hover {
+          border-color: var(--dojo-green);
+          background: #ebece5;
+        }
+
+        @media (max-width: 900px) {
+          .dojoHome {
+            padding-top: 48px;
+          }
+
+          .dojoHome .homeStartGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .dojoHome .homeStartCard {
+            border-bottom: 1px solid var(--dojo-line);
+          }
+
+          .dojoHome .homeStartCard:nth-child(2) {
+            border-right: 0;
+          }
+
+          .dojoHome .homeStartCard:nth-last-child(-n + 2) {
+            border-bottom: 0;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .dojoHome {
+            padding-top: 38px;
+          }
+
+          .dojoHome .homeHeader {
+            margin-bottom: 38px;
+            padding-left: 22px;
+          }
+
+          .dojoHome .dojoHomeMark {
+            height: 55px;
+          }
+
+          .dojoHome .homeHeader h1 {
+            font-size: 44px;
+          }
+
+          .dojoHome .homeStartGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .dojoHome .homeStartCard {
+            min-height: 150px;
+            border-right: 0;
+            border-bottom: 1px solid var(--dojo-line) !important;
+          }
+
+          .dojoHome .homeStartCard:last-child {
+            border-bottom: 0 !important;
+          }
+        }
+
+
+        /* =====================================================
+           DOJO HOME — DEFINITIVE ACTION CARDS
+           ===================================================== */
+
+        .dojoHome .homeStartGrid {
+          display: grid !important;
+          grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+          gap: 16px !important;
+
+          margin: 0 0 30px !important;
+          padding: 0 !important;
+
+          border: 0 !important;
+        }
+
+        .dojoHome .homeStartCard {
+          box-sizing: border-box !important;
+
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: flex-start !important;
+
+          width: 100% !important;
+          min-width: 0 !important;
+          min-height: 180px !important;
+
+          padding: 24px !important;
+
+          border: 1px solid #d1d3cd !important;
+          border-radius: 16px !important;
+
+          background: #faf9f5 !important;
+          color: #101312 !important;
+
+          text-decoration: none !important;
+          overflow: hidden !important;
+
+          box-shadow: none !important;
+
+          transition:
+            transform 140ms ease,
+            border-color 140ms ease,
+            background 140ms ease,
+            box-shadow 140ms ease !important;
+        }
+
+        .dojoHome .homeStartCard > div {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: flex-start !important;
+
+          width: 100% !important;
+          height: 100% !important;
+        }
+
+        .dojoHome .homeStartCard .dashboardLabel {
+          display: block !important;
+
+          margin: 0 0 24px !important;
+
+          color: #747a76 !important;
+
+          font-size: 10px !important;
+          font-weight: 800 !important;
+          line-height: 1 !important;
+          letter-spacing: .12em !important;
+          text-transform: uppercase !important;
+        }
+
+        .dojoHome .homeStartCard h2 {
+          margin: 0 0 10px !important;
+
+          color: #101312 !important;
+
+          font-size: 22px !important;
+          font-weight: 650 !important;
+          line-height: 1.1 !important;
+          letter-spacing: -.025em !important;
+        }
+
+        .dojoHome .homeStartCard p {
+          max-width: 230px !important;
+          margin: 0 !important;
+
+          color: #656c67 !important;
+
+          font-size: 13px !important;
+          line-height: 1.45 !important;
+        }
+
+        .dojoHome .homeStartCard:hover {
+          border-color: #315cf5 !important;
+          background: #ffffff !important;
+
+          transform: translateY(-2px) !important;
+
+          box-shadow:
+            0 10px 28px rgba(28, 42, 82, .08) !important;
+        }
+
+        .dojoHome .homeStartCard:hover .dashboardLabel {
+          color: #315cf5 !important;
+        }
+
+        .dojoHome .homeStartCard:hover h2 {
+          color: #101312 !important;
+        }
+
+        .dojoHome .homeStartCard:hover p {
+          color: #5e6560 !important;
+        }
+
+        @media (max-width: 900px) {
+          .dojoHome .homeStartGrid {
+            grid-template-columns:
+              repeat(2, minmax(0, 1fr)) !important;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .dojoHome .homeStartGrid {
+            grid-template-columns: 1fr !important;
+          }
+
+          .dojoHome .homeStartCard {
+            min-height: 150px !important;
+          }
+        }
+
 
       `}</style>
     </main>
