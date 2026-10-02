@@ -385,20 +385,29 @@ function AskDojo({q}:{q:any}) {
 function SolutionTools({
   q,
   tab,
-  setTab
+  setTab,
+  openByDefault = true
 }:{
   q:any;
   tab:Tab;
-  setTab:(x:Tab)=>void
+  setTab:(x:Tab)=>void;
+  openByDefault?:boolean;
 }) {
-  const [shown,setShown]=useState<Tab>('answer');
+  const [shown,setShown]=useState<Tab|null>(
+    openByDefault ? 'answer' : null
+  );
 
   useEffect(()=>{
     setTab('answer');
-    setShown('answer');
-  },[q.id,setTab]);
+    setShown(openByDefault ? 'answer' : null);
+  },[q.id,setTab,openByDefault]);
 
   const choose=(x:Tab)=>{
+    if (!openByDefault && shown===x) {
+      setShown(null);
+      return;
+    }
+
     setTab(x);
     setShown(x);
   };
@@ -883,6 +892,19 @@ export default function PracticeSession({
               ({q.marks})
             </div>
           </div>
+
+          {mode==='practice' &&
+           stage==='doing' &&
+           options.solutions && (
+            <div className="practiceSolutionTools">
+              <SolutionTools
+                q={q}
+                tab={tab}
+                setTab={setTab}
+                openByDefault={false}
+              />
+            </div>
+          )}
 
           {stage !== 'doing' && (
             <div

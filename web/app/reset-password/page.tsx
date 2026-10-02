@@ -47,7 +47,7 @@ export default function ResetPasswordPage(){
   }
 
   return (
-    <main className="page">
+    <main className="page authPage">
       <h1>Choose a new password</h1>
 
       {!complete && (

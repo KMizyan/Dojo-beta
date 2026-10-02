@@ -51,7 +51,7 @@ export default function LoginPage(){
     `/signup?next=${encodeURIComponent(next)}`;
 
   return (
-    <main className="page">
+    <main className="page authPage">
       <h1>Log in to DOJO</h1>
 
       <form onSubmit={signIn}>

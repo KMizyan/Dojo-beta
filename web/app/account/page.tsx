@@ -305,14 +305,14 @@ export default function AccountPage(){
 
   if(loading){
     return (
-      <main className="page">
+      <main className="page accountPage">
         <p>Loading account...</p>
       </main>
     );
   }
 
   return (
-    <main className="page">
+    <main className="page accountPage">
       <h1>Account</h1>
 
       <section

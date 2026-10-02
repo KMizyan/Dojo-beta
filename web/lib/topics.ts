@@ -1,7 +1,7 @@
 export const TOPIC_AREAS = {
   pure: {
     label: 'Pure',
-    description: 'Core pure mathematics topics.',
+    description: 'Pure topics.',
     topics: [
       ['proof','Proof'],['algebra-functions','Algebra & Functions'],['coordinate-geometry','Coordinate Geometry'],
       ['sequences-series','Sequences & Series'],['trigonometry','Trigonometry'],['exponentials-logarithms','Exponentials & Logarithms'],
@@ -10,7 +10,7 @@ export const TOPIC_AREAS = {
   },
   statistics: {
     label: 'Statistics',
-    description: 'Statistics and probability topics.',
+    description: 'Statistics topics.',
     topics: [
       ['sampling','Sampling'],['data-presentation-interpretation','Data Presentation & Interpretation'],['probability','Probability'],
       ['statistical-distributions','Statistical Distributions'],['hypothesis-testing','Hypothesis Testing']
@@ -18,7 +18,7 @@ export const TOPIC_AREAS = {
   },
   mechanics: {
     label: 'Mechanics',
-    description: 'Applied mechanics topics.',
+    description: 'Mechanics topics.',
     topics: [
       ['quantities-units','Quantities & Units in Mechanics'],['kinematics','Kinematics'],['forces-newtons-laws',"Forces & Newton's Laws"],['moments','Moments']
     ]

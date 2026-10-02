@@ -382,7 +382,7 @@ async function loadWork() {
               </div>
 
               <p>
-                A place devoted to disciplined practice, learning and improvement.
+                A place devoted to developing a skill through repeated practise, experimentation and feedback
               </p>
             </div>
           </>
@@ -430,7 +430,7 @@ async function loadWork() {
             <h2>Question Sets</h2>
 
             <p>
-              Build a mixed set around the topics you want to work on.
+              Build mixed topic sets and customise your workspace
             </p>
           </div>
 
@@ -442,13 +442,14 @@ async function loadWork() {
         >
           <div>
             <span className="dashboardLabel">
-              Assessment
+              Assess
             </span>
 
             <h2>Papers</h2>
 
             <p>
-              Work through past papers or DOJO-generated papers.
+              Create unseen papers or complete past papers in{' '}
+              <span className="examModeText">exam mode</span>
             </p>
           </div>
 
@@ -460,16 +461,13 @@ async function loadWork() {
         >
           <div>
             <span className="dashboardLabel">
-              Review
+              Patch
             </span>
 
             <h2>Review</h2>
 
             <p>
-              Review past results and revisit questions.
-              {!loading && flaggedCount > 0
-                ? ` ${flaggedCount} flagged.`
-                : ''}
+              Retry flagged questions, practise similar ones and review completed papers
             </p>
           </div>
 

@@ -567,7 +567,7 @@ export default function PapersPage() {
             onClick={() => setSection('generate')}
           >
             <span className="paper-entry-title">
-              Generate a Paper
+              DOJO Papers
             </span>
 
             <span className="paper-entry-copy">
@@ -593,7 +593,9 @@ export default function PapersPage() {
           <div className="section-heading-row">
             <div>
               <h2>Past Papers</h2>
-              <p>Choose the paper you want to access.</p>
+              <p>
+          Create a full exam style paper from DOJO questions or complete a past paper
+        </p>
             </div>
           </div>
 
@@ -974,7 +976,7 @@ export default function PapersPage() {
             Back to Papers
           </button>
 
-          <h2>Generate a Paper</h2>
+          <h2>DOJO Papers</h2>
 
           <p>
             Choose the basics and start. More control is available
@@ -1273,7 +1275,7 @@ export default function PapersPage() {
             ) : savedPapers.length === 0 ? (
               <p className="empty-history">
                 {paperHistoryView === 'archived'
-                  ? 'No archived papers.'
+                  ? 'Papers hidden from view in Latest will appear here.'
                   : 'Generated papers and results will appear here as you use DOJO.'}
               </p>
             ) : (

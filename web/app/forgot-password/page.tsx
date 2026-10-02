@@ -36,7 +36,7 @@ export default function ForgotPasswordPage(){
   }
 
   return (
-    <main className="page">
+    <main className="page authPage">
       <h1>Reset your password</h1>
 
       <p>

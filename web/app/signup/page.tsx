@@ -81,7 +81,7 @@ export default function SignupPage(){
     `/login?next=${encodeURIComponent(next)}`;
 
   return (
-    <main className="page">
+    <main className="page authPage">
       <h1>Create your DOJO account</h1>
 
       {!created && (

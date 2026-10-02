@@ -3759,3 +3759,392 @@ body .main.practiceShell .dojoChat.collapsed form {
 
 /* END DOJO QUESTION SETS — BLUE INTERACTION STATES */
 
+
+
+/* DOJO EXAM MODE TEXT */
+.dojoHome .examModeText {
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 0.92em;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+/* END DOJO EXAM MODE TEXT */
+\n
+/* DOJO TOPIC AREA — REMOVE CATEGORY LABELS */
+.topicAreaPage .topicCard .topicLabel,
+.topicAreaPage .topicCard .topicCategory,
+.topicAreaPage .topicCard .topicEyebrow,
+.topicAreaPage .topicCard .sectionLabel {
+  display: none !important;
+}
+/* END DOJO TOPIC AREA — REMOVE CATEGORY LABELS */
+
+/* DOJO ACCOUNT + AUTH DESIGN */
+
+/* ---------- AUTH ---------- */
+
+.authPage {
+  width: min(480px, calc(100% - 40px));
+  min-height: 0;
+  margin: 72px auto 100px;
+  padding: 38px 40px 36px;
+  background: #fff;
+  border: 1px solid #deded8;
+  border-radius: 16px;
+}
+
+.authPage h1 {
+  margin: 0 0 26px;
+  font-size: 32px;
+  line-height: 1.08;
+  letter-spacing: -1.15px;
+}
+
+.authPage > p {
+  margin: 18px 0 0;
+  color: #696966;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.authPage > h1 + p {
+  margin-top: -12px;
+  margin-bottom: 26px;
+}
+
+.authPage form {
+  display: grid;
+  gap: 19px;
+  margin: 0;
+}
+
+.authPage form > div {
+  display: grid;
+  gap: 7px;
+}
+
+.authPage label {
+  font-size: 13px;
+  font-weight: 750;
+  color: #272725;
+}
+
+.authPage label + br {
+  display: none;
+}
+
+.authPage input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #d3d3ce;
+  border-radius: 9px;
+  background: #fff;
+  color: #161616;
+  font: inherit;
+  font-size: 15px;
+  outline: none;
+  transition:
+    border-color .12s ease,
+    box-shadow .12s ease;
+}
+
+.authPage input:focus {
+  border-color: #2948b8;
+  box-shadow: 0 0 0 3px rgba(41,72,184,.10);
+}
+
+.authPage form > button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 3px;
+  border: 1px solid #111;
+  border-radius: 9px;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.authPage form > button:hover:not(:disabled) {
+  background: #242424;
+}
+
+.authPage form > button:disabled {
+  opacity: .48;
+  cursor: default;
+}
+
+.authPage a {
+  color: #30302e;
+  font-weight: 700;
+}
+
+.authPage a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.authPage form + p {
+  padding: 11px 13px;
+  border-radius: 8px;
+  background: #f2f2ef;
+  color: #454542;
+  font-size: 13px;
+}
+
+
+/* ---------- ACCOUNT ---------- */
+
+.accountPage {
+  width: min(920px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 62px 0 100px;
+}
+
+.accountPage > h1 {
+  margin: 0 0 34px;
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -1.6px;
+}
+
+.accountPage > section {
+  margin-top: 16px !important;
+  padding: 28px 30px !important;
+  border: 1px solid #dfdfda !important;
+  border-radius: 14px !important;
+  background: #fff;
+}
+
+.accountPage > section:first-of-type {
+  margin-top: 0 !important;
+}
+
+.accountPage > section > h2 {
+  margin: 0 0 24px !important;
+  font-size: 21px;
+  letter-spacing: -.45px;
+}
+
+.accountPage > section p {
+  color: #5f5f5b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.accountPage > section p strong {
+  color: #171717;
+}
+
+/* Account details */
+.accountPage > section:first-of-type > p:first-of-type {
+  margin: 0;
+  padding: 15px 0;
+  border-top: 1px solid #ededE9;
+  border-bottom: 1px solid #ededE9;
+  color: #222;
+}
+
+.accountPage > section:first-of-type > p:first-of-type strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #777773;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.accountPage > section:first-of-type > p:nth-of-type(2) {
+  display: inline-block;
+  margin: 20px 14px 0 0;
+}
+
+.accountPage > section:first-of-type > p:nth-of-type(2) a {
+  display: inline-flex;
+  min-height: 39px;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid #d5d5d0;
+  border-radius: 8px;
+  background: #fff;
+  color: #222;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.accountPage > section:first-of-type > button {
+  min-height: 39px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: #777;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.accountPage > section:first-of-type > button:hover {
+  color: #111;
+}
+
+
+/* Membership */
+.accountPage > section:nth-of-type(2) {
+  position: relative;
+}
+
+.accountPage > section:nth-of-type(2) > h2 {
+  padding-right: 100px;
+}
+
+.accountPage > section:nth-of-type(2) > p:first-of-type strong {
+  display: inline-flex;
+  align-items: center;
+  min-height: 25px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #eef1fb;
+  color: #2948b8;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+
+.accountPage > section:nth-of-type(2) > p {
+  max-width: 660px;
+}
+
+.accountPage > section:nth-of-type(2) > button,
+.accountPage > section:nth-of-type(2) > div button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid #d2d2cd;
+  border-radius: 8px;
+  background: #fff;
+  color: #171717;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.accountPage > section:nth-of-type(2) > button:hover:not(:disabled),
+.accountPage > section:nth-of-type(2) > div button:hover:not(:disabled) {
+  border-color: #999;
+}
+
+.accountPage > section:nth-of-type(2) button:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+/* Trial membership offer nested card */
+.accountPage > section:nth-of-type(2) > div {
+  border-color: #dfdfda !important;
+  border-radius: 12px !important;
+  background: #fafaf8;
+}
+
+.accountPage > section:nth-of-type(2) > div h3 {
+  font-size: 19px;
+  letter-spacing: -.3px;
+}
+
+.accountPage > section:nth-of-type(2) > div input {
+  min-width: 230px;
+  min-height: 42px;
+  padding: 0 13px;
+  border: 1px solid #d2d2cd;
+  border-radius: 8px;
+  background: #fff;
+  color: #111;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.accountPage > section:nth-of-type(2) > div input:focus {
+  border-color: #2948b8;
+  box-shadow: 0 0 0 3px rgba(41,72,184,.09);
+}
+
+/* Join DOJO is the primary action inside the trial offer */
+.accountPage > section:nth-of-type(2) > div > button {
+  border-color: #2948b8;
+  background: #2948b8;
+  color: #fff;
+}
+
+.accountPage > section:nth-of-type(2) > div > button:hover:not(:disabled) {
+  border-color: #203b9b;
+  background: #203b9b;
+}
+
+
+/* Data & privacy should be quieter */
+.accountPage > section:last-of-type {
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
+}
+
+.accountPage > section:last-of-type > h2 {
+  margin-bottom: 8px !important;
+  font-size: 17px;
+}
+
+.accountPage > section:last-of-type > p {
+  max-width: 720px;
+  margin-top: 0;
+}
+
+
+/* Loading state */
+.accountPage > p:first-child {
+  margin-top: 20px;
+  color: #777;
+}
+
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 640px) {
+  .authPage {
+    width: calc(100% - 28px);
+    margin: 34px auto 70px;
+    padding: 30px 24px;
+    border-radius: 13px;
+  }
+
+  .authPage h1 {
+    font-size: 29px;
+  }
+
+  .accountPage {
+    width: calc(100% - 32px);
+    padding: 40px 0 70px;
+  }
+
+  .accountPage > h1 {
+    margin-bottom: 26px;
+    font-size: 36px;
+  }
+
+  .accountPage > section {
+    padding: 23px 21px !important;
+  }
+
+  .accountPage > section:nth-of-type(2) > div input {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* END DOJO ACCOUNT + AUTH DESIGN */

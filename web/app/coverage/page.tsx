@@ -297,18 +297,44 @@ export default function CoveragePage(){
           Question architecture
         </h1>
 
-        <p
-          style={{
-            margin:0,
-            maxWidth:'720px',
-            lineHeight:1.6,
-            opacity:.7
-          }}
-        >
-          Every architecture currently present in your
-          question bank, and which ones you have actually
-          marked.
-        </p>
+        <div
+            style={{
+              maxWidth:'760px',
+              marginTop:'14px'
+            }}
+          >
+            <p
+              style={{
+                margin:0,
+                lineHeight:1.6,
+                opacity:.7
+              }}
+            >
+              <strong
+                style={{
+                  color:'var(--foreground)',
+                  opacity:1,
+                  fontWeight:600
+                }}
+              >
+                Exam questions follow recurring structures.
+              </strong>
+              {' '}
+              We&apos;ve broken the current exam question bank
+              down into distinct question types, or architectures.
+            </p>
+
+            <p
+              style={{
+                margin:'10px 0 0',
+                lineHeight:1.5,
+                fontWeight:600
+              }}
+            >
+              See exactly which types you&apos;ve covered — and
+              which you&apos;re yet to see.
+            </p>
+          </div>
       </section>
 
       {error && (
@@ -409,7 +435,7 @@ export default function CoveragePage(){
               : `${pct(
                   encounteredArchitectures,
                   totalArchitectures
-                )}% encountered`}
+                )}% covered`}
           </span>
         </div>
 
@@ -431,7 +457,7 @@ export default function CoveragePage(){
           <span>
             {loggedIn===false
               ? 'Your marked attempts appear here'
-              : 'only actually marked questions count'}
+              : 'questions you’ve marked'}
           </span>
         </div>
       </section>
