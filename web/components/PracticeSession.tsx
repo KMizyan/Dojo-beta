@@ -183,6 +183,7 @@ export function FullSolutionView({q}:{q:any}) {
 
 function AskDojo({q}:{q:any}) {
   const [messages,setMessages]=useState<Message[]>([]);
+  const responseStartRef=useRef<HTMLDivElement|null>(null);
   const [input,setInput]=useState('');
   const [busy,setBusy]=useState(false);
   const [error,setError]=useState('');
@@ -194,6 +195,29 @@ function AskDojo({q}:{q:any}) {
     setInput('');
     setError('');
   },[q.id]);
+
+  useEffect(()=>{
+    if(!busy) return;
+
+    const frame=requestAnimationFrame(()=>{
+      const response=responseStartRef.current;
+      const messages=response?.closest('.dojoMessages') as HTMLElement | null;
+
+      if(response && messages){
+        const targetTop=
+          response.offsetTop -
+          messages.offsetTop -
+          16;
+
+        messages.scrollTo({
+          top:Math.max(0,targetTop),
+          behavior:'smooth'
+        });
+      }
+    });
+
+    return ()=>cancelAnimationFrame(frame);
+  },[busy]);
 
   async function send(e:FormEvent) {
     e.preventDefault();
@@ -331,7 +355,7 @@ function AskDojo({q}:{q:any}) {
           ))}
 
           {busy && (
-            <div className="dojoMessage assistant">
+            <div ref={responseStartRef} className="dojoMessage assistant">
               Thinking…
             </div>
           )}
