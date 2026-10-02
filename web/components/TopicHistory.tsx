@@ -106,6 +106,9 @@ export default function TopicHistory({
   const [view,setView]=
     useState<View>('in_progress');
 
+  const [expanded,setExpanded]=
+    useState(false);
+
   const [work,setWork]=
     useState<WorkItem[]>([]);
 
@@ -311,22 +314,39 @@ export default function TopicHistory({
       topic.trim().toLowerCase();
 
     const persisted=work
-      .filter(item=>
-        !isPaper(item) &&
-        (item.work_questions ?? [])
-          .some(row=>
-            (
-              questionTopics[
-                String(
-                  row.question_id
-                )
-              ] ?? ''
-            )
-              .trim()
-              .toLowerCase() ===
-              wanted
+      .filter(item=>{
+        if(item.kind !== 'question_set'){
+          return false;
+        }
+
+        if(
+          item.title
+            .trim()
+            .toLowerCase() === 'similar practice'
+        ){
+          return false;
+        }
+
+        const itemQuestions=
+          item.work_questions ?? [];
+
+        if(itemQuestions.length === 0){
+          return false;
+        }
+
+        return itemQuestions.some(row=>
+          (
+            questionTopics[
+              String(
+                row.question_id
+              )
+            ] ?? ''
           )
-      )
+            .trim()
+            .toLowerCase() ===
+            wanted
+        );
+      })
       .map<Row>(item=>({
         key:`work-${item.id}`,
         title:
@@ -474,6 +494,14 @@ export default function TopicHistory({
         : item.status === 'marked'
     );
 
+  const displayed=
+    expanded
+      ? visible
+      : visible.slice(0,2);
+
+  const hiddenCount=
+    Math.max(0,visible.length-2);
+
   return (
     <section className="historyStrip">
       <div style={{width:'100%'}}>
@@ -510,11 +538,12 @@ export default function TopicHistory({
                   ? 'active'
                   : ''
               }
-              onClick={()=>
+              onClick={()=>{
                 setView(
                   'in_progress'
-                )
-              }
+                );
+                setExpanded(false);
+              }}
             >
               In progress
             </button>
@@ -526,9 +555,10 @@ export default function TopicHistory({
                   ? 'active'
                   : ''
               }
-              onClick={()=>
-                setView('latest')
-              }
+              onClick={()=>{
+                setView('latest');
+                setExpanded(false);
+              }}
             >
               Latest
             </button>
@@ -561,7 +591,7 @@ export default function TopicHistory({
           )}
 
           {!loading &&
-            visible.map(item=>(
+            displayed.map(item=>(
             <Link
               key={item.key}
               href={item.href}
@@ -628,6 +658,30 @@ export default function TopicHistory({
               </div>
             </Link>
           ))}
+
+          {!loading && visible.length > 2 && (
+            <button
+              type="button"
+              onClick={()=>setExpanded(value=>!value)}
+              style={{
+                width:'100%',
+                border:0,
+                borderTop:'1px solid rgba(0,0,0,.08)',
+                background:'transparent',
+                padding:'12px 0 2px',
+                color:'#5f6661',
+                font:'inherit',
+                fontSize:'12px',
+                fontWeight:700,
+                textAlign:'left',
+                cursor:'pointer'
+              }}
+            >
+              {expanded
+                ? 'Show less ↑'
+                : `Show more (${hiddenCount}) ↓`}
+            </button>
+          )}
         </div>
       </div>
     </section>

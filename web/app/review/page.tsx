@@ -301,7 +301,11 @@ export default function ReviewPage() {
               </span>
             </>
           ) : (
-            <span className="paperStatus">
+            <span className={`paperStatus ${
+                item.status === 'marking' || item.status === 'completed'
+                  ? 'paperStatusPending'
+                  : 'paperStatusProgress'
+              }`}>
               {item.status === 'marking'
                 ? 'Marking'
                 : item.status === 'completed'

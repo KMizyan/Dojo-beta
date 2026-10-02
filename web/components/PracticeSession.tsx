@@ -204,7 +204,7 @@ function AskDojo({q}:{q:any}) {
     const questionKey=String(q.id ?? '');
 
     if(!questionKey){
-      setError('Ask DOJO could not identify this question.');
+      setError('SENSEI could not identify this question.');
       return;
     }
 
@@ -231,7 +231,7 @@ function AskDojo({q}:{q:any}) {
       if(!entitlement.allowed){
         setMembershipRequired(true);
         throw new Error(
-          `You've used Ask DOJO on ${entitlement.allowance} unique questions during your trial. You can still continue Ask DOJO conversations on questions you've already used it on.`
+          `You've used SENSEI on ${entitlement.allowance} unique questions during your trial. You can still continue SENSEI conversations on questions you've already used it on.`
         );
       }
 
@@ -255,13 +255,13 @@ function AskDojo({q}:{q:any}) {
 
       if(!r.ok) {
         throw new Error(
-          data.detail || 'Ask DOJO could not respond.'
+          data.detail || 'SENSEI could not respond.'
         );
       }
 
       if(!data.text){
         throw new Error(
-          'Ask DOJO returned an empty response.'
+          'SENSEI returned an empty response.'
         );
       }
 
@@ -294,14 +294,14 @@ function AskDojo({q}:{q:any}) {
           );
         }catch(releaseError){
           console.error(
-            'Could not release Ask DOJO trial use:',
+            'Could not release SENSEI trial use:',
             releaseError
           );
         }
       }
 
       setError(
-        err.message || 'Ask DOJO could not respond.'
+        err.message || 'SENSEI could not respond.'
       );
     } finally {
       setBusy(false);
@@ -309,13 +309,13 @@ function AskDojo({q}:{q:any}) {
   }
 
   return (
-    <div className="dojoChat open">
+    <div className={`dojoChat ${messages.length || busy || error ? 'open' : 'collapsed'}`}>
       <div className="dojoChatBody">
 
         <div className="dojoMessages">
 
           {!messages.length && (
-            <p>
+            <p className="senseiIntro">
               Ask for a hint, an explanation of a step,
               or anything about this question.
             </p>
@@ -352,10 +352,23 @@ function AskDojo({q}:{q:any}) {
         </div>
 
         <form onSubmit={send}>
-          <input
+          <textarea
+            className="senseiComposerInput"
+            rows={1}
             value={input}
-            onChange={e=>setInput(e.target.value)}
-            placeholder="Ask DOJO about this question…"
+            onChange={e=>{
+              setInput(e.target.value);
+              e.currentTarget.style.height = 'auto';
+              e.currentTarget.style.height =
+                `${Math.min(e.currentTarget.scrollHeight, 144)}px`;
+            }}
+            onKeyDown={e=>{
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                e.currentTarget.form?.requestSubmit();
+              }
+            }}
+            placeholder="Ask SENSEI about this question…"
           />
 
           <button
@@ -378,13 +391,16 @@ function SolutionTools({
   tab:Tab;
   setTab:(x:Tab)=>void
 }) {
-  const [shown,setShown]=useState<Tab|null>(null);
+  const [shown,setShown]=useState<Tab>('answer');
 
-  useEffect(()=>setShown(null),[q.id]);
+  useEffect(()=>{
+    setTab('answer');
+    setShown('answer');
+  },[q.id,setTab]);
 
   const choose=(x:Tab)=>{
     setTab(x);
-    setShown(shown===x?null:x);
+    setShown(x);
   };
 
   return (
@@ -742,8 +758,8 @@ export default function PracticeSession({
 
         <p>
           {loggedIn
-            ? 'Your question-by-question marks have been saved to My Work.'
-            : 'This result is not saved. Create a free account to save future work and build your DOJO history.'}
+            ? 'Your question-by-question marks have been saved.'
+            : 'This result is not saved. Create a Trial account to save future work and build your DOJO history.'}
         </p>
 
         <div className="resultQuestions">
@@ -769,21 +785,7 @@ export default function PracticeSession({
             Practise again
           </Link>
 
-          {loggedIn===false ? (
-            <Link
-              className="secondarySessionButton"
-              href="/signup?next=%2Fmy-work"
-            >
-              Create free account
-            </Link>
-          ) : (
-            <Link
-              className="secondarySessionButton"
-              href="/my-work"
-            >
-              Go to My Work
-            </Link>
-          )}
+
         </div>
       </section>
     );
@@ -881,15 +883,6 @@ export default function PracticeSession({
               ({q.marks})
             </div>
           </div>
-
-          {options.solutions &&
-            (mode==='practice'||stage==='marking') && (
-              <SolutionTools
-                q={q}
-                tab={tab}
-                setTab={setTab}
-              />
-            )}
 
           {stage !== 'doing' && (
             <div
@@ -1013,34 +1006,46 @@ export default function PracticeSession({
           )}
         </div>
 
-        {(options.askDojo || loggedIn===false) && mode==='practice' && (
-          <aside className="dojoColumn">
-            <div className="dojoColumnHeading">
-              <b>Ask DOJO</b>
-              <span>Question {index+1}</span>
-            </div>
-
-            {loggedIn===false ? (
-              <div
-                style={{
-                  padding:'20px',
-                  border:'1px solid #ddd',
-                  borderRadius:'8px',
-                  background:'#fff'
-                }}
-              >
-                <b>Get help with this question</b>
-                <p style={{margin:'8px 0 14px',color:'#666'}}>
-                  Ask DOJO for hints, explanations and help with individual steps.
-                </p>
-                <Link href="/signup" style={{fontWeight:700}}>
-                  Create free account →
-                </Link>
-              </div>
-            ) : options.askDojo ? (
-              <AskDojo q={q}/>
-            ) : null}
+        {stage==='marking' && options.solutions ? (
+          <aside className="markingReferenceColumn">
+            <SolutionTools
+              q={q}
+              tab={tab}
+              setTab={setTab}
+            />
           </aside>
+        ) : (
+          (options.askDojo || loggedIn===false) &&
+          mode==='practice' &&
+          stage==='doing' && (
+            <aside className="dojoColumn">
+              <div className="dojoColumnHeading">
+                <b>SENSEI</b>
+                <span>Question {index+1}</span>
+              </div>
+
+              {loggedIn===false ? (
+                <div
+                  style={{
+                    padding:'20px',
+                    border:'1px solid #ddd',
+                    borderRadius:'8px',
+                    background:'#fff'
+                  }}
+                >
+                  <b>Get help with this question</b>
+                  <p style={{margin:'8px 0 14px',color:'#666'}}>
+                    Ask SENSEI for hints, explanations and help with individual steps.
+                  </p>
+                  <Link href="/signup" style={{fontWeight:700}}>
+                    Create free account →
+                  </Link>
+                </div>
+              ) : options.askDojo ? (
+                <AskDojo q={q}/>
+              ) : null}
+            </aside>
+          )
         )}
       </div>
 

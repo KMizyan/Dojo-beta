@@ -939,8 +939,10 @@ export default function ResumeWork({workId,startMarking=false}:Props) {
           mode={mode}
           questions={questions}
           options={{
-            askDojo:mode === 'practice',
-            solutions:mode === 'practice',
+            // Exam restrictions apply while sitting the paper, not while
+            // marking it. Marking needs the full checking workspace.
+            askDojo:shouldStartMarking || mode === 'practice',
+            solutions:shouldStartMarking || mode === 'practice',
             timer:false,
             freeNav:true
           }}

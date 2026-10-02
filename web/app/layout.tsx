@@ -29,7 +29,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
             <Link href="/topics">Topics</Link>
             <Link href="/papers">Papers</Link>
-            <Link href="/my-work">My Work</Link>
+            
             <AuthNav />
           </nav>
 

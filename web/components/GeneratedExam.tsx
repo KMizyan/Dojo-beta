@@ -232,6 +232,40 @@ export default function GeneratedExam({
       </div>
     </div>}
 
+    {finished&&
+      <div className="examFinishedFixed">
+        <div className="examFinishedFixedInner">
+          <div className="examFinishedFixedCopy">
+            <b>Paper finished</b>
+            <span>
+              {saveError
+                ? saveError
+                : 'Save for marking later, or mark it now.'}
+            </span>
+          </div>
+
+          <div className="examFinishedFixedActions">
+            <button
+              type="button"
+              disabled={saving}
+              onClick={()=>saveFinishedPaper(false)}
+            >
+              {saving ? 'Saving...' : 'Save for later'}
+            </button>
+
+            <button
+              className="examFinishedFixedPrimary"
+              type="button"
+              disabled={saving}
+              onClick={()=>saveFinishedPaper(true)}
+            >
+              Mark now
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
     <article className={`continuousPaper ${paused?'paperIsPaused':''}`}>
       <header className="paperMiniHeader"><span>DOJO</span><span>{paper.level} Mathematics - {title}</span></header>
       {paper.questions.map((q:any,i:number)=><ExamQuestion q={q} index={i} key={q.id||i}/>)}

@@ -1389,23 +1389,23 @@ async function loadWork() {
           align-items: baseline;
           justify-content: center;
           padding: 8px 9px;
-          border: 1px solid #cbd6ce;
+          border: 1px solid #9fbea8;
           border-radius: 9px;
-          background: #f1f5f2;
-          color: #294534 !important;
+          background: #d8e5dc;
+          color: #203b29 !important;
           margin: 0 !important;
         }
 
         .scoreBadge strong {
           display: inline;
           overflow: visible;
-          color: #294534;
+          color: #203b29;
           font-size: 14px;
           line-height: 1;
         }
 
         .scoreBadge small {
-          color: #607067;
+          color: #486e55;
           font-size: 10px;
           font-weight: 700;
         }
@@ -1427,9 +1427,9 @@ async function loadWork() {
 
         .status-marking,
         .status-completed {
-          border-color: #d8d0bc;
-          background: #faf7ef;
-          color: #6f6040 !important;
+          border-color: #d8bd72;
+          background: #f3e5b8;
+          color: #594613 !important;
         }
 
         .recentArrow {

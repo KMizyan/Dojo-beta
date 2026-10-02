@@ -13,7 +13,7 @@ export default async function TopicPage({params}:{params:Promise<{area:string,to
   const banks=await getTopics();
   const bankName=matchBankTopic(info.label,banks);
   const groups=focusGroups(topic);
-  return <main className="main">
+  return <main className="main dojoTopics topicDetail">
     <div className="crumb"><Link href="/topics">Topics</Link><span>›</span><Link href={`/topics/${area}`}>{info.areaLabel}</Link><span>›</span>{info.label}</div>
     <h1 className="pageTitle">{info.label}</h1>
     <TopicHistory topic={info.label}/>

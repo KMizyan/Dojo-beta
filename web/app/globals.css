@@ -108,7 +108,6 @@
 
 
 /* Practice session */
-.practiceShell { max-width: 980px; }
 .practiceSession { padding-top: 18px; }
 .sessionHeader { display:flex; justify-content:space-between; align-items:flex-end; gap:30px; margin:18px 0 28px; }
 .sessionHeader h1 { margin:4px 0 0; font-size:34px; }
@@ -2204,3 +2203,1559 @@ body .dojoHome .dojoDefinition > p {
   line-height: 1.45 !important;
 }
 /* END DOJO DEFINITION — COMPACT BRAND MESSAGE */
+
+/* =========================================================
+   DOJO TOPICS DESIGN
+   ========================================================= */
+
+/*
+ * Topics should feel like part of the same place as the
+ * homepage: quiet, direct and built around starting work.
+ */
+
+body:has(.dojoTopics) {
+  background: #f5f4ef;
+}
+
+.dojoTopics {
+  max-width: 1120px;
+  padding-top: 72px;
+}
+
+/* ---------- Shared page heading ---------- */
+
+.dojoTopics .eyebrow {
+  color: #626964;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .14em;
+}
+
+.dojoTopics .pageTitle {
+  margin: 12px 0 0;
+  color: #0d100e;
+  font-size: clamp(38px, 4vw, 48px);
+  line-height: 1;
+  font-weight: 720;
+  letter-spacing: -.045em;
+}
+
+.dojoTopics .lede {
+  margin: 24px 0 0;
+  color: #555d57;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+/* ---------- Breadcrumb ---------- */
+
+.dojoTopics .crumb {
+  margin: 0 0 30px;
+  gap: 10px;
+  color: #8a908c;
+  font-size: 13px;
+}
+
+.dojoTopics .crumb a {
+  color: #4f5651;
+}
+
+.dojoTopics .crumb a:hover {
+  color: #315cf5;
+}
+
+/* ---------- Topics landing: three disciplines ---------- */
+
+.dojoTopics .areaGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 38px;
+}
+
+.dojoTopics .areaCard {
+  position: relative;
+  min-height: 196px;
+  padding: 26px 26px 24px;
+  overflow: hidden;
+  background: #faf9f5;
+  border: 1px solid #d4d5d0;
+  border-radius: 15px;
+  box-shadow: none;
+  transition:
+    border-color .15s ease,
+    background .15s ease,
+    transform .15s ease;
+}
+
+.dojoTopics .areaCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 26px;
+  width: 30px;
+  height: 3px;
+  background: #315cf5;
+}
+
+.dojoTopics .areaCard h2 {
+  margin: 7px 0 10px;
+  color: #101311;
+  font-size: 25px;
+  line-height: 1.1;
+  font-weight: 680;
+  letter-spacing: -.035em;
+}
+
+.dojoTopics .areaCard p {
+  max-width: 240px;
+  margin: 0;
+  color: #656c67;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.dojoTopics .areaCard span {
+  position: absolute;
+  left: 26px;
+  bottom: 23px;
+  margin: 0;
+  color: #171a18;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dojoTopics .areaCard:hover {
+  transform: translateY(-2px);
+  background: #fff;
+  border-color: #315cf5;
+  box-shadow: 0 8px 24px rgba(15, 18, 16, .05);
+}
+
+/* ---------- Area page: individual topics ---------- */
+
+.dojoTopics .topicList {
+  max-width: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 36px;
+}
+
+.dojoTopics .topicLink {
+  min-height: 64px;
+  padding: 0 20px;
+  background: #faf9f5;
+  border: 1px solid #d8d9d4;
+  border-radius: 11px;
+  color: #151816;
+  font-size: 15px;
+  font-weight: 650;
+  box-shadow: none;
+}
+
+.dojoTopics .topicLink b {
+  color: #777e79;
+  font-size: 17px;
+  font-weight: 500;
+  transition:
+    color .15s ease,
+    transform .15s ease;
+}
+
+.dojoTopics .topicLink:hover {
+  transform: none;
+  background: #fff;
+  border-color: #315cf5;
+  box-shadow: none;
+}
+
+.dojoTopics .topicLink:hover b {
+  color: #315cf5;
+  transform: translateX(2px);
+}
+
+/* ---------- Individual topic ---------- */
+
+.dojoTopics.topicDetail .pageTitle {
+  margin-bottom: 34px;
+}
+
+/*
+ * History is supporting information, so visually subordinate
+ * it to the actual practice action.
+ */
+.dojoTopics .historyStrip {
+  margin-top: 0;
+  padding: 18px 20px;
+  background: #ebece8;
+  border: 1px solid #d3d5d0;
+  border-radius: 11px;
+  box-shadow: none;
+}
+
+.dojoTopics .historyStrip p {
+  color: #68706a;
+}
+
+/* Main practice action */
+.dojoTopics .practiceBox {
+  margin-top: 16px;
+  padding: 25px 26px;
+  background: #101411;
+  color: #fff;
+  border: 1px solid #101411;
+  border-radius: 14px;
+}
+
+.dojoTopics .practiceBox .eyebrow {
+  color: #9ca7a0;
+}
+
+.dojoTopics .practiceTop h2 {
+  margin: 8px 0 7px;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 650;
+  letter-spacing: -.035em;
+}
+
+.dojoTopics .practiceTop p {
+  color: #b9bfbb;
+  font-size: 13px;
+}
+
+.dojoTopics .quickControls label {
+  color: #b9bfbb;
+}
+
+.dojoTopics .quickControls select {
+  color: #111412;
+  background: #fff;
+  border-color: #fff;
+  border-radius: 8px;
+}
+
+.dojoTopics .practiceBox .primary {
+  background: #315cf5;
+  color: #fff;
+  border-radius: 8px;
+}
+
+.dojoTopics .practiceBox .primary:hover:not(:disabled) {
+  background: #244ee6;
+}
+
+.dojoTopics .practiceBox .primary:disabled {
+  background: #555c57;
+  color: #c9cecb;
+}
+
+.dojoTopics .advancedToggle {
+  color: #c2c8c4;
+  font-size: 12px;
+}
+
+.dojoTopics .advPractice,
+.dojoTopics .advancedPanel {
+  border-color: #343936;
+}
+
+.dojoTopics .advPractice,
+.dojoTopics .advPractice label,
+.dojoTopics .advPractice b,
+.dojoTopics .advPractice small,
+.dojoTopics .advancedPanel,
+.dojoTopics .advancedPanel label {
+  color: #d5d9d6;
+}
+
+/* ---------- Focus practice ---------- */
+
+.dojoTopics .subSection {
+  margin-top: 54px;
+  padding-top: 0;
+}
+
+.dojoTopics .subSection .eyebrow {
+  color: #626964;
+}
+
+.dojoTopics .subSection h2 {
+  margin: 9px 0 10px;
+  color: #111412;
+  font-size: 27px;
+  font-weight: 680;
+  letter-spacing: -.035em;
+}
+
+.dojoTopics .subSection .muted {
+  max-width: 680px;
+  color: #686f6a;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.dojoTopics .subtopicGrid {
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.dojoTopics .subtopic {
+  min-height: 58px;
+  padding: 0 18px;
+  align-items: center;
+  background: #faf9f5;
+  border: 1px solid #d8d9d4;
+  border-radius: 10px;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.dojoTopics .subtopic:hover {
+  transform: none;
+  background: #fff;
+  border-color: #315cf5;
+  box-shadow: none;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 800px) {
+  .dojoTopics {
+    padding-top: 44px;
+  }
+
+  .dojoTopics .areaGrid,
+  .dojoTopics .topicList,
+  .dojoTopics .subtopicGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .dojoTopics .areaCard {
+    min-height: 175px;
+  }
+
+  .dojoTopics .practiceTop {
+    align-items: flex-start;
+  }
+}
+
+/* END DOJO TOPICS DESIGN */
+
+/* DOJO GLOBAL NAV + TOPICS CARD REFINEMENT */
+
+/* Dark PROJECT DOJO band is now part of the site-wide identity */
+body .nav {
+  background: #0d110f !important;
+  border-bottom-color: #0d110f !important;
+  color: #fff !important;
+}
+
+body .nav a,
+body .nav button {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+body .nav a:hover,
+body .nav button:hover {
+  color: #fff !important;
+}
+
+body .nav .brand,
+body .nav .brandProject,
+body .nav .brandDojo {
+  color: #fff !important;
+}
+
+body .nav .brandSubject {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+body .nav .brandSubject::before {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Topic-area cards don't need decorative blue ticks */
+body .dojoTopics .areaCard::before {
+  display: none !important;
+}
+
+/* END DOJO GLOBAL NAV + TOPICS CARD REFINEMENT */
+
+/* DOJO PRACTICE WORKSPACE — CANONICAL */
+
+/*
+  Practice intentionally uses a wider canvas than the ordinary site.
+  Question + SENSEI form one centred pair.
+*/
+body .main.practiceShell {
+  box-sizing: border-box !important;
+  width: min(1460px, calc(100vw - 96px)) !important;
+  max-width: 1460px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+body .main.practiceShell .practiceSession {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding-top: 18px;
+}
+
+/*
+  Equal working surfaces separated by a deliberate gap.
+
+  On a ~1750px screen:
+  ~702px question + 56px gap + ~702px SENSEI.
+*/
+body .main.practiceShell .questionWorkspace {
+  display: grid !important;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr) !important;
+  gap: 56px !important;
+  align-items: start !important;
+  width: 100% !important;
+  margin-top: 18px !important;
+}
+
+body .main.practiceShell .questionColumn,
+body .main.practiceShell .dojoColumn {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+/* Header and navigation use the same full working width. */
+body .main.practiceShell .sessionHeader {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 18px 0 34px !important;
+}
+
+body .main.practiceShell .sessionNav {
+  width: 100% !important;
+  padding: 30px 0 20px !important;
+}
+
+/* =========================================================
+   SENSEI
+   ========================================================= */
+
+body .main.practiceShell .dojoColumn {
+  position: sticky;
+  top: 22px;
+
+  height: min(720px, calc(100vh - 44px));
+  min-height: 560px;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  border: 1px solid #252a27;
+  border-radius: 14px;
+
+  background: #0d110f;
+  color: #f5f4ef;
+
+  box-shadow: none;
+}
+
+body .main.practiceShell .dojoColumnHeading {
+  height: 68px;
+  flex: 0 0 68px;
+
+  padding: 0 22px;
+
+  border-bottom: 1px solid #292e2b;
+  background: #0d110f;
+}
+
+body .main.practiceShell .dojoColumnHeading b {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+body .main.practiceShell .dojoColumnHeading span {
+  color: #8f9791;
+  font-size: 11px;
+}
+
+body .main.practiceShell .dojoColumn .dojoChat {
+  position: static;
+
+  width: 100%;
+  height: auto;
+  min-height: 0;
+
+  flex: 1 1 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  filter: none;
+}
+
+body .main.practiceShell .dojoColumn .dojoChatBody {
+  height: 100%;
+  min-height: 0;
+
+  flex: 1 1 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border: 0;
+  border-radius: 0;
+
+  background: #0d110f;
+}
+
+/*
+  Only the messages scroll.
+  The composer remains permanently reachable.
+*/
+body .main.practiceShell .dojoColumn .dojoMessages {
+  height: auto;
+  min-height: 0;
+
+  flex: 1 1 auto;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  padding: 24px 22px 32px;
+
+  background: #0d110f;
+
+  scrollbar-color: #424944 transparent;
+  scrollbar-width: thin;
+}
+
+body .main.practiceShell .dojoColumn .dojoMessages > p {
+  max-width: 420px;
+
+  margin: 4px 0;
+
+  color: #8f9791;
+
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+body .main.practiceShell .dojoColumn .dojoMessage {
+  max-width: 94% !important;
+
+  margin: 12px 0;
+  padding: 13px 15px;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+body .main.practiceShell .dojoColumn .dojoMessage.user {
+  margin-left: auto;
+
+  border: 1px solid #1f4f8f;
+  background: #1f4f8f;
+
+  color: #fff;
+}
+
+body .main.practiceShell .dojoColumn .dojoMessage.assistant {
+  width: fit-content;
+  max-width: 94% !important;
+
+  border: 1px solid #303632;
+  background: #171c19;
+
+  color: #f2f2ed;
+}
+
+body .main.practiceShell
+.dojoColumn
+.dojoMessage.assistant
+.katex {
+  color: #f2f2ed;
+}
+
+/*
+  Maths gets the full SENSEI width first.
+  Horizontal scrolling only appears for genuinely long expressions.
+*/
+body .main.practiceShell .dojoColumn .katex-display {
+  max-width: 100%;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  padding-bottom: 4px;
+}
+
+body .main.practiceShell .dojoColumn .dojoChatError {
+  margin: 12px 0;
+  padding: 12px 14px;
+
+  border: 1px solid #643a3a;
+  border-radius: 8px;
+
+  background: #241616;
+  color: #ffb9b9;
+}
+
+body .main.practiceShell .dojoColumn .dojoChatError a {
+  color: #fff;
+}
+
+/* Composer stays at the bottom. */
+body .main.practiceShell .dojoColumn .dojoChatBody form {
+  position: relative;
+
+  flex: 0 0 auto;
+
+  display: flex;
+  gap: 9px;
+
+  padding: 16px;
+
+  border-top: 1px solid #292e2b;
+
+  background: #111613;
+}
+
+body .main.practiceShell .dojoColumn .dojoChatBody input {
+  min-width: 0;
+  height: 48px;
+
+  flex: 1;
+
+  padding: 0 15px;
+
+  border: 1px solid #3a403c;
+  border-radius: 9px;
+  outline: none;
+
+  background: #1a201c;
+  color: #fff;
+
+  font: inherit;
+  font-size: 13px;
+}
+
+body .main.practiceShell
+.dojoColumn
+.dojoChatBody
+input::placeholder {
+  color: #858c87;
+}
+
+body .main.practiceShell
+.dojoColumn
+.dojoChatBody
+input:focus {
+  border-color: #1f4f8f;
+}
+
+body .main.practiceShell
+.dojoColumn
+.dojoChatBody
+form button {
+  min-width: 72px;
+  height: 48px;
+
+  padding: 0 18px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: #1f4f8f;
+  color: #fff;
+
+  font-weight: 800;
+  cursor: pointer;
+}
+
+body .main.practiceShell
+.dojoColumn
+.dojoChatBody
+form button:disabled {
+  background: #303632;
+  color: #777f79;
+
+  opacity: 1;
+  cursor: default;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1250px) {
+  body .main.practiceShell {
+    width: calc(100vw - 48px) !important;
+  }
+
+  body .main.practiceShell .questionWorkspace {
+    grid-template-columns:
+      minmax(0, 1.05fr)
+      minmax(420px, .95fr) !important;
+
+    gap: 32px !important;
+  }
+}
+
+@media (max-width: 950px) {
+  body .main.practiceShell {
+    width: calc(100vw - 40px) !important;
+  }
+
+  body .main.practiceShell .questionWorkspace {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  body .main.practiceShell .dojoColumn {
+    position: static;
+
+    height: 620px;
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 600px) {
+  body .main.practiceShell {
+    width: calc(100vw - 28px) !important;
+  }
+
+  body .main.practiceShell .dojoColumn {
+    height: 560px;
+    min-height: 480px;
+
+    border-radius: 10px;
+  }
+
+  body .main.practiceShell .dojoColumnHeading {
+    height: 58px;
+    flex-basis: 58px;
+
+    padding: 0 16px;
+  }
+
+  body .main.practiceShell .dojoColumn .dojoMessages {
+    padding: 18px 16px 24px;
+  }
+}
+
+/* END DOJO PRACTICE WORKSPACE — CANONICAL */
+
+
+
+/* DOJO PRACTICE QUESTION / SENSEI HIERARCHY */
+
+/*
+   The question is the primary working surface.
+   SENSEI remains substantial, but clearly secondary.
+*/
+body .main.practiceShell .questionWorkspace {
+  grid-template-columns:
+    minmax(0, 1.38fr)
+    minmax(420px, 1fr) !important;
+  gap: 48px !important;
+}
+
+/* QUESTION */
+body .main.practiceShell .questionPaper.edexcelPaper {
+  min-height: 430px !important;
+  padding: 42px 54px 48px 66px !important;
+}
+
+body .main.practiceShell .questionPaper.edexcelPaper .questionBody {
+  max-width: none !important;
+  font-size: 19px !important;
+  line-height: 1.72 !important;
+}
+
+body .main.practiceShell .questionPaper.edexcelPaper .renderText {
+  line-height: 1.72 !important;
+  margin-bottom: 18px !important;
+}
+
+body .main.practiceShell .questionPaper.edexcelPaper .displayMath {
+  font-size: 1.06em !important;
+}
+
+body .main.practiceShell .questionPaper.edexcelPaper .katex {
+  font-size: 1.1em !important;
+}
+
+body .main.practiceShell .questionPaper.edexcelPaper .paperQuestionNumber {
+  left: 25px !important;
+  top: 42px !important;
+  font-size: 18px !important;
+}
+
+body .main.practiceShell .questionPaper.edexcelPaper .paperMarks {
+  font-size: 17px !important;
+}
+
+/*
+   UNUSED SENSEI
+   Compact enough to stay secondary, but still visibly an assistant.
+*/
+body .main.practiceShell .dojoColumn:has(.dojoChat.collapsed) {
+  min-height: 0 !important;
+  height: 230px !important;
+  align-self: start !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 !important;
+  background: #0b100d !important;
+  border: 1px solid #242c27 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+body .main.practiceShell .dojoColumn:has(.dojoChat.collapsed) .dojoColumnHeading {
+  flex: 0 0 58px !important;
+  height: 58px !important;
+  min-height: 58px !important;
+  padding: 0 20px !important;
+  margin: 0 !important;
+  border-bottom: 1px solid #29312c !important;
+  background: transparent !important;
+}
+
+body .main.practiceShell .dojoColumn:has(.dojoChat.collapsed) .dojoColumnHeading b {
+  color: #fff !important;
+  font-size: 13px !important;
+  letter-spacing: .08em !important;
+}
+
+body .main.practiceShell .dojoColumn:has(.dojoChat.collapsed) .dojoColumnHeading span {
+  display: block !important;
+  color: #7f8983 !important;
+  font-size: 10px !important;
+}
+
+body .main.practiceShell .dojoChat.collapsed {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+body .main.practiceShell .dojoChat.collapsed .dojoChatBody {
+  height: 100% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+body .main.practiceShell .dojoChat.collapsed .dojoMessages {
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  padding: 18px 20px !important;
+  overflow: hidden !important;
+  background: #0d110f !important;
+}
+
+body .main.practiceShell .dojoChat.collapsed .senseiIntro {
+  max-width: 390px !important;
+  margin: 0 !important;
+  color: #8d9690 !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+body .main.practiceShell .dojoChat.collapsed form {
+  flex: 0 0 auto !important;
+  padding: 11px 14px !important;
+}
+
+/* Keep the two-column hierarchy until tablet width. */
+@media (max-width: 1250px) and (min-width: 951px) {
+  body .main.practiceShell .questionWorkspace {
+    grid-template-columns:
+      minmax(0, 1.25fr)
+      minmax(390px, .85fr) !important;
+    gap: 32px !important;
+  }
+
+  body .main.practiceShell .questionPaper.edexcelPaper .questionBody {
+    font-size: 18px !important;
+  }
+}
+
+/* Existing mobile behaviour: stack them. */
+@media (max-width: 950px) {
+  body .main.practiceShell .questionWorkspace {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+}
+
+/* END DOJO PRACTICE QUESTION / SENSEI HIERARCHY */
+
+
+/* DOJO GENERATED PAPER — FIXED FINISH CONTROL */
+.examFinishedFixed {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  z-index: 100;
+  width: min(760px, calc(100vw - 40px));
+  transform: translateX(-50%);
+  background: #0d110f;
+  color: #fff;
+  border: 1px solid #252b27;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
+}
+
+.examFinishedFixedInner {
+  min-height: 72px;
+  padding: 12px 14px 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.examFinishedFixedCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.examFinishedFixedCopy b {
+  font-size: 14px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.examFinishedFixedCopy span {
+  color: #aeb5b0;
+  font-size: 11px;
+}
+
+.examFinishedFixedActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.examFinishedFixedActions button {
+  min-height: 38px;
+  padding: 0 15px;
+  border: 1px solid #424944;
+  border-radius: 8px;
+  background: #171c19;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.examFinishedFixedActions button:hover:not(:disabled) {
+  background: #222824;
+}
+
+.examFinishedFixedActions .examFinishedFixedPrimary {
+  background: #315cf5;
+  border-color: #315cf5;
+  color: #fff;
+}
+
+.examFinishedFixedActions .examFinishedFixedPrimary:hover:not(:disabled) {
+  background: #294fd8;
+}
+
+.examFinishedFixedActions button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+@media (max-width: 650px) {
+  .examFinishedFixed {
+    top: 64px;
+    width: calc(100vw - 24px);
+  }
+
+  .examFinishedFixedInner {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .examFinishedFixedActions {
+    width: 100%;
+  }
+
+  .examFinishedFixedActions button {
+    flex: 1;
+  }
+}
+/* END DOJO GENERATED PAPER — FIXED FINISH CONTROL */
+
+
+/* DOJO MARKING REFERENCE — PLAIN PAPER STYLE */
+.markingReferenceColumn {
+  min-width: 0 !important;
+  align-self: start !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.markingReferenceColumn .solutionTools {
+  margin: 0 !important;
+  background: #fff !important;
+  border: 1px solid #d9d9d9 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  color: #111 !important;
+}
+
+.markingReferenceColumn .solutionChoices {
+  background: #fff !important;
+  color: #111 !important;
+  border-bottom: 1px solid #e2e2e2 !important;
+  border-radius: 0 !important;
+}
+
+.markingReferenceColumn .solutionChoices span {
+  color: #777 !important;
+}
+
+.markingReferenceColumn .solutionReveal {
+  background: #fff !important;
+  color: #111 !important;
+  border-radius: 0 !important;
+  min-height: 0 !important;
+}
+
+.markingReferenceColumn .solutionReveal * {
+  color: inherit;
+}
+/* END DOJO MARKING REFERENCE — PLAIN PAPER STYLE */
+
+
+/* SENSEI AUTO-GROWING COMPOSER */
+.senseiComposerInput {
+  box-sizing: border-box;
+  min-height: 40px;
+  max-height: 144px;
+  resize: none;
+  overflow-y: auto;
+
+  font: inherit;
+  line-height: 1.45;
+
+  /* Prevent textarea defaults from changing the existing design */
+  margin: 0;
+}
+
+.senseiComposerInput::-webkit-scrollbar {
+  width: 6px;
+}
+
+.senseiComposerInput::-webkit-scrollbar-thumb {
+  background: #555b57;
+  border-radius: 999px;
+}
+/* END SENSEI AUTO-GROWING COMPOSER */
+
+
+/* SENSEI TEXTAREA VISUAL FIX */
+.dojoColumn form .senseiComposerInput {
+  display: block !important;
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+
+  min-height: 40px !important;
+  max-height: 144px !important;
+
+  margin: 0 !important;
+  padding: 10px 13px !important;
+
+  background: #151b17 !important;
+  color: #f4f5f3 !important;
+
+  border: 1px solid #39413c !important;
+  border-radius: 8px !important;
+  outline: none !important;
+  box-shadow: none !important;
+
+  font: inherit !important;
+  font-size: 13px !important;
+  line-height: 19px !important;
+
+  resize: none !important;
+  overflow-y: auto !important;
+
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+.dojoColumn form .senseiComposerInput::placeholder {
+  color: #818983 !important;
+  opacity: 1 !important;
+}
+
+.dojoColumn form .senseiComposerInput:focus {
+  border-color: #59625c !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+/* END SENSEI TEXTAREA VISUAL FIX */
+
+
+/* =========================================================
+   DOJO REVIEW — HOMEPAGE VISUAL SYSTEM
+   ========================================================= */
+
+.reviewPage {
+  color: #111412;
+}
+
+/* Page heading */
+.reviewPage > h1 {
+  color: #101312;
+  font-size: clamp(38px, 4vw, 54px);
+  line-height: 1;
+  letter-spacing: -0.045em;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.reviewPage > h1 + p {
+  color: #666d68;
+  font-size: 15px;
+  line-height: 1.55;
+  margin-bottom: 34px;
+}
+
+/* Main sections */
+.reviewPage .reviewSection {
+  background: #f8f8f5;
+  border: 1px solid #d8dbd7;
+  border-radius: 8px;
+  padding: 30px 32px;
+  box-shadow: none;
+}
+
+.reviewPage .reviewSection + .reviewSection {
+  margin-top: 22px;
+}
+
+/* Section hierarchy */
+.reviewPage .sectionLabel,
+.reviewPage .groupTitle {
+  color: #315cf5;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.reviewPage .sectionHeading h2 {
+  color: #111412;
+  font-size: 25px;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  margin-top: 9px;
+  margin-bottom: 8px;
+}
+
+.reviewPage .sectionHeading p {
+  color: #656c67;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Flag count — compact, deliberate, not dashboard-y */
+.reviewPage .flagCount {
+  min-width: 76px;
+  background: #111412;
+  color: #fff;
+  border: 1px solid #111412;
+  border-radius: 7px;
+  padding: 13px 16px;
+  text-align: center;
+}
+
+.reviewPage .flagCount strong {
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.reviewPage .flagCount span {
+  color: #bfc5c1;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+
+/* Inner information rows */
+.reviewPage .flaggedSummary,
+.reviewPage .emptyState {
+  margin-top: 24px;
+  background: #fff;
+  border: 1px solid #dcdeda;
+  border-radius: 6px;
+  padding: 20px 22px;
+}
+
+.reviewPage .flaggedSummary strong,
+.reviewPage .emptyState strong {
+  color: #111412;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.reviewPage .flaggedSummary span,
+.reviewPage .emptyState p {
+  color: #69706b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Primary action */
+.reviewPage .primaryAction {
+  color: #315cf5;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.reviewPage .primaryAction:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Paper filters */
+.reviewPage .paperFilters {
+  gap: 8px;
+  margin-top: 22px;
+  margin-bottom: 24px;
+}
+
+.reviewPage .paperFilters button {
+  appearance: none;
+  background: #fff;
+  color: #343936;
+  border: 1px solid #d6d9d5;
+  border-radius: 6px;
+  padding: 8px 13px;
+  font-size: 12px;
+  font-weight: 650;
+  box-shadow: none;
+}
+
+.reviewPage .paperFilters button:hover:not(:disabled) {
+  border-color: #315cf5;
+  color: #315cf5;
+}
+
+.reviewPage .paperFilters button.active {
+  background: #315cf5;
+  color: #fff;
+  border-color: #315cf5;
+}
+
+/* Paper record */
+.reviewPage .paperRecord {
+  border-top: 1px solid #dedfdd;
+  padding-top: 22px;
+}
+
+.reviewPage .paperGroup + .paperGroup {
+  margin-top: 30px;
+}
+
+.reviewPage .yearGroup {
+  border-top: 1px solid #e2e3e1;
+}
+
+.reviewPage .yearLabel {
+  color: #111412;
+  font-weight: 700;
+}
+
+/* Mobile */
+@media (max-width: 720px) {
+  .reviewPage .reviewSection {
+    padding: 22px 20px;
+  }
+
+  .reviewPage .sectionHeading {
+    gap: 18px;
+  }
+
+  .reviewPage .flaggedSummary {
+    align-items: flex-start;
+  }
+}
+
+/* END DOJO REVIEW — HOMEPAGE VISUAL SYSTEM */
+
+
+/* DOJO REVIEW — PAPER RECORD ROWS */
+.reviewPage .paperRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px 130px 24px;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px 20px;
+  margin-top: 10px;
+  border: 1px solid #d8dad7;
+  border-radius: 10px;
+  background: #fbfbf8;
+  color: #111412;
+  text-decoration: none;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.reviewPage .paperRow:hover {
+  border-color: #315cf5;
+  background: #fff;
+}
+
+.reviewPage .paperIdentity {
+  min-width: 0;
+}
+
+.reviewPage .paperIdentity strong {
+  display: block;
+  margin: 0 0 5px;
+  color: #111412;
+  font-size: 15px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.reviewPage .paperIdentity span {
+  display: block;
+  color: #6d746f;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.reviewPage .paperDate {
+  color: #626964;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.reviewPage .paperScore {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.reviewPage .paperScore strong {
+  color: #111412;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.reviewPage .paperScore > span:not(.paperStatus) {
+  color: #626964;
+  font-size: 11px;
+}
+
+.reviewPage .paperStatus {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  border: 1px solid #d9ddd9;
+  border-radius: 7px;
+  background: #f1f2ef;
+  color: #333934;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.reviewPage .paperArrow {
+  justify-self: end;
+  color: #111412;
+  font-size: 16px;
+}
+
+.reviewPage .yearGroup {
+  padding: 14px 0 4px;
+}
+
+.reviewPage .yearLabel {
+  margin-bottom: 4px;
+}
+
+@media (max-width: 760px) {
+  .reviewPage .paperRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 16px;
+    padding: 16px;
+  }
+
+  .reviewPage .paperDate,
+  .reviewPage .paperScore {
+    grid-column: 1;
+  }
+
+  .reviewPage .paperArrow {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    align-self: center;
+  }
+}
+/* END DOJO REVIEW — PAPER RECORD ROWS */
+
+/* DOJO REVIEW COLOUR LANGUAGE */
+
+/* Flagged questions: same yellow action language as Latest */
+.reviewPage .flaggedSummary {
+  background: #fff0b8 !important;
+  border-color: #e1c15a !important;
+}
+
+.reviewPage .flaggedSummary strong {
+  color: #332a08 !important;
+}
+
+.reviewPage .flaggedSummary span,
+.reviewPage .flaggedSummary p {
+  color: #685821 !important;
+}
+
+/* Keep the action legible against the yellow panel */
+.reviewPage .flaggedSummary a {
+  color: #315cf5 !important;
+}
+
+
+/* IN PROGRESS — neutral */
+.reviewPage .paperStatusProgress {
+  display: inline-flex !important;
+  align-items: center;
+  width: fit-content;
+  padding: 7px 11px !important;
+
+  border: 1px solid #d5d9d6 !important;
+  border-radius: 8px !important;
+
+  background: #f0f2f0 !important;
+  color: #454b47 !important;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* READY TO MARK / MARKING — yellow */
+.reviewPage .paperStatusPending {
+  display: inline-flex !important;
+  align-items: center;
+  width: fit-content;
+  padding: 7px 11px !important;
+
+  border: 1px solid #dfbf55 !important;
+  border-radius: 8px !important;
+
+  background: #ffedaa !important;
+  color: #544000 !important;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* MARKED — green score block */
+.reviewPage .paperScore:has(> strong) {
+  display: inline-flex !important;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  width: fit-content;
+  min-width: 64px;
+
+  padding: 7px 11px !important;
+
+  border: 1px solid #9fc8ae !important;
+  border-radius: 8px !important;
+
+  background: #dfeee4 !important;
+}
+
+.reviewPage .paperScore:has(> strong) strong {
+  color: #173d29 !important;
+  font-weight: 750;
+}
+
+.reviewPage .paperScore:has(> strong) span {
+  color: #426750 !important;
+  font-size: 11px;
+}
+
+/* END DOJO REVIEW COLOUR LANGUAGE */
+
+/* Review questions link — neutral */
+.reviewPage .flaggedSummary a {
+  color: #303532 !important;
+}
+
+/* DOJO QUESTION SETS — BLUE INTERACTION STATES */
+
+.questionSetsV2Page .questionSetCourseGrid button.active,
+.questionSetsV2Page .questionSetTopicGrid button.active,
+.questionSetsV2Page .questionSetCountRow button.active {
+  background: #2948B8 !important;
+  border-color: #2948B8 !important;
+  color: #fff !important;
+}
+
+.questionSetsV2Page .questionSetTopicGrid button.active .questionSetCheckbox {
+  background: #2948B8 !important;
+  border-color: #2948B8 !important;
+  color: #fff !important;
+}
+
+.questionSetsV2Page .questionSetModeButton.active,
+.questionSetsV2Page .questionSetOptionButton.active,
+.questionSetsV2Page button[aria-pressed="true"] {
+  background: #2948B8 !important;
+  border-color: #2948B8 !important;
+  color: #fff !important;
+}
+
+/* END DOJO QUESTION SETS — BLUE INTERACTION STATES */
+
