@@ -564,6 +564,27 @@ export default function PracticeSession({
     Math.min(initialQuestion, Math.max(0, questions.length - 1))
   );
   const [index,setIndex]=useState(safeInitialQuestion);
+
+  useEffect(()=>{
+    if(typeof window === 'undefined' || !questions.length) return;
+
+    const url = new URL(window.location.href);
+
+    // Only lock a normal Topics practice session that does not
+    // already have an explicit question selection.
+    if(!url.searchParams.has('ids') && !url.searchParams.has('work')){
+      const ids = questions
+        .map((question:any)=>String(question?.id || question?.source_question_id || ''))
+        .filter(Boolean);
+
+      if(ids.length === questions.length){
+        url.searchParams.set('ids',ids.join(','));
+        url.searchParams.set('resumeQuestion',String(index));
+        window.history.replaceState(null,'',url.toString());
+      }
+    }
+  },[]);
+
   const [stage,setStage]=useState<'doing'|'marking'|'results'>(initialStage);
   const [tab,setTab]=useState<Tab>('answer');
   const [marks,setMarks]=useState<Record<string,number>>({});
@@ -693,6 +714,12 @@ export default function PracticeSession({
   const move=(i:number)=>{
     setIndex(i);
     setTab('answer');
+
+    if(typeof window !== 'undefined'){
+      const url = new URL(window.location.href);
+      url.searchParams.set('resumeQuestion',String(i));
+      window.history.replaceState(null,'',url.toString());
+    }
 
     if(workId){
       updateWorkProgress(workId,i)
