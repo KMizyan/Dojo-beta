@@ -1845,51 +1845,43 @@ def ask_dojo(body:AskDojoRequest):
     q=_find_dojo_question(body.question_id)
     if not q: raise HTTPException(404,'Question not found')
     context={
-        'question_id':q.get('id'),
-        'topic':q.get('topic'),
-        'areas':q.get('areas'),
-        'techniques':q.get('techniques'),
-        'family':q.get('family'),
-        'architecture':q.get('architecture'),
-        'depth':q.get('depth'),
-        'marks':q.get('marks'),
         'question':q.get('question'),
         'answer':q.get('answer'),
         'solution':q.get('solution'),
-        'topic_metadata':q.get('topic_metadata'),
-        'generative_structure':q.get('generative_structure'),
-        'emergent_structure':q.get('emergent_structure'),
     }
 
     instructions=(
-        'You are Ask DOJO, the mathematics tutor inside DOJO, an A-level mathematics practice product. '
-        'You are helping the student with exactly ONE current question. '
+        'You are SENSEI, a maths assistant inside DOJO. '
 
-        'You have been given the complete DOJO record for that question, including the question, '
-        'answer, worked solution, marks and structural/topic metadata. Use all of this information '
-        'when it is relevant to understanding what the question is testing and how it should be solved. '
+        'The student is working with an A-level maths question. '
+        'The question, answer and reviewed solution are supplied to you as background context. '
 
-        'Treat the supplied DOJO question and reviewed solution as the authoritative mathematical '
-        'context for this conversation. Do not invent a different version of the question. '
+        'Treat this information as context only. Do not refer to, apply, continue, or reveal '
+        'anything from the supplied question or solution unless the student\'s request explicitly '
+        'calls for it. '
 
-        'Respond to what the student actually asks. If they ask for a hint, give a useful next step '
-        'without unnecessarily revealing the rest of the solution. If they ask for an explanation, '
-        'explain the mathematical reasoning clearly. If they explicitly ask for the answer or full '
-        'working, you may give it. Do not force a hint-based interaction when the student has asked '
-        'for something more direct. '
+        'Respond to the student\'s message according to what they are actually asking. '
+        'If they ask a general or conceptual question, answer it generally without connecting '
+        'it back to the supplied question. '
 
-        'The student may refer naturally to things such as "part a", "that step", "why did you do that", '
-        '"what do I do next", or symbols appearing in the question. Use the supplied question context '
-        'and the conversation so far to resolve those references. '
+        'If they explicitly ask about the supplied question, use the supplied question, answer '
+        'and reviewed solution as the authoritative context. '
 
-        'Stay focused on this question and the mathematics needed to understand it. '
-        'Use language appropriate for an A-level maths student. Be concise unless more explanation '
-        'is genuinely useful or the student asks for detail. '
+        'Use the conversation so far for continuity. '
 
-        'Write mathematical notation using $...$ for inline mathematics and $$...$$ for displayed mathematics.'
+        'Write mathematical notation using $...$ for inline mathematics and $$...$$ '
+        'for displayed mathematics.'
     )
-    items=[{'role':'user','content':'Current DOJO question context:\n'+json.dumps(context,ensure_ascii=False)}]
-    items += [{'role':m.role,'content':m.content} for m in body.messages if m.role in ('user','assistant') and m.content.strip()]
+    instructions += (
+        '\n\nBACKGROUND CONTEXT — supplied by DOJO, not by the student:\n'
+        + json.dumps(context,ensure_ascii=False)
+    )
+
+    items=[
+        {'role':m.role,'content':m.content}
+        for m in body.messages
+        if m.role in ('user','assistant') and m.content.strip()
+    ]
     payload={
         'model':os.getenv('DOJO_OPENAI_MODEL','gpt-5.6-luna'),'instructions':instructions,'input':items,
         'reasoning':{'effort':'low'},'text':{'verbosity':'low'},'max_output_tokens':700,'store':False,
@@ -1907,7 +1899,7 @@ def ask_dojo(body:AskDojoRequest):
             for c in item.get('content',[]):
                 if c.get('type')=='output_text' and c.get('text'): pieces.append(str(c['text']))
     if not pieces: raise HTTPException(502,'Ask DOJO returned no text.')
-    return {'text':'\n'.join(pieces).strip()}
+    return {'text':'\n'.join(pieces).strip(),'sensei_version':'minimal-context-v1'}
 
 # --- Generated papers -------------------------------------------------------
 PURE_PHASES=(
