@@ -1869,6 +1869,10 @@ def ask_dojo(body:AskDojoRequest):
 
         'Use the conversation so far for continuity. '
 
+        'When using mathematical notation from the supplied context, interpret the intended '
+        'mathematics and write it using clean, standard LaTeX rather than copying malformed, '
+        'corrupted, or presentation-specific source notation. '
+
         'Write mathematical notation using $...$ for inline mathematics and $$...$$ '
         'for displayed mathematics.'
     )

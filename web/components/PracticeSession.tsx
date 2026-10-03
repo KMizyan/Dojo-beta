@@ -19,6 +19,9 @@ import {
 } from '../lib/work';
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { BlockMath, InlineMath } from 'react-katex';
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import { supabase } from '../lib/supabase';
 
@@ -45,6 +48,19 @@ function MathText({text}:{text:string}) {
     if (bit.startsWith('$') && bit.endsWith('$')) return <InlineMath key={i} math={bit.slice(1,-1)} />;
     return <span key={i} style={{whiteSpace:'pre-wrap'}}>{bit}</span>;
   })}</>;
+}
+
+function SenseiText({text}:{text:string}) {
+  return (
+    <div className="senseiMarkdown">
+      <ReactMarkdown
+        remarkPlugins={[remarkMath]}
+        rehypePlugins={[rehypeKatex]}
+      >
+        {text}
+      </ReactMarkdown>
+    </div>
+  );
 }
 
 function Blocks({blocks}:{blocks:any[]}) {
@@ -340,9 +356,10 @@ function AskDojo({q}:{q:any}) {
 
           {!messages.length && (
             <p className="senseiIntro">
-              Ask for a hint, an explanation of a step,
-              or anything about this question.
-            </p>
+                <strong>SENSEI can see this question.</strong><br />
+                Ask about the problem, explore the maths behind it,
+                or take the conversation wherever you need.
+              </p>
           )}
 
           {messages.map((m,i)=>(
@@ -350,7 +367,9 @@ function AskDojo({q}:{q:any}) {
               className={'dojoMessage '+m.role}
               key={i}
             >
-              <MathText text={m.content}/>
+              {m.role === 'assistant'
+                ? <SenseiText text={m.content}/>
+                : <MathText text={m.content}/>}
             </div>
           ))}
 
@@ -392,7 +411,7 @@ function AskDojo({q}:{q:any}) {
                 e.currentTarget.form?.requestSubmit();
               }
             }}
-            placeholder="Ask SENSEI about this question…"
+            placeholder="Ask SENSEI…"
           />
 
           <button
