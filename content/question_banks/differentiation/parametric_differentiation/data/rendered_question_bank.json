@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "updated_at": "2026-09-15T10:05:41.897146+00:00",
+  "updated_at": "2026-10-04T09:03:15.011255+00:00",
   "questions": [
     {
       "question_id": "Q000001",
@@ -5278,6 +5278,2838 @@
             {
               "type": "latex",
               "content": "3"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000010",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_17d6ab93f1844fe8",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-10-04T09:02:55.435225+00:00",
+        "generation_selection": {
+          "family": "parametric_derivative_core",
+          "requested_depth": 0,
+          "actual_depth": 0.68,
+          "architecture": "direct_log_product",
+          "validation_attempt": 1,
+          "architecture_requested": "direct_log_product",
+          "seed": 611206951,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = 4*log(t),    y = t^2*log(t), where t > 0.\n\nFind an expression for dy/dx in terms of t.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "$x = 4 \\log{\\left(t \\right)},\\qquad y = t^{2} \\log{\\left(t \\right)}$, where $t > 0$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Find an expression for $\\frac{dy}{dx}$ in terms of t."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parametric_derivative_core",
+        "architecture": "direct_log_product",
+        "depth_position": 0.68,
+        "object_kind": "parametric_curve",
+        "object_grammar": "log_product",
+        "task_sequence": [
+          "derive_parametric_dy_dx"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "prompt": "Find an expression for dy/dx in terms of t.",
+            "depends_on": [],
+            "data": {
+              "show_target": null
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parametric_derivative_core",
+          "depth": 0,
+          "architecture": "direct_log_product",
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parametric_derivative_core",
+        "required_rules": [
+          "log_differentiation",
+          "product_rule"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": true
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "4/t",
+            "srepr": "Mul(Integer(4), Pow(Symbol('t', real=True), Integer(-1)))"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "2*t*log(t) + t",
+            "srepr": "Add(Mul(Integer(2), Symbol('t', real=True), log(Symbol('t', real=True))), Symbol('t', real=True))"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "t*(2*t*log(t) + t)/4",
+            "srepr": "Mul(Rational(1, 4), Symbol('t', real=True), Add(Mul(Integer(2), Symbol('t', real=True), log(Symbol('t', real=True))), Symbol('t', real=True)))"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "t**2*log(t)/2 + t**2/4",
+            "srepr": "Add(Mul(Rational(1, 2), Pow(Symbol('t', real=True), Integer(2)), log(Symbol('t', real=True))), Mul(Rational(1, 4), Pow(Symbol('t', real=True), Integer(2))))"
+          },
+          "parameter_domain": {
+            "lower": {
+              "__type__": "sympy",
+              "expression": "0",
+              "srepr": "Integer(0)"
+            }
+          },
+          "undefined_parameter_values": []
+        },
+        "parts": {
+          "a": {
+            "dx_dt": {
+              "__type__": "sympy",
+              "expression": "4/t",
+              "srepr": "Mul(Integer(4), Pow(Symbol('t', real=True), Integer(-1)))"
+            },
+            "dy_dt": {
+              "__type__": "sympy",
+              "expression": "2*t*log(t) + t",
+              "srepr": "Add(Mul(Integer(2), Symbol('t', real=True), log(Symbol('t', real=True))), Symbol('t', real=True))"
+            },
+            "dy_dx_unsimplified": {
+              "__type__": "sympy",
+              "expression": "t*(2*t*log(t) + t)/4",
+              "srepr": "Mul(Rational(1, 4), Symbol('t', real=True), Add(Mul(Integer(2), Symbol('t', real=True), log(Symbol('t', real=True))), Symbol('t', real=True)))"
+            },
+            "dy_dx": {
+              "__type__": "sympy",
+              "expression": "t**2*log(t)/2 + t**2/4",
+              "srepr": "Add(Mul(Rational(1, 2), Pow(Symbol('t', real=True), Integer(2)), log(Symbol('t', real=True))), Mul(Rational(1, 4), Pow(Symbol('t', real=True), Integer(2))))"
+            },
+            "undefined_parameter_values": []
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 3,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Differentiate the parametric equations.",
+                "working": "Differentiate both parametric equations.\ndx/dt = 4/t\ndy/dt = t*(2*log(t) + 1)",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Obtains both parameter derivatives correctly.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Differentiate both parametric equations."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dx}{dt} = \\frac{4}{t}"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dt} = t \\left(2 \\log{\\left(t \\right)} + 1\\right)"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the parametric derivative and simplify.",
+                "working": "dy/dx = (dy/dt)/(dx/dt) = (t*(2*log(t) + 1))/(4/t)\nTherefore dy/dx = t^2*(2*log(t) + 1)/4.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses dy/dx = (dy/dt)/(dx/dt).",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct simplified derivative.",
+                    "depends_on": [
+                      "parametric_ratio"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "parametric_rate_ratio",
+                    "type": "foundation",
+                    "level": "intermediate",
+                    "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                  }
+                ],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx}$ = $\\frac{\\frac{dy}{dt}}{\\frac{dx}{dt}} = t \\frac{t}{4} \\left(2 \\log{\\left(t \\right)} + 1\\right)$"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\frac{t^{2} \\left(2 \\log{\\left(t \\right)} + 1\\right)}{4}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "dx_dt": {
+                "__type__": "sympy",
+                "expression": "4/t"
+              },
+              "dy_dt": {
+                "__type__": "sympy",
+                "expression": "2*t*log(t) + t"
+              },
+              "dy_dx_unsimplified": {
+                "__type__": "sympy",
+                "expression": "t*(2*t*log(t) + t)/4"
+              },
+              "dy_dx": {
+                "__type__": "sympy",
+                "expression": "t**2*log(t)/2 + t**2/4"
+              },
+              "undefined_parameter_values": []
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "parametric_rate_ratio",
+              "type": "foundation",
+              "level": "intermediate",
+              "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t",
+            "srepr": "Symbol('t', real=True)"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "4*log(t)",
+            "srepr": "Mul(Integer(4), log(Symbol('t', real=True)))"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "t**2*log(t)",
+            "srepr": "Mul(Pow(Symbol('t', real=True), Integer(2)), log(Symbol('t', real=True)))"
+          },
+          "domain": {
+            "lower": {
+              "__type__": "sympy",
+              "expression": "0",
+              "srepr": "Integer(0)"
+            }
+          },
+          "object_kind": "parametric_curve",
+          "object_grammar": "log_product",
+          "family": "parametric_derivative_core",
+          "architecture": "direct_log_product",
+          "task_sequence": [
+            "derive_parametric_dy_dx"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "derive_parametric_dy_dx",
+              "prompt": "Find an expression for dy/dx in terms of t.",
+              "depends_on": [],
+              "data": {
+                "show_target": null
+              }
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parametric_derivative_core",
+            "architecture": "direct_log_product",
+            "depth_position": 0.68,
+            "object_kind": "parametric_curve",
+            "object_grammar": "log_product",
+            "task_sequence": [
+              "derive_parametric_dy_dx"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "derive_parametric_dy_dx",
+                "prompt": "Find an expression for dy/dx in terms of t.",
+                "depends_on": [],
+                "data": {
+                  "show_target": null
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parametric_derivative_core",
+              "depth": 0,
+              "architecture": "direct_log_product",
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parametric_derivative_core",
+            "required_rules": [
+              "log_differentiation",
+              "product_rule"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": true
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Dx Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{4}{t}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "2 t \\log{\\left(t \\right)} + t"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx Unsimplified**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{t \\left(2 t \\log{\\left(t \\right)} + t\\right)}{4}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{t^{2} \\log{\\left(t \\right)}}{2} + \\frac{t^{2}}{4}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Undefined Parameter Values**"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000011",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_1f21f0966e214be3",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-10-04T09:02:57.904574+00:00",
+        "generation_selection": {
+          "family": "parametric_derivative_core",
+          "requested_depth": 0.5,
+          "actual_depth": 0.68,
+          "architecture": "direct_log_product",
+          "validation_attempt": 1,
+          "architecture_requested": "direct_log_product",
+          "seed": 2019039860,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = 2*log(t),    y = t^2*log(t), where t > 0.\n\nFind an expression for dy/dx in terms of t.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "$x = 2 \\log{\\left(t \\right)},\\qquad y = t^{2} \\log{\\left(t \\right)}$, where $t > 0$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Find an expression for $\\frac{dy}{dx}$ in terms of t."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parametric_derivative_core",
+        "architecture": "direct_log_product",
+        "depth_position": 0.68,
+        "object_kind": "parametric_curve",
+        "object_grammar": "log_product",
+        "task_sequence": [
+          "derive_parametric_dy_dx"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "prompt": "Find an expression for dy/dx in terms of t.",
+            "depends_on": [],
+            "data": {
+              "show_target": null
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parametric_derivative_core",
+          "depth": 0.5,
+          "architecture": "direct_log_product",
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parametric_derivative_core",
+        "required_rules": [
+          "log_differentiation",
+          "product_rule"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": true
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "2/t",
+            "srepr": "Mul(Integer(2), Pow(Symbol('t', real=True), Integer(-1)))"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "2*t*log(t) + t",
+            "srepr": "Add(Mul(Integer(2), Symbol('t', real=True), log(Symbol('t', real=True))), Symbol('t', real=True))"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "t*(2*t*log(t) + t)/2",
+            "srepr": "Mul(Rational(1, 2), Symbol('t', real=True), Add(Mul(Integer(2), Symbol('t', real=True), log(Symbol('t', real=True))), Symbol('t', real=True)))"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "t**2*log(t) + t**2/2",
+            "srepr": "Add(Mul(Pow(Symbol('t', real=True), Integer(2)), log(Symbol('t', real=True))), Mul(Rational(1, 2), Pow(Symbol('t', real=True), Integer(2))))"
+          },
+          "parameter_domain": {
+            "lower": {
+              "__type__": "sympy",
+              "expression": "0",
+              "srepr": "Integer(0)"
+            }
+          },
+          "undefined_parameter_values": []
+        },
+        "parts": {
+          "a": {
+            "dx_dt": {
+              "__type__": "sympy",
+              "expression": "2/t",
+              "srepr": "Mul(Integer(2), Pow(Symbol('t', real=True), Integer(-1)))"
+            },
+            "dy_dt": {
+              "__type__": "sympy",
+              "expression": "2*t*log(t) + t",
+              "srepr": "Add(Mul(Integer(2), Symbol('t', real=True), log(Symbol('t', real=True))), Symbol('t', real=True))"
+            },
+            "dy_dx_unsimplified": {
+              "__type__": "sympy",
+              "expression": "t*(2*t*log(t) + t)/2",
+              "srepr": "Mul(Rational(1, 2), Symbol('t', real=True), Add(Mul(Integer(2), Symbol('t', real=True), log(Symbol('t', real=True))), Symbol('t', real=True)))"
+            },
+            "dy_dx": {
+              "__type__": "sympy",
+              "expression": "t**2*log(t) + t**2/2",
+              "srepr": "Add(Mul(Pow(Symbol('t', real=True), Integer(2)), log(Symbol('t', real=True))), Mul(Rational(1, 2), Pow(Symbol('t', real=True), Integer(2))))"
+            },
+            "undefined_parameter_values": []
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 3,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Differentiate the parametric equations.",
+                "working": "Differentiate both parametric equations.\ndx/dt = 2/t\ndy/dt = t*(2*log(t) + 1)",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Obtains both parameter derivatives correctly.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Differentiate both parametric equations."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dx}{dt} = \\frac{2}{t}"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dt} = t \\left(2 \\log{\\left(t \\right)} + 1\\right)"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the parametric derivative and simplify.",
+                "working": "dy/dx = (dy/dt)/(dx/dt) = (t*(2*log(t) + 1))/(2/t)\nTherefore dy/dx = t^2*(2*log(t) + 1)/2.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses dy/dx = (dy/dt)/(dx/dt).",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct simplified derivative.",
+                    "depends_on": [
+                      "parametric_ratio"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "parametric_rate_ratio",
+                    "type": "foundation",
+                    "level": "intermediate",
+                    "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                  }
+                ],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx}$ = $\\frac{\\frac{dy}{dt}}{\\frac{dx}{dt}} = t \\frac{t}{2} \\left(2 \\log{\\left(t \\right)} + 1\\right)$"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\frac{t^{2} \\left(2 \\log{\\left(t \\right)} + 1\\right)}{2}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "dx_dt": {
+                "__type__": "sympy",
+                "expression": "2/t"
+              },
+              "dy_dt": {
+                "__type__": "sympy",
+                "expression": "2*t*log(t) + t"
+              },
+              "dy_dx_unsimplified": {
+                "__type__": "sympy",
+                "expression": "t*(2*t*log(t) + t)/2"
+              },
+              "dy_dx": {
+                "__type__": "sympy",
+                "expression": "t**2*log(t) + t**2/2"
+              },
+              "undefined_parameter_values": []
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "parametric_rate_ratio",
+              "type": "foundation",
+              "level": "intermediate",
+              "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t",
+            "srepr": "Symbol('t', real=True)"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "2*log(t)",
+            "srepr": "Mul(Integer(2), log(Symbol('t', real=True)))"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "t**2*log(t)",
+            "srepr": "Mul(Pow(Symbol('t', real=True), Integer(2)), log(Symbol('t', real=True)))"
+          },
+          "domain": {
+            "lower": {
+              "__type__": "sympy",
+              "expression": "0",
+              "srepr": "Integer(0)"
+            }
+          },
+          "object_kind": "parametric_curve",
+          "object_grammar": "log_product",
+          "family": "parametric_derivative_core",
+          "architecture": "direct_log_product",
+          "task_sequence": [
+            "derive_parametric_dy_dx"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "derive_parametric_dy_dx",
+              "prompt": "Find an expression for dy/dx in terms of t.",
+              "depends_on": [],
+              "data": {
+                "show_target": null
+              }
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parametric_derivative_core",
+            "architecture": "direct_log_product",
+            "depth_position": 0.68,
+            "object_kind": "parametric_curve",
+            "object_grammar": "log_product",
+            "task_sequence": [
+              "derive_parametric_dy_dx"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "derive_parametric_dy_dx",
+                "prompt": "Find an expression for dy/dx in terms of t.",
+                "depends_on": [],
+                "data": {
+                  "show_target": null
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parametric_derivative_core",
+              "depth": 0.5,
+              "architecture": "direct_log_product",
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parametric_derivative_core",
+            "required_rules": [
+              "log_differentiation",
+              "product_rule"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": true
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Dx Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{2}{t}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "2 t \\log{\\left(t \\right)} + t"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx Unsimplified**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{t \\left(2 t \\log{\\left(t \\right)} + t\\right)}{2}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx**"
+            },
+            {
+              "type": "latex",
+              "content": "t^{2} \\log{\\left(t \\right)} + \\frac{t^{2}}{2}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Undefined Parameter Values**"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000012",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_5823c8807fbb48ca",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-10-04T09:03:00.291030+00:00",
+        "generation_selection": {
+          "family": "parametric_derivative_core",
+          "requested_depth": 1,
+          "actual_depth": 0.68,
+          "architecture": "direct_log_product",
+          "validation_attempt": 1,
+          "architecture_requested": "direct_log_product",
+          "seed": 109649124,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = log(t),    y = t^4*log(t), where t > 0.\n\nFind an expression for dy/dx in terms of t.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "$x = \\log{\\left(t \\right)},\\qquad y = t^{4} \\log{\\left(t \\right)}$, where $t > 0$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Find an expression for $\\frac{dy}{dx}$ in terms of t."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parametric_derivative_core",
+        "architecture": "direct_log_product",
+        "depth_position": 0.68,
+        "object_kind": "parametric_curve",
+        "object_grammar": "log_product",
+        "task_sequence": [
+          "derive_parametric_dy_dx"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "prompt": "Find an expression for dy/dx in terms of t.",
+            "depends_on": [],
+            "data": {
+              "show_target": null
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parametric_derivative_core",
+          "depth": 1,
+          "architecture": "direct_log_product",
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parametric_derivative_core",
+        "required_rules": [
+          "log_differentiation",
+          "product_rule"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": true
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "1/t",
+            "srepr": "Pow(Symbol('t', real=True), Integer(-1))"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "4*t**3*log(t) + t**3",
+            "srepr": "Add(Mul(Integer(4), Pow(Symbol('t', real=True), Integer(3)), log(Symbol('t', real=True))), Pow(Symbol('t', real=True), Integer(3)))"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "t*(4*t**3*log(t) + t**3)",
+            "srepr": "Mul(Symbol('t', real=True), Add(Mul(Integer(4), Pow(Symbol('t', real=True), Integer(3)), log(Symbol('t', real=True))), Pow(Symbol('t', real=True), Integer(3))))"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "4*t**4*log(t) + t**4",
+            "srepr": "Add(Mul(Integer(4), Pow(Symbol('t', real=True), Integer(4)), log(Symbol('t', real=True))), Pow(Symbol('t', real=True), Integer(4)))"
+          },
+          "parameter_domain": {
+            "lower": {
+              "__type__": "sympy",
+              "expression": "0",
+              "srepr": "Integer(0)"
+            }
+          },
+          "undefined_parameter_values": []
+        },
+        "parts": {
+          "a": {
+            "dx_dt": {
+              "__type__": "sympy",
+              "expression": "1/t",
+              "srepr": "Pow(Symbol('t', real=True), Integer(-1))"
+            },
+            "dy_dt": {
+              "__type__": "sympy",
+              "expression": "4*t**3*log(t) + t**3",
+              "srepr": "Add(Mul(Integer(4), Pow(Symbol('t', real=True), Integer(3)), log(Symbol('t', real=True))), Pow(Symbol('t', real=True), Integer(3)))"
+            },
+            "dy_dx_unsimplified": {
+              "__type__": "sympy",
+              "expression": "t*(4*t**3*log(t) + t**3)",
+              "srepr": "Mul(Symbol('t', real=True), Add(Mul(Integer(4), Pow(Symbol('t', real=True), Integer(3)), log(Symbol('t', real=True))), Pow(Symbol('t', real=True), Integer(3))))"
+            },
+            "dy_dx": {
+              "__type__": "sympy",
+              "expression": "4*t**4*log(t) + t**4",
+              "srepr": "Add(Mul(Integer(4), Pow(Symbol('t', real=True), Integer(4)), log(Symbol('t', real=True))), Pow(Symbol('t', real=True), Integer(4)))"
+            },
+            "undefined_parameter_values": []
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 3,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Differentiate the parametric equations.",
+                "working": "Differentiate both parametric equations.\ndx/dt = 1/t\ndy/dt = t^3*(4*log(t) + 1)",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Obtains both parameter derivatives correctly.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Differentiate both parametric equations."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dx}{dt} = \\frac{1}{t}"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dt} = t^{3} \\left(4 \\log{\\left(t \\right)} + 1\\right)"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the parametric derivative and simplify.",
+                "working": "dy/dx = (dy/dt)/(dx/dt) = (t^3*(4*log(t) + 1))/(1/t)\nTherefore dy/dx = t^4*(4*log(t) + 1).",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses dy/dx = (dy/dt)/(dx/dt).",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct simplified derivative.",
+                    "depends_on": [
+                      "parametric_ratio"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "parametric_rate_ratio",
+                    "type": "foundation",
+                    "level": "intermediate",
+                    "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                  }
+                ],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx}$ = $\\frac{\\frac{dy}{dt}}{\\frac{dx}{dt}} = t t^{3} \\left(4 \\log{\\left(t \\right)} + 1\\right)$"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = t^{4} \\left(4 \\log{\\left(t \\right)} + 1\\right)"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "dx_dt": {
+                "__type__": "sympy",
+                "expression": "1/t"
+              },
+              "dy_dt": {
+                "__type__": "sympy",
+                "expression": "4*t**3*log(t) + t**3"
+              },
+              "dy_dx_unsimplified": {
+                "__type__": "sympy",
+                "expression": "t*(4*t**3*log(t) + t**3)"
+              },
+              "dy_dx": {
+                "__type__": "sympy",
+                "expression": "4*t**4*log(t) + t**4"
+              },
+              "undefined_parameter_values": []
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "parametric_rate_ratio",
+              "type": "foundation",
+              "level": "intermediate",
+              "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t",
+            "srepr": "Symbol('t', real=True)"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "log(t)",
+            "srepr": "log(Symbol('t', real=True))"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "t**4*log(t)",
+            "srepr": "Mul(Pow(Symbol('t', real=True), Integer(4)), log(Symbol('t', real=True)))"
+          },
+          "domain": {
+            "lower": {
+              "__type__": "sympy",
+              "expression": "0",
+              "srepr": "Integer(0)"
+            }
+          },
+          "object_kind": "parametric_curve",
+          "object_grammar": "log_product",
+          "family": "parametric_derivative_core",
+          "architecture": "direct_log_product",
+          "task_sequence": [
+            "derive_parametric_dy_dx"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "derive_parametric_dy_dx",
+              "prompt": "Find an expression for dy/dx in terms of t.",
+              "depends_on": [],
+              "data": {
+                "show_target": null
+              }
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parametric_derivative_core",
+            "architecture": "direct_log_product",
+            "depth_position": 0.68,
+            "object_kind": "parametric_curve",
+            "object_grammar": "log_product",
+            "task_sequence": [
+              "derive_parametric_dy_dx"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "derive_parametric_dy_dx",
+                "prompt": "Find an expression for dy/dx in terms of t.",
+                "depends_on": [],
+                "data": {
+                  "show_target": null
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parametric_derivative_core",
+              "depth": 1,
+              "architecture": "direct_log_product",
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parametric_derivative_core",
+            "required_rules": [
+              "log_differentiation",
+              "product_rule"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": true
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Dx Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{1}{t}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "4 t^{3} \\log{\\left(t \\right)} + t^{3}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx Unsimplified**"
+            },
+            {
+              "type": "latex",
+              "content": "t \\left(4 t^{3} \\log{\\left(t \\right)} + t^{3}\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx**"
+            },
+            {
+              "type": "latex",
+              "content": "4 t^{4} \\log{\\left(t \\right)} + t^{4}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Undefined Parameter Values**"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000013",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_0a90e43fc2c44056",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-10-04T09:03:09.696332+00:00",
+        "generation_selection": {
+          "family": "parametric_derivative_core",
+          "requested_depth": 0,
+          "actual_depth": 0.38,
+          "architecture": "direct_structured_product",
+          "validation_attempt": 1,
+          "architecture_requested": "direct_structured_product",
+          "seed": 1273424101,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = 2 - 5*t^2,    y = t*(t - 5)*(t - 2)*(t + 2)*(t + 5), where t != 0.\n\nFind an expression for dy/dx in terms of t.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "$x = 2 - 5 t^{2},\\qquad y = t \\left(t - 5\\right) \\left(t - 2\\right) \\left(t + 2\\right) \\left(t + 5\\right)$, where t != 0."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Find an expression for $\\frac{dy}{dx}$ in terms of t."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parametric_derivative_core",
+        "architecture": "direct_structured_product",
+        "depth_position": 0.38,
+        "object_kind": "parametric_curve",
+        "object_grammar": "product",
+        "task_sequence": [
+          "derive_parametric_dy_dx"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "prompt": "Find an expression for dy/dx in terms of t.",
+            "depends_on": [],
+            "data": {
+              "show_target": null
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parametric_derivative_core",
+          "depth": 0,
+          "architecture": "direct_structured_product",
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parametric_derivative_core",
+        "required_rules": [
+          "power_rule",
+          "product_rule",
+          "algebraic_expansion"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": true
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "-10*t",
+            "srepr": "Mul(Integer(-1), Integer(10), Symbol('t', real=True))"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "2*t**2*(t**2 - 25) + 2*t**2*(t**2 - 4) + (t**2 - 25)*(t**2 - 4)",
+            "srepr": "Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-25))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-25)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))))"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "-(2*t**2*(t**2 - 25) + 2*t**2*(t**2 - 4) + (t**2 - 25)*(t**2 - 4))/(10*t)",
+            "srepr": "Mul(Integer(-1), Rational(1, 10), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-25))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-25)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4)))))"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "(-5*t**4 + 87*t**2 - 100)/(10*t)",
+            "srepr": "Mul(Rational(1, 10), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(-1), Integer(5), Pow(Symbol('t', real=True), Integer(4))), Mul(Integer(87), Pow(Symbol('t', real=True), Integer(2))), Integer(-100)))"
+          },
+          "parameter_domain": {
+            "excluded": [
+              {
+                "__type__": "sympy",
+                "expression": "0",
+                "srepr": "Integer(0)"
+              }
+            ]
+          },
+          "undefined_parameter_values": []
+        },
+        "parts": {
+          "a": {
+            "dx_dt": {
+              "__type__": "sympy",
+              "expression": "-10*t",
+              "srepr": "Mul(Integer(-1), Integer(10), Symbol('t', real=True))"
+            },
+            "dy_dt": {
+              "__type__": "sympy",
+              "expression": "2*t**2*(t**2 - 25) + 2*t**2*(t**2 - 4) + (t**2 - 25)*(t**2 - 4)",
+              "srepr": "Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-25))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-25)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))))"
+            },
+            "dy_dx_unsimplified": {
+              "__type__": "sympy",
+              "expression": "-(2*t**2*(t**2 - 25) + 2*t**2*(t**2 - 4) + (t**2 - 25)*(t**2 - 4))/(10*t)",
+              "srepr": "Mul(Integer(-1), Rational(1, 10), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-25))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-25)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4)))))"
+            },
+            "dy_dx": {
+              "__type__": "sympy",
+              "expression": "(-5*t**4 + 87*t**2 - 100)/(10*t)",
+              "srepr": "Mul(Rational(1, 10), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(-1), Integer(5), Pow(Symbol('t', real=True), Integer(4))), Mul(Integer(87), Pow(Symbol('t', real=True), Integer(2))), Integer(-100)))"
+            },
+            "undefined_parameter_values": []
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 3,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Differentiate the parametric equations.",
+                "working": "Differentiate both parametric equations.\ndx/dt = -10*t\ndy/dt = 5*t^4 - 87*t^2 + 100",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Obtains both parameter derivatives correctly.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Differentiate both parametric equations."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dx}{dt} = - 10 t"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dt} = 5 t^{4} - 87 t^{2} + 100"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the parametric derivative and simplify.",
+                "working": "dy/dx = (dy/dt)/(dx/dt) = (5*t^4 - 87*t^2 + 100)/(-10*t)\nTherefore dy/dx = -(5*t^4 - 87*t^2 + 100)/(10*t).",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses dy/dx = (dy/dt)/(dx/dt).",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct simplified derivative.",
+                    "depends_on": [
+                      "parametric_ratio"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "parametric_rate_ratio",
+                    "type": "foundation",
+                    "level": "intermediate",
+                    "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                  }
+                ],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx}$ = $\\frac{\\frac{dy}{dt}}{\\frac{dx}{dt}} = - \\frac{1}{10 t} \\left(5 t^{4} - 87 t^{2} + 100\\right)$"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\frac{1}{10 t} \\left(-100 - 5 t^{4} + 87 t^{2}\\right)"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "dx_dt": {
+                "__type__": "sympy",
+                "expression": "-10*t"
+              },
+              "dy_dt": {
+                "__type__": "sympy",
+                "expression": "2*t**2*(t**2 - 25) + 2*t**2*(t**2 - 4) + (t**2 - 25)*(t**2 - 4)"
+              },
+              "dy_dx_unsimplified": {
+                "__type__": "sympy",
+                "expression": "(-2*t**2*(t**2 - 25) - 2*t**2*(t**2 - 4) - (t**2 - 25)*(t**2 - 4))/(10*t)"
+              },
+              "dy_dx": {
+                "__type__": "sympy",
+                "expression": "(-5*t**4 + 87*t**2 - 100)/(10*t)"
+              },
+              "undefined_parameter_values": []
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "parametric_rate_ratio",
+              "type": "foundation",
+              "level": "intermediate",
+              "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t",
+            "srepr": "Symbol('t', real=True)"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "2 - 5*t**2",
+            "srepr": "Add(Integer(2), Mul(Integer(-1), Integer(5), Pow(Symbol('t', real=True), Integer(2))))"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "t*(t**2 - 25)*(t**2 - 4)",
+            "srepr": "Mul(Symbol('t', real=True), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-25)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4)))"
+          },
+          "domain": {
+            "excluded": [
+              {
+                "__type__": "sympy",
+                "expression": "0",
+                "srepr": "Integer(0)"
+              }
+            ]
+          },
+          "object_kind": "parametric_curve",
+          "object_grammar": "product",
+          "family": "parametric_derivative_core",
+          "architecture": "direct_structured_product",
+          "task_sequence": [
+            "derive_parametric_dy_dx"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "derive_parametric_dy_dx",
+              "prompt": "Find an expression for dy/dx in terms of t.",
+              "depends_on": [],
+              "data": {
+                "show_target": null
+              }
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parametric_derivative_core",
+            "architecture": "direct_structured_product",
+            "depth_position": 0.38,
+            "object_kind": "parametric_curve",
+            "object_grammar": "product",
+            "task_sequence": [
+              "derive_parametric_dy_dx"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "derive_parametric_dy_dx",
+                "prompt": "Find an expression for dy/dx in terms of t.",
+                "depends_on": [],
+                "data": {
+                  "show_target": null
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parametric_derivative_core",
+              "depth": 0,
+              "architecture": "direct_structured_product",
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parametric_derivative_core",
+            "required_rules": [
+              "power_rule",
+              "product_rule",
+              "algebraic_expansion"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": true
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Dx Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "- 10 t"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "2 t^{2} \\left(t^{2} - 25\\right) + 2 t^{2} \\left(t^{2} - 4\\right) + \\left(t^{2} - 25\\right) \\left(t^{2} - 4\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx Unsimplified**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{1}{10 t} \\left(- \\left(t^{2} - 25\\right) \\left(t^{2} - 4\\right) - 2 t^{2} \\left(t^{2} - 4\\right) - 2 t^{2} \\left(t^{2} - 25\\right)\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{1}{10 t} \\left(- 5 t^{4} + 87 t^{2} - 100\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Undefined Parameter Values**"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000014",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_347d95ef78f74e79",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-10-04T09:03:12.576119+00:00",
+        "generation_selection": {
+          "family": "parametric_derivative_core",
+          "requested_depth": 0.5,
+          "actual_depth": 0.38,
+          "architecture": "direct_structured_product",
+          "validation_attempt": 1,
+          "architecture_requested": "direct_structured_product",
+          "seed": 254341524,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = -4*t^2 - 3,    y = t*(t - 2)*(t - 1)*(t + 1)*(t + 2), where t != 0.\n\nFind an expression for dy/dx in terms of t.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "$x = - 4 t^{2} - 3,\\qquad y = t \\left(t + 1\\right) \\left(t - 1\\right) \\left(t - 2\\right) \\left(t + 2\\right)$, where t != 0."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Find an expression for $\\frac{dy}{dx}$ in terms of t."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parametric_derivative_core",
+        "architecture": "direct_structured_product",
+        "depth_position": 0.38,
+        "object_kind": "parametric_curve",
+        "object_grammar": "product",
+        "task_sequence": [
+          "derive_parametric_dy_dx"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "prompt": "Find an expression for dy/dx in terms of t.",
+            "depends_on": [],
+            "data": {
+              "show_target": null
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parametric_derivative_core",
+          "depth": 0.5,
+          "architecture": "direct_structured_product",
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parametric_derivative_core",
+        "required_rules": [
+          "power_rule",
+          "product_rule",
+          "algebraic_expansion"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": true
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "-8*t",
+            "srepr": "Mul(Integer(-1), Integer(8), Symbol('t', real=True))"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "2*t**2*(t**2 - 4) + 2*t**2*(t**2 - 1) + (t**2 - 4)*(t**2 - 1)",
+            "srepr": "Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-1))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-1))))"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "-(2*t**2*(t**2 - 4) + 2*t**2*(t**2 - 1) + (t**2 - 4)*(t**2 - 1))/(8*t)",
+            "srepr": "Mul(Integer(-1), Rational(1, 8), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-1))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-1)))))"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "(-5*t**4 + 15*t**2 - 4)/(8*t)",
+            "srepr": "Mul(Rational(1, 8), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(-1), Integer(5), Pow(Symbol('t', real=True), Integer(4))), Mul(Integer(15), Pow(Symbol('t', real=True), Integer(2))), Integer(-4)))"
+          },
+          "parameter_domain": {
+            "excluded": [
+              {
+                "__type__": "sympy",
+                "expression": "0",
+                "srepr": "Integer(0)"
+              }
+            ]
+          },
+          "undefined_parameter_values": []
+        },
+        "parts": {
+          "a": {
+            "dx_dt": {
+              "__type__": "sympy",
+              "expression": "-8*t",
+              "srepr": "Mul(Integer(-1), Integer(8), Symbol('t', real=True))"
+            },
+            "dy_dt": {
+              "__type__": "sympy",
+              "expression": "2*t**2*(t**2 - 4) + 2*t**2*(t**2 - 1) + (t**2 - 4)*(t**2 - 1)",
+              "srepr": "Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-1))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-1))))"
+            },
+            "dy_dx_unsimplified": {
+              "__type__": "sympy",
+              "expression": "-(2*t**2*(t**2 - 4) + 2*t**2*(t**2 - 1) + (t**2 - 4)*(t**2 - 1))/(8*t)",
+              "srepr": "Mul(Integer(-1), Rational(1, 8), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-1))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-1)))))"
+            },
+            "dy_dx": {
+              "__type__": "sympy",
+              "expression": "(-5*t**4 + 15*t**2 - 4)/(8*t)",
+              "srepr": "Mul(Rational(1, 8), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(-1), Integer(5), Pow(Symbol('t', real=True), Integer(4))), Mul(Integer(15), Pow(Symbol('t', real=True), Integer(2))), Integer(-4)))"
+            },
+            "undefined_parameter_values": []
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 3,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Differentiate the parametric equations.",
+                "working": "Differentiate both parametric equations.\ndx/dt = -8*t\ndy/dt = 5*t^4 - 15*t^2 + 4",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Obtains both parameter derivatives correctly.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Differentiate both parametric equations."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dx}{dt} = - 8 t"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dt} = 5 t^{4} - 15 t^{2} + 4"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the parametric derivative and simplify.",
+                "working": "dy/dx = (dy/dt)/(dx/dt) = (5*t^4 - 15*t^2 + 4)/(-8*t)\nTherefore dy/dx = -(5*t^4 - 15*t^2 + 4)/(8*t).",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses dy/dx = (dy/dt)/(dx/dt).",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct simplified derivative.",
+                    "depends_on": [
+                      "parametric_ratio"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "parametric_rate_ratio",
+                    "type": "foundation",
+                    "level": "intermediate",
+                    "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                  }
+                ],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx}$ = $\\frac{\\frac{dy}{dt}}{\\frac{dx}{dt}} = - \\frac{1}{8 t} \\left(5 t^{4} - 15 t^{2} + 4\\right)$"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\frac{1}{8 t} \\left(-4 - 5 t^{4} + 15 t^{2}\\right)"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "dx_dt": {
+                "__type__": "sympy",
+                "expression": "-8*t"
+              },
+              "dy_dt": {
+                "__type__": "sympy",
+                "expression": "2*t**2*(t**2 - 4) + 2*t**2*(t**2 - 1) + (t**2 - 4)*(t**2 - 1)"
+              },
+              "dy_dx_unsimplified": {
+                "__type__": "sympy",
+                "expression": "(-2*t**2*(t**2 - 4) - 2*t**2*(t**2 - 1) - (t**2 - 4)*(t**2 - 1))/(8*t)"
+              },
+              "dy_dx": {
+                "__type__": "sympy",
+                "expression": "(-5*t**4 + 15*t**2 - 4)/(8*t)"
+              },
+              "undefined_parameter_values": []
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "parametric_rate_ratio",
+              "type": "foundation",
+              "level": "intermediate",
+              "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t",
+            "srepr": "Symbol('t', real=True)"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "-4*t**2 - 3",
+            "srepr": "Add(Mul(Integer(-1), Integer(4), Pow(Symbol('t', real=True), Integer(2))), Integer(-3))"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "t*(t**2 - 4)*(t**2 - 1)",
+            "srepr": "Mul(Symbol('t', real=True), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-1)))"
+          },
+          "domain": {
+            "excluded": [
+              {
+                "__type__": "sympy",
+                "expression": "0",
+                "srepr": "Integer(0)"
+              }
+            ]
+          },
+          "object_kind": "parametric_curve",
+          "object_grammar": "product",
+          "family": "parametric_derivative_core",
+          "architecture": "direct_structured_product",
+          "task_sequence": [
+            "derive_parametric_dy_dx"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "derive_parametric_dy_dx",
+              "prompt": "Find an expression for dy/dx in terms of t.",
+              "depends_on": [],
+              "data": {
+                "show_target": null
+              }
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parametric_derivative_core",
+            "architecture": "direct_structured_product",
+            "depth_position": 0.38,
+            "object_kind": "parametric_curve",
+            "object_grammar": "product",
+            "task_sequence": [
+              "derive_parametric_dy_dx"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "derive_parametric_dy_dx",
+                "prompt": "Find an expression for dy/dx in terms of t.",
+                "depends_on": [],
+                "data": {
+                  "show_target": null
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parametric_derivative_core",
+              "depth": 0.5,
+              "architecture": "direct_structured_product",
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parametric_derivative_core",
+            "required_rules": [
+              "power_rule",
+              "product_rule",
+              "algebraic_expansion"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": true
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Dx Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "- 8 t"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "2 t^{2} \\left(t^{2} - 4\\right) + 2 t^{2} \\left(t^{2} - 1\\right) + \\left(t^{2} - 1\\right) \\left(t^{2} - 4\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx Unsimplified**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{1}{8 t} \\left(- \\left(t^{2} - 1\\right) \\left(t^{2} - 4\\right) - 2 t^{2} \\left(t^{2} - 1\\right) - 2 t^{2} \\left(t^{2} - 4\\right)\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{1}{8 t} \\left(- 5 t^{4} + 15 t^{2} - 4\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Undefined Parameter Values**"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000015",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_94aaacdd2ce640c9",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-10-04T09:03:15.011108+00:00",
+        "generation_selection": {
+          "family": "parametric_derivative_core",
+          "requested_depth": 1,
+          "actual_depth": 0.38,
+          "architecture": "direct_structured_product",
+          "validation_attempt": 1,
+          "architecture_requested": "direct_structured_product",
+          "seed": 496255266,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "A curve C has parametric equations\n\n    x = -3*t^2 - 5,    y = t*(t - 3)*(t - 2)*(t + 2)*(t + 3), where t != 0.\n\nFind an expression for dy/dx in terms of t.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "A curve C has parametric equations"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "$x = - 3 t^{2} - 5,\\qquad y = t \\left(t - 3\\right) \\left(t - 2\\right) \\left(t + 2\\right) \\left(t + 3\\right)$, where t != 0."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "Find an expression for $\\frac{dy}{dx}$ in terms of t."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "parametric_derivative_core",
+        "architecture": "direct_structured_product",
+        "depth_position": 0.38,
+        "object_kind": "parametric_curve",
+        "object_grammar": "product",
+        "task_sequence": [
+          "derive_parametric_dy_dx"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "prompt": "Find an expression for dy/dx in terms of t.",
+            "depends_on": [],
+            "data": {
+              "show_target": null
+            }
+          }
+        ],
+        "part_count": 1,
+        "part_dependencies": {
+          "a": []
+        },
+        "presentation": {},
+        "generation_spec": {
+          "family": "parametric_derivative_core",
+          "depth": 1,
+          "architecture": "direct_structured_product",
+          "presentation_mode": null,
+          "preferred_parameter": null,
+          "pmt_primary_topic": "Parametric Differentiation",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "parametric_derivative_core",
+        "required_rules": [
+          "power_rule",
+          "product_rule",
+          "algebraic_expansion"
+        ],
+        "multipart": false,
+        "part_count": 1,
+        "requires_parametric_differentiation": true,
+        "domain_restriction_required": true
+      },
+      "topic_metadata": {
+        "primary": "Parametric Differentiation",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "dx_dt": {
+            "__type__": "sympy",
+            "expression": "-6*t",
+            "srepr": "Mul(Integer(-1), Integer(6), Symbol('t', real=True))"
+          },
+          "dy_dt": {
+            "__type__": "sympy",
+            "expression": "2*t**2*(t**2 - 9) + 2*t**2*(t**2 - 4) + (t**2 - 9)*(t**2 - 4)",
+            "srepr": "Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-9))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-9)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))))"
+          },
+          "dy_dx_unsimplified": {
+            "__type__": "sympy",
+            "expression": "-(2*t**2*(t**2 - 9) + 2*t**2*(t**2 - 4) + (t**2 - 9)*(t**2 - 4))/(6*t)",
+            "srepr": "Mul(Integer(-1), Rational(1, 6), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-9))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-9)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4)))))"
+          },
+          "dy_dx": {
+            "__type__": "sympy",
+            "expression": "(-5*t**4 + 39*t**2 - 36)/(6*t)",
+            "srepr": "Mul(Rational(1, 6), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(-1), Integer(5), Pow(Symbol('t', real=True), Integer(4))), Mul(Integer(39), Pow(Symbol('t', real=True), Integer(2))), Integer(-36)))"
+          },
+          "parameter_domain": {
+            "excluded": [
+              {
+                "__type__": "sympy",
+                "expression": "0",
+                "srepr": "Integer(0)"
+              }
+            ]
+          },
+          "undefined_parameter_values": []
+        },
+        "parts": {
+          "a": {
+            "dx_dt": {
+              "__type__": "sympy",
+              "expression": "-6*t",
+              "srepr": "Mul(Integer(-1), Integer(6), Symbol('t', real=True))"
+            },
+            "dy_dt": {
+              "__type__": "sympy",
+              "expression": "2*t**2*(t**2 - 9) + 2*t**2*(t**2 - 4) + (t**2 - 9)*(t**2 - 4)",
+              "srepr": "Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-9))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-9)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))))"
+            },
+            "dy_dx_unsimplified": {
+              "__type__": "sympy",
+              "expression": "-(2*t**2*(t**2 - 9) + 2*t**2*(t**2 - 4) + (t**2 - 9)*(t**2 - 4))/(6*t)",
+              "srepr": "Mul(Integer(-1), Rational(1, 6), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-9))), Mul(Integer(2), Pow(Symbol('t', real=True), Integer(2)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4))), Mul(Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-9)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4)))))"
+            },
+            "dy_dx": {
+              "__type__": "sympy",
+              "expression": "(-5*t**4 + 39*t**2 - 36)/(6*t)",
+              "srepr": "Mul(Rational(1, 6), Pow(Symbol('t', real=True), Integer(-1)), Add(Mul(Integer(-1), Integer(5), Pow(Symbol('t', real=True), Integer(4))), Mul(Integer(39), Pow(Symbol('t', real=True), Integer(2))), Integer(-36)))"
+            },
+            "undefined_parameter_values": []
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 3,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "derive_parametric_dy_dx",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Differentiate the parametric equations.",
+                "working": "Differentiate both parametric equations.\ndx/dt = -6*t\ndy/dt = 5*t^4 - 39*t^2 + 36",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Obtains both parameter derivatives correctly.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Differentiate both parametric equations."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dx}{dt} = - 6 t"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dt} = 5 t^{4} - 39 t^{2} + 36"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Form the parametric derivative and simplify.",
+                "working": "dy/dx = (dy/dt)/(dx/dt) = (5*t^4 - 39*t^2 + 36)/(-6*t)\nTherefore dy/dx = -(5*t^4 - 39*t^2 + 36)/(6*t).",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses dy/dx = (dy/dt)/(dx/dt).",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct simplified derivative.",
+                    "depends_on": [
+                      "parametric_ratio"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "parametric_rate_ratio",
+                    "type": "foundation",
+                    "level": "intermediate",
+                    "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                  }
+                ],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "$\\frac{dy}{dx}$ = $\\frac{\\frac{dy}{dt}}{\\frac{dx}{dt}} = - \\frac{1}{6 t} \\left(5 t^{4} - 39 t^{2} + 36\\right)$"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Therefore"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\frac{1}{6 t} \\left(-36 - 5 t^{4} + 39 t^{2}\\right)"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "The gradient compares the rates at which y and x change with respect to the same parameter."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "dx_dt": {
+                "__type__": "sympy",
+                "expression": "-6*t"
+              },
+              "dy_dt": {
+                "__type__": "sympy",
+                "expression": "2*t**2*(t**2 - 9) + 2*t**2*(t**2 - 4) + (t**2 - 9)*(t**2 - 4)"
+              },
+              "dy_dx_unsimplified": {
+                "__type__": "sympy",
+                "expression": "(-2*t**2*(t**2 - 9) - 2*t**2*(t**2 - 4) - (t**2 - 9)*(t**2 - 4))/(6*t)"
+              },
+              "dy_dx": {
+                "__type__": "sympy",
+                "expression": "(-5*t**4 + 39*t**2 - 36)/(6*t)"
+              },
+              "undefined_parameter_values": []
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 2,
+              "concept_id": "parametric_rate_ratio",
+              "type": "foundation",
+              "level": "intermediate",
+              "explanation": "The gradient compares the rates at which y and x change with respect to the same parameter."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "base_derivatives_manageable": {
+            "passed": true,
+            "detail": null
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "t": {
+            "__type__": "sympy",
+            "expression": "t",
+            "srepr": "Symbol('t', real=True)"
+          },
+          "x_t": {
+            "__type__": "sympy",
+            "expression": "-3*t**2 - 5",
+            "srepr": "Add(Mul(Integer(-1), Integer(3), Pow(Symbol('t', real=True), Integer(2))), Integer(-5))"
+          },
+          "y_t": {
+            "__type__": "sympy",
+            "expression": "t*(t**2 - 9)*(t**2 - 4)",
+            "srepr": "Mul(Symbol('t', real=True), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-9)), Add(Pow(Symbol('t', real=True), Integer(2)), Integer(-4)))"
+          },
+          "domain": {
+            "excluded": [
+              {
+                "__type__": "sympy",
+                "expression": "0",
+                "srepr": "Integer(0)"
+              }
+            ]
+          },
+          "object_kind": "parametric_curve",
+          "object_grammar": "product",
+          "family": "parametric_derivative_core",
+          "architecture": "direct_structured_product",
+          "task_sequence": [
+            "derive_parametric_dy_dx"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "derive_parametric_dy_dx",
+              "prompt": "Find an expression for dy/dx in terms of t.",
+              "depends_on": [],
+              "data": {
+                "show_target": null
+              }
+            }
+          ]
+        },
+        "full_structure": {
+          "generative": {
+            "family": "parametric_derivative_core",
+            "architecture": "direct_structured_product",
+            "depth_position": 0.38,
+            "object_kind": "parametric_curve",
+            "object_grammar": "product",
+            "task_sequence": [
+              "derive_parametric_dy_dx"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "derive_parametric_dy_dx",
+                "prompt": "Find an expression for dy/dx in terms of t.",
+                "depends_on": [],
+                "data": {
+                  "show_target": null
+                }
+              }
+            ],
+            "part_count": 1,
+            "part_dependencies": {
+              "a": []
+            },
+            "presentation": {},
+            "generation_spec": {
+              "family": "parametric_derivative_core",
+              "depth": 1,
+              "architecture": "direct_structured_product",
+              "presentation_mode": null,
+              "preferred_parameter": null,
+              "pmt_primary_topic": "Parametric Differentiation",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "parametric_derivative_core",
+            "required_rules": [
+              "power_rule",
+              "product_rule",
+              "algebraic_expansion"
+            ],
+            "multipart": false,
+            "part_count": 1,
+            "requires_parametric_differentiation": true,
+            "domain_restriction_required": true
+          },
+          "topic_metadata": {
+            "primary": "Parametric Differentiation",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Dx Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "- 6 t"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dt**"
+            },
+            {
+              "type": "latex",
+              "content": "2 t^{2} \\left(t^{2} - 9\\right) + 2 t^{2} \\left(t^{2} - 4\\right) + \\left(t^{2} - 9\\right) \\left(t^{2} - 4\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx Unsimplified**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{1}{6 t} \\left(- \\left(t^{2} - 9\\right) \\left(t^{2} - 4\\right) - 2 t^{2} \\left(t^{2} - 4\\right) - 2 t^{2} \\left(t^{2} - 9\\right)\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Dy Dx**"
+            },
+            {
+              "type": "latex",
+              "content": "\\frac{1}{6 t} \\left(- 5 t^{4} + 39 t^{2} - 36\\right)"
+            },
+            {
+              "type": "markdown",
+              "content": "**Undefined Parameter Values**"
             }
           ]
         }

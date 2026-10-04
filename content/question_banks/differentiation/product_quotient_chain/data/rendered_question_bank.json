@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "updated_at": "2026-09-15T10:05:53.790001+00:00",
+  "updated_at": "2026-10-04T09:04:14.279798+00:00",
   "questions": [
     {
       "question_id": "Q000001",
@@ -11404,6 +11404,2262 @@
             {
               "type": "markdown",
               "content": "factorised"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000018",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_8059b3068aa54414",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-10-04T09:04:08.326456+00:00",
+        "generation_selection": {
+          "family": "derivative_parameter_reasoning",
+          "requested_depth": 0,
+          "actual_depth": 1,
+          "architecture": "stationary_point_parameter_range",
+          "validation_attempt": 1,
+          "architecture_requested": "stationary_point_parameter_range",
+          "seed": 1885241247,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "The function is defined by\n\n    y = (k + x^2 - 4*x)*exp(-x).\n\n(a) Show that dy/dx = -(k + x^2 - 6*x + 4)*exp(-x).\n\n(b) Given that the curve has at least one stationary point, find the range of possible values of k.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The function is defined by"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "latex",
+            "content": "y = \\left(k + x^{2} - 4 x\\right) e^{- x}"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Show that $\\frac{dy}{dx} = \\left(-4 - k - x^{2} + 6 x\\right) e^{- x}$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Given that the curve has at least one stationary point, find the range of possible values of k."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "derivative_parameter_reasoning",
+        "architecture": "stationary_point_parameter_range",
+        "depth_position": 1,
+        "object_kind": "explicit_function",
+        "object_grammar": "parameter_discriminant",
+        "expression_tree": {
+          "kind": "product",
+          "family": null,
+          "detail": null,
+          "children": []
+        },
+        "task_sequence": [
+          "differentiate",
+          "stationary_parameter_range"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "prompt": "Show that dy/dx = -(k + x^2 - 6*x + 4)*exp(-x).",
+            "depends_on": [],
+            "data": {
+              "show_target": {
+                "__type__": "sympy",
+                "expression": "-(k + x**2 - 6*x + 4)*exp(-x)",
+                "srepr": "Mul(Integer(-1), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(6), Symbol('x', real=True)), Integer(4)), exp(Mul(Integer(-1), Symbol('x', real=True))))"
+              },
+              "output_form": "factorised"
+            }
+          },
+          {
+            "part": "b",
+            "operation": "stationary_parameter_range",
+            "prompt": "Given that the curve has at least one stationary point, find the range of possible values of k.",
+            "depends_on": [
+              "a"
+            ]
+          }
+        ],
+        "part_count": 2,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "presentation": {
+          "show_that": true
+        },
+        "generation_spec": {
+          "family": "derivative_parameter_reasoning",
+          "depth": 0,
+          "architecture": "stationary_point_parameter_range",
+          "required_rules": null,
+          "function_families": null,
+          "output_form": null,
+          "preferred_x": null,
+          "presentation_mode": null,
+          "pmt_primary_topic": "Product, Quotient and Chain Rules",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "derivative_parameter_reasoning",
+        "required_rules": [
+          "product_rule",
+          "chain_rule"
+        ],
+        "function_families": [
+          "polynomial",
+          "exponential",
+          "parameter"
+        ],
+        "nesting_depth": 1,
+        "multipart": true,
+        "part_count": 2,
+        "requires_differentiation": true
+      },
+      "topic_metadata": {
+        "primary": "Product, Quotient and Chain Rules",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "expression": {
+            "__type__": "sympy",
+            "expression": "(k + x**2 - 4*x)*exp(-x)",
+            "srepr": "Mul(Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(4), Symbol('x', real=True))), exp(Mul(Integer(-1), Symbol('x', real=True))))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "(2*x - 4)*exp(-x) - (k + x**2 - 4*x)*exp(-x)",
+            "srepr": "Add(Mul(Add(Mul(Integer(2), Symbol('x', real=True)), Integer(-4)), exp(Mul(Integer(-1), Symbol('x', real=True)))), Mul(Integer(-1), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(4), Symbol('x', real=True))), exp(Mul(Integer(-1), Symbol('x', real=True)))))"
+          },
+          "derivative_forms": {
+            "raw": {
+              "__type__": "sympy",
+              "expression": "(2*x - 4)*exp(-x) - (k + x**2 - 4*x)*exp(-x)",
+              "srepr": "Add(Mul(Add(Mul(Integer(2), Symbol('x', real=True)), Integer(-4)), exp(Mul(Integer(-1), Symbol('x', real=True)))), Mul(Integer(-1), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(4), Symbol('x', real=True))), exp(Mul(Integer(-1), Symbol('x', real=True)))))"
+            },
+            "expanded": {
+              "__type__": "sympy",
+              "expression": "-k*exp(-x) - x**2*exp(-x) + 6*x*exp(-x) - 4*exp(-x)",
+              "srepr": "Add(Mul(Integer(-1), Symbol('k', real=True), exp(Mul(Integer(-1), Symbol('x', real=True)))), Mul(Integer(-1), Pow(Symbol('x', real=True), Integer(2)), exp(Mul(Integer(-1), Symbol('x', real=True)))), Mul(Integer(6), Symbol('x', real=True), exp(Mul(Integer(-1), Symbol('x', real=True)))), Mul(Integer(-1), Integer(4), exp(Mul(Integer(-1), Symbol('x', real=True)))))"
+            },
+            "factorised": {
+              "__type__": "sympy",
+              "expression": "-(k + x**2 - 6*x + 4)*exp(-x)",
+              "srepr": "Mul(Integer(-1), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(6), Symbol('x', real=True)), Integer(4)), exp(Mul(Integer(-1), Symbol('x', real=True))))"
+            },
+            "single_fraction": {
+              "__type__": "sympy",
+              "expression": "-(k + x**2 - 6*x + 4)*exp(-x)",
+              "srepr": "Mul(Integer(-1), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(6), Symbol('x', real=True)), Integer(4)), exp(Mul(Integer(-1), Symbol('x', real=True))))"
+            },
+            "simplified": {
+              "__type__": "sympy",
+              "expression": "(-k - x**2 + 6*x - 4)*exp(-x)",
+              "srepr": "Mul(Add(Mul(Integer(-1), Symbol('k', real=True)), Mul(Integer(-1), Pow(Symbol('x', real=True), Integer(2))), Mul(Integer(6), Symbol('x', real=True)), Integer(-4)), exp(Mul(Integer(-1), Symbol('x', real=True))))"
+            }
+          },
+          "domain": {},
+          "independently_detected_rules": [
+            "product_rule",
+            "chain_rule"
+          ]
+        },
+        "parts": {
+          "a": {
+            "derivative": {
+              "__type__": "sympy",
+              "expression": "(2*x - 4)*exp(-x) - (k + x**2 - 4*x)*exp(-x)",
+              "srepr": "Add(Mul(Add(Mul(Integer(2), Symbol('x', real=True)), Integer(-4)), exp(Mul(Integer(-1), Symbol('x', real=True)))), Mul(Integer(-1), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(4), Symbol('x', real=True))), exp(Mul(Integer(-1), Symbol('x', real=True)))))"
+            },
+            "display_derivative": {
+              "__type__": "sympy",
+              "expression": "-(k + x**2 - 6*x + 4)*exp(-x)",
+              "srepr": "Mul(Integer(-1), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(6), Symbol('x', real=True)), Integer(4)), exp(Mul(Integer(-1), Symbol('x', real=True))))"
+            },
+            "output_form": "factorised"
+          },
+          "b": {
+            "stationary_polynomial": {
+              "__type__": "sympy",
+              "expression": "-k - x**2 + 6*x - 4",
+              "srepr": "Add(Mul(Integer(-1), Symbol('k', real=True)), Mul(Integer(-1), Pow(Symbol('x', real=True), Integer(2))), Mul(Integer(6), Symbol('x', real=True)), Integer(-4))"
+            },
+            "discriminant": {
+              "__type__": "sympy",
+              "expression": "-4*(k - 5)",
+              "srepr": "Mul(Integer(-1), Integer(4), Add(Symbol('k', real=True), Integer(-5)))"
+            },
+            "parameter": {
+              "__type__": "sympy",
+              "expression": "k",
+              "srepr": "Symbol('k', real=True)"
+            },
+            "parameter_range": {
+              "__type__": "sympy",
+              "expression": "Interval(-oo, 5)",
+              "srepr": "Interval(-oo, Integer(5), true, false)"
+            }
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 6,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Identify the differentiation structure.",
+                "working": "The required structure is product rule, with the chain rule.\nTake u = k + x^2 - 4*x and v = exp(-x).\ndu/dx = 2*(x - 2),    dv/dx = -exp(-x)\nThen dy/dx = (du/dx)v + u(dv/dx).",
+                "marks_available": 0,
+                "marks": [],
+                "concepts": [
+                  {
+                    "concept_id": "product_structure",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "For a product, differentiate each factor in turn while leaving the other factor unchanged."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "The required structure is product rule, with the chain rule."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Take $u = k + x^{2} - 4 x$ and $v = e^{- x}$."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{du}{dx} = -4 + 2 x,\\qquad \\frac{dv}{dx} = - e^{- x}"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Then $\\frac{dy}{dx} = v \\frac{du}{dx} + u \\frac{dv}{dx}$."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": null,
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "For a product, differentiate each factor in turn while leaving the other factor unchanged."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Differentiate and simplify into the requested form.",
+                "working": "dy/dx = -(k + x^2 - 6*x + 4)*exp(-x).",
+                "marks_available": 3,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Applies the required product, quotient or chain rule structure.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Differentiates all component functions correctly.",
+                    "depends_on": [
+                      "rule_structure"
+                    ],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Presents an equivalent derivative in the requested form.",
+                    "depends_on": [
+                      "correct_derivative"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = \\left(-4 - k - x^{2} + 6 x\\right) e^{- x}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[3 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "derivative": {
+                "__type__": "sympy",
+                "expression": "(2*x - 4)*exp(-x) - (k + x**2 - 4*x)*exp(-x)"
+              },
+              "display_derivative": {
+                "__type__": "sympy",
+                "expression": "(-k - x**2 + 6*x - 4)*exp(-x)"
+              },
+              "output_form": "factorised"
+            }
+          },
+          {
+            "part": "b",
+            "operation": "stationary_parameter_range",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Use the stationary-point condition.",
+                "working": "Stationary points require\n-k - x^2 + 6*x - 4 = 0.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Removes the non-zero exponential factor and forms the quadratic stationary equation.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "nonzero_exp_factor",
+                    "type": "strategic_reasoning",
+                    "level": "intermediate",
+                    "explanation": "An exponential factor is always positive, so it cannot make the derivative zero."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Stationary points require"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "- k - x^{2} + 6 x - 4 = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "An exponential factor is always positive, so it cannot make the derivative zero."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Require the quadratic to have a real solution.",
+                "working": "Its discriminant is\nD = -4*(k - 5).\nFor at least one stationary point, D >= 0.\nHence k <= 5.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the discriminant condition D >= 0.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct parameter range.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Its discriminant is"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "D = 20 - 4 k"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "For at least one stationary point, $D \\ge 0$."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Hence"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "k \\le 5"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "stationary_polynomial": {
+                "__type__": "sympy",
+                "expression": "-k - x**2 + 6*x - 4"
+              },
+              "discriminant": {
+                "__type__": "sympy",
+                "expression": "20 - 4*k"
+              },
+              "parameter": {
+                "__type__": "sympy",
+                "expression": "k"
+              },
+              "parameter_range": {
+                "__type__": "sympy",
+                "expression": "Interval(-oo, 5)"
+              }
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 1,
+              "concept_id": "product_structure",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "For a product, differentiate each factor in turn while leaving the other factor unchanged."
+            },
+            {
+              "part": "b",
+              "step": 1,
+              "concept_id": "nonzero_exp_factor",
+              "type": "strategic_reasoning",
+              "level": "intermediate",
+              "explanation": "An exponential factor is always positive, so it cannot make the derivative zero."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "show_derivative_part_a": {
+            "passed": true,
+            "detail": {
+              "__type__": "sympy",
+              "expression": "-(k + x**2 - 6*x + 4)*exp(-x)",
+              "srepr": "Mul(Integer(-1), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(6), Symbol('x', real=True)), Integer(4)), exp(Mul(Integer(-1), Symbol('x', real=True))))"
+            }
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "x": {
+            "__type__": "sympy",
+            "expression": "x",
+            "srepr": "Symbol('x', real=True)"
+          },
+          "expression": {
+            "__type__": "sympy",
+            "expression": "(k + x**2 - 4*x)*exp(-x)",
+            "srepr": "Mul(Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(4), Symbol('x', real=True))), exp(Mul(Integer(-1), Symbol('x', real=True))))"
+          },
+          "domain": {},
+          "object_kind": "explicit_function",
+          "object_grammar": "parameter_discriminant",
+          "family": "derivative_parameter_reasoning",
+          "architecture": "stationary_point_parameter_range",
+          "required_rules": [
+            "product_rule",
+            "chain_rule"
+          ],
+          "function_families": [
+            "polynomial",
+            "exponential",
+            "parameter"
+          ],
+          "expression_tree": {
+            "kind": "product",
+            "family": null,
+            "detail": null,
+            "children": []
+          },
+          "task_sequence": [
+            "differentiate",
+            "stationary_parameter_range"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "differentiate",
+              "prompt": "Show that dy/dx = -(k + x^2 - 6*x + 4)*exp(-x).",
+              "depends_on": [],
+              "data": {
+                "show_target": {
+                  "__type__": "sympy",
+                  "expression": "-(k + x**2 - 6*x + 4)*exp(-x)",
+                  "srepr": "Mul(Integer(-1), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(6), Symbol('x', real=True)), Integer(4)), exp(Mul(Integer(-1), Symbol('x', real=True))))"
+                },
+                "output_form": "factorised"
+              }
+            },
+            {
+              "part": "b",
+              "operation": "stationary_parameter_range",
+              "prompt": "Given that the curve has at least one stationary point, find the range of possible values of k.",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "parameter": {
+            "__type__": "sympy",
+            "expression": "k",
+            "srepr": "Symbol('k', real=True)"
+          },
+          "parameter_range": {
+            "__type__": "sympy",
+            "expression": "Interval(-oo, 5)",
+            "srepr": "Interval(-oo, Integer(5), true, false)"
+          },
+          "range_boundary": {
+            "__type__": "sympy",
+            "expression": "5",
+            "srepr": "Integer(5)"
+          }
+        },
+        "full_structure": {
+          "generative": {
+            "family": "derivative_parameter_reasoning",
+            "architecture": "stationary_point_parameter_range",
+            "depth_position": 1,
+            "object_kind": "explicit_function",
+            "object_grammar": "parameter_discriminant",
+            "expression_tree": {
+              "kind": "product",
+              "family": null,
+              "detail": null,
+              "children": []
+            },
+            "task_sequence": [
+              "differentiate",
+              "stationary_parameter_range"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "differentiate",
+                "prompt": "Show that dy/dx = -(k + x^2 - 6*x + 4)*exp(-x).",
+                "depends_on": [],
+                "data": {
+                  "show_target": {
+                    "__type__": "sympy",
+                    "expression": "-(k + x**2 - 6*x + 4)*exp(-x)",
+                    "srepr": "Mul(Integer(-1), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(6), Symbol('x', real=True)), Integer(4)), exp(Mul(Integer(-1), Symbol('x', real=True))))"
+                  },
+                  "output_form": "factorised"
+                }
+              },
+              {
+                "part": "b",
+                "operation": "stationary_parameter_range",
+                "prompt": "Given that the curve has at least one stationary point, find the range of possible values of k.",
+                "depends_on": [
+                  "a"
+                ]
+              }
+            ],
+            "part_count": 2,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "presentation": {
+              "show_that": true
+            },
+            "generation_spec": {
+              "family": "derivative_parameter_reasoning",
+              "depth": 0,
+              "architecture": "stationary_point_parameter_range",
+              "required_rules": null,
+              "function_families": null,
+              "output_form": null,
+              "preferred_x": null,
+              "presentation_mode": null,
+              "pmt_primary_topic": "Product, Quotient and Chain Rules",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "derivative_parameter_reasoning",
+            "required_rules": [
+              "product_rule",
+              "chain_rule"
+            ],
+            "function_families": [
+              "polynomial",
+              "exponential",
+              "parameter"
+            ],
+            "nesting_depth": 1,
+            "multipart": true,
+            "part_count": 2,
+            "requires_differentiation": true
+          },
+          "topic_metadata": {
+            "primary": "Product, Quotient and Chain Rules",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Derivative**"
+            },
+            {
+              "type": "latex",
+              "content": "\\left(2 x - 4\\right) e^{- x} - \\left(k + x^{2} - 4 x\\right) e^{- x}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Display Derivative**"
+            },
+            {
+              "type": "latex",
+              "content": "\\left(-4 - k - x^{2} + 6 x\\right) e^{- x}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Output Form**"
+            },
+            {
+              "type": "markdown",
+              "content": "factorised"
+            }
+          ],
+          "b": [
+            {
+              "type": "markdown",
+              "content": "**Stationary Polynomial**"
+            },
+            {
+              "type": "latex",
+              "content": "- k - x^{2} + 6 x - 4"
+            },
+            {
+              "type": "markdown",
+              "content": "**Discriminant**"
+            },
+            {
+              "type": "latex",
+              "content": "20 - 4 k"
+            },
+            {
+              "type": "markdown",
+              "content": "**Parameter**"
+            },
+            {
+              "type": "latex",
+              "content": "k"
+            },
+            {
+              "type": "markdown",
+              "content": "**Parameter Range**"
+            },
+            {
+              "type": "latex",
+              "content": "\\left(-\\infty, 5\\right]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000019",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_02d72893519148b1",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-10-04T09:04:10.804730+00:00",
+        "generation_selection": {
+          "family": "derivative_parameter_reasoning",
+          "requested_depth": 0.5,
+          "actual_depth": 1,
+          "architecture": "stationary_point_parameter_range",
+          "validation_attempt": 1,
+          "architecture_requested": "stationary_point_parameter_range",
+          "seed": 588633546,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "The function is defined by\n\n    y = (k + x^2 - 2*x)*exp(-2*x).\n\n(a) Show that dy/dx = -2*(k + x^2 - 3*x + 1)*exp(-2*x).\n\n(b) Given that the curve has at least one stationary point, find the range of possible values of k.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The function is defined by"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "latex",
+            "content": "y = \\left(k + x^{2} - 2 x\\right) e^{- 2 x}"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Show that $\\frac{dy}{dx} = - 2 \\left(k + x^{2} - 3 x + 1\\right) e^{- 2 x}$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Given that the curve has at least one stationary point, find the range of possible values of k."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "derivative_parameter_reasoning",
+        "architecture": "stationary_point_parameter_range",
+        "depth_position": 1,
+        "object_kind": "explicit_function",
+        "object_grammar": "parameter_discriminant",
+        "expression_tree": {
+          "kind": "product",
+          "family": null,
+          "detail": null,
+          "children": []
+        },
+        "task_sequence": [
+          "differentiate",
+          "stationary_parameter_range"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "prompt": "Show that dy/dx = -2*(k + x^2 - 3*x + 1)*exp(-2*x).",
+            "depends_on": [],
+            "data": {
+              "show_target": {
+                "__type__": "sympy",
+                "expression": "-2*(k + x**2 - 3*x + 1)*exp(-2*x)",
+                "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(3), Symbol('x', real=True)), Integer(1)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+              },
+              "output_form": "factorised"
+            }
+          },
+          {
+            "part": "b",
+            "operation": "stationary_parameter_range",
+            "prompt": "Given that the curve has at least one stationary point, find the range of possible values of k.",
+            "depends_on": [
+              "a"
+            ]
+          }
+        ],
+        "part_count": 2,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "presentation": {
+          "show_that": true
+        },
+        "generation_spec": {
+          "family": "derivative_parameter_reasoning",
+          "depth": 0.5,
+          "architecture": "stationary_point_parameter_range",
+          "required_rules": null,
+          "function_families": null,
+          "output_form": null,
+          "preferred_x": null,
+          "presentation_mode": null,
+          "pmt_primary_topic": "Product, Quotient and Chain Rules",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "derivative_parameter_reasoning",
+        "required_rules": [
+          "product_rule",
+          "chain_rule"
+        ],
+        "function_families": [
+          "polynomial",
+          "exponential",
+          "parameter"
+        ],
+        "nesting_depth": 1,
+        "multipart": true,
+        "part_count": 2,
+        "requires_differentiation": true
+      },
+      "topic_metadata": {
+        "primary": "Product, Quotient and Chain Rules",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "expression": {
+            "__type__": "sympy",
+            "expression": "(k + x**2 - 2*x)*exp(-2*x)",
+            "srepr": "Mul(Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(2), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "(2*x - 2)*exp(-2*x) - 2*(k + x**2 - 2*x)*exp(-2*x)",
+            "srepr": "Add(Mul(Add(Mul(Integer(2), Symbol('x', real=True)), Integer(-2)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))), Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(2), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))))"
+          },
+          "derivative_forms": {
+            "raw": {
+              "__type__": "sympy",
+              "expression": "(2*x - 2)*exp(-2*x) - 2*(k + x**2 - 2*x)*exp(-2*x)",
+              "srepr": "Add(Mul(Add(Mul(Integer(2), Symbol('x', real=True)), Integer(-2)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))), Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(2), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))))"
+            },
+            "expanded": {
+              "__type__": "sympy",
+              "expression": "-2*k*exp(-2*x) - 2*x**2*exp(-2*x) + 6*x*exp(-2*x) - 2*exp(-2*x)",
+              "srepr": "Add(Mul(Integer(-1), Integer(2), Symbol('k', real=True), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))), Mul(Integer(-1), Integer(2), Pow(Symbol('x', real=True), Integer(2)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))), Mul(Integer(6), Symbol('x', real=True), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))), Mul(Integer(-1), Integer(2), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))))"
+            },
+            "factorised": {
+              "__type__": "sympy",
+              "expression": "-2*(k + x**2 - 3*x + 1)*exp(-2*x)",
+              "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(3), Symbol('x', real=True)), Integer(1)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+            },
+            "single_fraction": {
+              "__type__": "sympy",
+              "expression": "-2*(k + x**2 - 3*x + 1)*exp(-2*x)",
+              "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(3), Symbol('x', real=True)), Integer(1)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+            },
+            "simplified": {
+              "__type__": "sympy",
+              "expression": "2*(-k - x**2 + 3*x - 1)*exp(-2*x)",
+              "srepr": "Mul(Integer(2), Add(Mul(Integer(-1), Symbol('k', real=True)), Mul(Integer(-1), Pow(Symbol('x', real=True), Integer(2))), Mul(Integer(3), Symbol('x', real=True)), Integer(-1)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+            }
+          },
+          "domain": {},
+          "independently_detected_rules": [
+            "product_rule",
+            "chain_rule"
+          ]
+        },
+        "parts": {
+          "a": {
+            "derivative": {
+              "__type__": "sympy",
+              "expression": "(2*x - 2)*exp(-2*x) - 2*(k + x**2 - 2*x)*exp(-2*x)",
+              "srepr": "Add(Mul(Add(Mul(Integer(2), Symbol('x', real=True)), Integer(-2)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))), Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(2), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))))"
+            },
+            "display_derivative": {
+              "__type__": "sympy",
+              "expression": "-2*(k + x**2 - 3*x + 1)*exp(-2*x)",
+              "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(3), Symbol('x', real=True)), Integer(1)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+            },
+            "output_form": "factorised"
+          },
+          "b": {
+            "stationary_polynomial": {
+              "__type__": "sympy",
+              "expression": "-k - x**2 + 3*x - 1",
+              "srepr": "Add(Mul(Integer(-1), Symbol('k', real=True)), Mul(Integer(-1), Pow(Symbol('x', real=True), Integer(2))), Mul(Integer(3), Symbol('x', real=True)), Integer(-1))"
+            },
+            "discriminant": {
+              "__type__": "sympy",
+              "expression": "5 - 4*k",
+              "srepr": "Add(Integer(5), Mul(Integer(-1), Integer(4), Symbol('k', real=True)))"
+            },
+            "parameter": {
+              "__type__": "sympy",
+              "expression": "k",
+              "srepr": "Symbol('k', real=True)"
+            },
+            "parameter_range": {
+              "__type__": "sympy",
+              "expression": "Interval(-oo, 5/4)",
+              "srepr": "Interval(-oo, Rational(5, 4), true, false)"
+            }
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 6,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Identify the differentiation structure.",
+                "working": "The required structure is product rule, with the chain rule.\nTake u = k + x^2 - 2*x and v = exp(-2*x).\ndu/dx = 2*(x - 1),    dv/dx = -2*exp(-2*x)\nThen dy/dx = (du/dx)v + u(dv/dx).",
+                "marks_available": 0,
+                "marks": [],
+                "concepts": [
+                  {
+                    "concept_id": "product_structure",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "For a product, differentiate each factor in turn while leaving the other factor unchanged."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "The required structure is product rule, with the chain rule."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Take $u = k + x^{2} - 2 x$ and $v = e^{- 2 x}$."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{du}{dx} = -2 + 2 x,\\qquad \\frac{dv}{dx} = - 2 e^{- 2 x}"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Then $\\frac{dy}{dx} = v \\frac{du}{dx} + u \\frac{dv}{dx}$."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": null,
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "For a product, differentiate each factor in turn while leaving the other factor unchanged."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Differentiate and simplify into the requested form.",
+                "working": "dy/dx = -2*(k + x^2 - 3*x + 1)*exp(-2*x).",
+                "marks_available": 3,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Applies the required product, quotient or chain rule structure.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Differentiates all component functions correctly.",
+                    "depends_on": [
+                      "rule_structure"
+                    ],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Presents an equivalent derivative in the requested form.",
+                    "depends_on": [
+                      "correct_derivative"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = - 2 \\left(k + x^{2} - 3 x + 1\\right) e^{- 2 x}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[3 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "derivative": {
+                "__type__": "sympy",
+                "expression": "(2*x - 2)*exp(-2*x) - (2*k + 2*x**2 - 4*x)*exp(-2*x)"
+              },
+              "display_derivative": {
+                "__type__": "sympy",
+                "expression": "(-2*k - 2*x**2 + 6*x - 2)*exp(-2*x)"
+              },
+              "output_form": "factorised"
+            }
+          },
+          {
+            "part": "b",
+            "operation": "stationary_parameter_range",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Use the stationary-point condition.",
+                "working": "Stationary points require\n-k - x^2 + 3*x - 1 = 0.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Removes the non-zero exponential factor and forms the quadratic stationary equation.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "nonzero_exp_factor",
+                    "type": "strategic_reasoning",
+                    "level": "intermediate",
+                    "explanation": "An exponential factor is always positive, so it cannot make the derivative zero."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Stationary points require"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "- k - x^{2} + 3 x - 1 = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "An exponential factor is always positive, so it cannot make the derivative zero."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Require the quadratic to have a real solution.",
+                "working": "Its discriminant is\nD = 5 - 4*k.\nFor at least one stationary point, D >= 0.\nHence k <= 5/4.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the discriminant condition D >= 0.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct parameter range.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Its discriminant is"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "D = 5 - 4 k"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "For at least one stationary point, $D \\ge 0$."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Hence"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "k \\le \\frac{5}{4}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "stationary_polynomial": {
+                "__type__": "sympy",
+                "expression": "-k - x**2 + 3*x - 1"
+              },
+              "discriminant": {
+                "__type__": "sympy",
+                "expression": "5 - 4*k"
+              },
+              "parameter": {
+                "__type__": "sympy",
+                "expression": "k"
+              },
+              "parameter_range": {
+                "__type__": "sympy",
+                "expression": "Interval(-oo, 5/4)"
+              }
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 1,
+              "concept_id": "product_structure",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "For a product, differentiate each factor in turn while leaving the other factor unchanged."
+            },
+            {
+              "part": "b",
+              "step": 1,
+              "concept_id": "nonzero_exp_factor",
+              "type": "strategic_reasoning",
+              "level": "intermediate",
+              "explanation": "An exponential factor is always positive, so it cannot make the derivative zero."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "show_derivative_part_a": {
+            "passed": true,
+            "detail": {
+              "__type__": "sympy",
+              "expression": "-2*(k + x**2 - 3*x + 1)*exp(-2*x)",
+              "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(3), Symbol('x', real=True)), Integer(1)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+            }
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "x": {
+            "__type__": "sympy",
+            "expression": "x",
+            "srepr": "Symbol('x', real=True)"
+          },
+          "expression": {
+            "__type__": "sympy",
+            "expression": "(k + x**2 - 2*x)*exp(-2*x)",
+            "srepr": "Mul(Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(2), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+          },
+          "domain": {},
+          "object_kind": "explicit_function",
+          "object_grammar": "parameter_discriminant",
+          "family": "derivative_parameter_reasoning",
+          "architecture": "stationary_point_parameter_range",
+          "required_rules": [
+            "product_rule",
+            "chain_rule"
+          ],
+          "function_families": [
+            "polynomial",
+            "exponential",
+            "parameter"
+          ],
+          "expression_tree": {
+            "kind": "product",
+            "family": null,
+            "detail": null,
+            "children": []
+          },
+          "task_sequence": [
+            "differentiate",
+            "stationary_parameter_range"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "differentiate",
+              "prompt": "Show that dy/dx = -2*(k + x^2 - 3*x + 1)*exp(-2*x).",
+              "depends_on": [],
+              "data": {
+                "show_target": {
+                  "__type__": "sympy",
+                  "expression": "-2*(k + x**2 - 3*x + 1)*exp(-2*x)",
+                  "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(3), Symbol('x', real=True)), Integer(1)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+                },
+                "output_form": "factorised"
+              }
+            },
+            {
+              "part": "b",
+              "operation": "stationary_parameter_range",
+              "prompt": "Given that the curve has at least one stationary point, find the range of possible values of k.",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "parameter": {
+            "__type__": "sympy",
+            "expression": "k",
+            "srepr": "Symbol('k', real=True)"
+          },
+          "parameter_range": {
+            "__type__": "sympy",
+            "expression": "Interval(-oo, 5/4)",
+            "srepr": "Interval(-oo, Rational(5, 4), true, false)"
+          },
+          "range_boundary": {
+            "__type__": "sympy",
+            "expression": "5/4",
+            "srepr": "Rational(5, 4)"
+          }
+        },
+        "full_structure": {
+          "generative": {
+            "family": "derivative_parameter_reasoning",
+            "architecture": "stationary_point_parameter_range",
+            "depth_position": 1,
+            "object_kind": "explicit_function",
+            "object_grammar": "parameter_discriminant",
+            "expression_tree": {
+              "kind": "product",
+              "family": null,
+              "detail": null,
+              "children": []
+            },
+            "task_sequence": [
+              "differentiate",
+              "stationary_parameter_range"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "differentiate",
+                "prompt": "Show that dy/dx = -2*(k + x^2 - 3*x + 1)*exp(-2*x).",
+                "depends_on": [],
+                "data": {
+                  "show_target": {
+                    "__type__": "sympy",
+                    "expression": "-2*(k + x**2 - 3*x + 1)*exp(-2*x)",
+                    "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Integer(3), Symbol('x', real=True)), Integer(1)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+                  },
+                  "output_form": "factorised"
+                }
+              },
+              {
+                "part": "b",
+                "operation": "stationary_parameter_range",
+                "prompt": "Given that the curve has at least one stationary point, find the range of possible values of k.",
+                "depends_on": [
+                  "a"
+                ]
+              }
+            ],
+            "part_count": 2,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "presentation": {
+              "show_that": true
+            },
+            "generation_spec": {
+              "family": "derivative_parameter_reasoning",
+              "depth": 0.5,
+              "architecture": "stationary_point_parameter_range",
+              "required_rules": null,
+              "function_families": null,
+              "output_form": null,
+              "preferred_x": null,
+              "presentation_mode": null,
+              "pmt_primary_topic": "Product, Quotient and Chain Rules",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "derivative_parameter_reasoning",
+            "required_rules": [
+              "product_rule",
+              "chain_rule"
+            ],
+            "function_families": [
+              "polynomial",
+              "exponential",
+              "parameter"
+            ],
+            "nesting_depth": 1,
+            "multipart": true,
+            "part_count": 2,
+            "requires_differentiation": true
+          },
+          "topic_metadata": {
+            "primary": "Product, Quotient and Chain Rules",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Derivative**"
+            },
+            {
+              "type": "latex",
+              "content": "\\left(2 x - 2\\right) e^{- 2 x} - 2 \\left(k + x^{2} - 2 x\\right) e^{- 2 x}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Display Derivative**"
+            },
+            {
+              "type": "latex",
+              "content": "- 2 \\left(k + x^{2} - 3 x + 1\\right) e^{- 2 x}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Output Form**"
+            },
+            {
+              "type": "markdown",
+              "content": "factorised"
+            }
+          ],
+          "b": [
+            {
+              "type": "markdown",
+              "content": "**Stationary Polynomial**"
+            },
+            {
+              "type": "latex",
+              "content": "- k - x^{2} + 3 x - 1"
+            },
+            {
+              "type": "markdown",
+              "content": "**Discriminant**"
+            },
+            {
+              "type": "latex",
+              "content": "5 - 4 k"
+            },
+            {
+              "type": "markdown",
+              "content": "**Parameter**"
+            },
+            {
+              "type": "latex",
+              "content": "k"
+            },
+            {
+              "type": "markdown",
+              "content": "**Parameter Range**"
+            },
+            {
+              "type": "latex",
+              "content": "\\left(-\\infty, \\frac{5}{4}\\right]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "question_id": "Q000020",
+      "source": {
+        "type": "generated",
+        "candidate_id": "contentlab_24bd9171d3084cd3",
+        "pipeline": "dojo_content_pipeline_v2",
+        "added_to_bank_at": "2026-10-04T09:04:14.279596+00:00",
+        "generation_selection": {
+          "family": "derivative_parameter_reasoning",
+          "requested_depth": 1,
+          "actual_depth": 1,
+          "architecture": "stationary_point_parameter_range",
+          "validation_attempt": 1,
+          "architecture_requested": "stationary_point_parameter_range",
+          "seed": 1213323185,
+          "generation_attempt": 1,
+          "diversity_reused": false
+        }
+      },
+      "question": {
+        "text": "The function is defined by\n\n    y = (k + x^2)*exp(-2*x).\n\n(a) Show that dy/dx = -2*(k + x^2 - x)*exp(-2*x).\n\n(b) Given that the curve has at least one stationary point, find the range of possible values of k.",
+        "display_blocks": [
+          {
+            "type": "markdown",
+            "content": "The function is defined by"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "latex",
+            "content": "y = \\left(k + x^{2}\\right) e^{- 2 x}"
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(a) Show that $\\frac{dy}{dx} = - 2 \\left(k + x^{2} - x\\right) e^{- 2 x}$."
+          },
+          {
+            "type": "spacer"
+          },
+          {
+            "type": "markdown",
+            "content": "(b) Given that the curve has at least one stationary point, find the range of possible values of k."
+          }
+        ]
+      },
+      "generative_structure": {
+        "family": "derivative_parameter_reasoning",
+        "architecture": "stationary_point_parameter_range",
+        "depth_position": 1,
+        "object_kind": "explicit_function",
+        "object_grammar": "parameter_discriminant",
+        "expression_tree": {
+          "kind": "product",
+          "family": null,
+          "detail": null,
+          "children": []
+        },
+        "task_sequence": [
+          "differentiate",
+          "stationary_parameter_range"
+        ],
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "prompt": "Show that dy/dx = -2*(k + x^2 - x)*exp(-2*x).",
+            "depends_on": [],
+            "data": {
+              "show_target": {
+                "__type__": "sympy",
+                "expression": "-2*(k + x**2 - x)*exp(-2*x)",
+                "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+              },
+              "output_form": "factorised"
+            }
+          },
+          {
+            "part": "b",
+            "operation": "stationary_parameter_range",
+            "prompt": "Given that the curve has at least one stationary point, find the range of possible values of k.",
+            "depends_on": [
+              "a"
+            ]
+          }
+        ],
+        "part_count": 2,
+        "part_dependencies": {
+          "a": [],
+          "b": [
+            "a"
+          ]
+        },
+        "presentation": {
+          "show_that": true
+        },
+        "generation_spec": {
+          "family": "derivative_parameter_reasoning",
+          "depth": 1,
+          "architecture": "stationary_point_parameter_range",
+          "required_rules": null,
+          "function_families": null,
+          "output_form": null,
+          "preferred_x": null,
+          "presentation_mode": null,
+          "pmt_primary_topic": "Product, Quotient and Chain Rules",
+          "pmt_overlaps": [],
+          "tags": {}
+        }
+      },
+      "emergent_structure": {
+        "family": "derivative_parameter_reasoning",
+        "required_rules": [
+          "product_rule",
+          "chain_rule"
+        ],
+        "function_families": [
+          "polynomial",
+          "exponential",
+          "parameter"
+        ],
+        "nesting_depth": 1,
+        "multipart": true,
+        "part_count": 2,
+        "requires_differentiation": true
+      },
+      "topic_metadata": {
+        "primary": "Product, Quotient and Chain Rules",
+        "overlaps": [],
+        "taxonomy_source": "PMT"
+      },
+      "answer": {
+        "object": {
+          "expression": {
+            "__type__": "sympy",
+            "expression": "(k + x**2)*exp(-2*x)",
+            "srepr": "Mul(Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+          },
+          "derivative": {
+            "__type__": "sympy",
+            "expression": "2*x*exp(-2*x) - 2*(k + x**2)*exp(-2*x)",
+            "srepr": "Add(Mul(Integer(2), Symbol('x', real=True), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))), Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))))"
+          },
+          "derivative_forms": {
+            "raw": {
+              "__type__": "sympy",
+              "expression": "2*x*exp(-2*x) - 2*(k + x**2)*exp(-2*x)",
+              "srepr": "Add(Mul(Integer(2), Symbol('x', real=True), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))), Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))))"
+            },
+            "expanded": {
+              "__type__": "sympy",
+              "expression": "-2*k*exp(-2*x) - 2*x**2*exp(-2*x) + 2*x*exp(-2*x)",
+              "srepr": "Add(Mul(Integer(-1), Integer(2), Symbol('k', real=True), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))), Mul(Integer(-1), Integer(2), Pow(Symbol('x', real=True), Integer(2)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))), Mul(Integer(2), Symbol('x', real=True), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))))"
+            },
+            "factorised": {
+              "__type__": "sympy",
+              "expression": "-2*(k + x**2 - x)*exp(-2*x)",
+              "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+            },
+            "single_fraction": {
+              "__type__": "sympy",
+              "expression": "-2*(k + x**2 - x)*exp(-2*x)",
+              "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+            },
+            "simplified": {
+              "__type__": "sympy",
+              "expression": "2*(-k - x**2 + x)*exp(-2*x)",
+              "srepr": "Mul(Integer(2), Add(Mul(Integer(-1), Symbol('k', real=True)), Mul(Integer(-1), Pow(Symbol('x', real=True), Integer(2))), Symbol('x', real=True)), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+            }
+          },
+          "domain": {},
+          "independently_detected_rules": [
+            "product_rule",
+            "chain_rule"
+          ]
+        },
+        "parts": {
+          "a": {
+            "derivative": {
+              "__type__": "sympy",
+              "expression": "2*x*exp(-2*x) - 2*(k + x**2)*exp(-2*x)",
+              "srepr": "Add(Mul(Integer(2), Symbol('x', real=True), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))), Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True)))))"
+            },
+            "display_derivative": {
+              "__type__": "sympy",
+              "expression": "-2*(k + x**2 - x)*exp(-2*x)",
+              "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+            },
+            "output_form": "factorised"
+          },
+          "b": {
+            "stationary_polynomial": {
+              "__type__": "sympy",
+              "expression": "-k - x**2 + x",
+              "srepr": "Add(Mul(Integer(-1), Symbol('k', real=True)), Mul(Integer(-1), Pow(Symbol('x', real=True), Integer(2))), Symbol('x', real=True))"
+            },
+            "discriminant": {
+              "__type__": "sympy",
+              "expression": "1 - 4*k",
+              "srepr": "Add(Integer(1), Mul(Integer(-1), Integer(4), Symbol('k', real=True)))"
+            },
+            "parameter": {
+              "__type__": "sympy",
+              "expression": "k",
+              "srepr": "Symbol('k', real=True)"
+            },
+            "parameter_range": {
+              "__type__": "sympy",
+              "expression": "Interval(-oo, 1/4)",
+              "srepr": "Interval(-oo, Rational(1, 4), true, false)"
+            }
+          }
+        }
+      },
+      "solution": {
+        "schema_version": 2,
+        "solution_engine_version": 1,
+        "total_marks": 6,
+        "marking_model": {
+          "status": "provisional_a_level_style",
+          "mark_types_used": [
+            "M",
+            "A",
+            "B",
+            "dM"
+          ],
+          "note": "Marks represent assessable mathematical achievements, not displayed lines. Final approval occurs at Review Gate 2."
+        },
+        "parts": [
+          {
+            "part": "a",
+            "operation": "differentiate",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Identify the differentiation structure.",
+                "working": "The required structure is product rule, with the chain rule.\nTake u = k + x^2 and v = exp(-2*x).\ndu/dx = 2*x,    dv/dx = -2*exp(-2*x)\nThen dy/dx = (du/dx)v + u(dv/dx).",
+                "marks_available": 0,
+                "marks": [],
+                "concepts": [
+                  {
+                    "concept_id": "product_structure",
+                    "type": "technique",
+                    "level": "intermediate",
+                    "explanation": "For a product, differentiate each factor in turn while leaving the other factor unchanged."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "The required structure is product rule, with the chain rule."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Take $u = k + x^{2}$ and $v = e^{- 2 x}$."
+                    },
+                    {
+                      "type": "latex",
+                      "content": "\\frac{du}{dx} = 2 x,\\qquad \\frac{dv}{dx} = - 2 e^{- 2 x}"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Then $\\frac{dy}{dx} = v \\frac{du}{dx} + u \\frac{dv}{dx}$."
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": null,
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "For a product, differentiate each factor in turn while leaving the other factor unchanged."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Differentiate and simplify into the requested form.",
+                "working": "dy/dx = -2*(k + x^2 - x)*exp(-2*x).",
+                "marks_available": 3,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Applies the required product, quotient or chain rule structure.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Differentiates all component functions correctly.",
+                    "depends_on": [
+                      "rule_structure"
+                    ],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Presents an equivalent derivative in the requested form.",
+                    "depends_on": [
+                      "correct_derivative"
+                    ],
+                    "follow_through": true
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "latex",
+                      "content": "\\frac{dy}{dx} = - 2 \\left(k + x^{2} - x\\right) e^{- 2 x}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[3 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "derivative": {
+                "__type__": "sympy",
+                "expression": "2*x*exp(-2*x) - (2*k + 2*x**2)*exp(-2*x)"
+              },
+              "display_derivative": {
+                "__type__": "sympy",
+                "expression": "(-2*k - 2*x**2 + 2*x)*exp(-2*x)"
+              },
+              "output_form": "factorised"
+            }
+          },
+          {
+            "part": "b",
+            "operation": "stationary_parameter_range",
+            "marks_available": 3,
+            "steps": [
+              {
+                "description": "Use the stationary-point condition.",
+                "working": "Stationary points require\n-k - x^2 + x = 0.",
+                "marks_available": 1,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Removes the non-zero exponential factor and forms the quadratic stationary equation.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [
+                  {
+                    "concept_id": "nonzero_exp_factor",
+                    "type": "strategic_reasoning",
+                    "level": "intermediate",
+                    "explanation": "An exponential factor is always positive, so it cannot make the derivative zero."
+                  }
+                ],
+                "depends_on_steps": [],
+                "step": 1,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Stationary points require"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "- k - x^{2} + x = 0"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[1 mark]",
+                  "concept_blocks": [
+                    [
+                      {
+                        "type": "markdown",
+                        "content": "An exponential factor is always positive, so it cannot make the derivative zero."
+                      }
+                    ]
+                  ],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              },
+              {
+                "description": "Require the quadratic to have a real solution.",
+                "working": "Its discriminant is\nD = 1 - 4*k.\nFor at least one stationary point, D >= 0.\nHence k <= 1/4.",
+                "marks_available": 2,
+                "marks": [
+                  {
+                    "type": "M",
+                    "marks": 1,
+                    "criterion": "Uses the discriminant condition D >= 0.",
+                    "depends_on": [],
+                    "follow_through": false
+                  },
+                  {
+                    "type": "A",
+                    "marks": 1,
+                    "criterion": "Obtains the correct parameter range.",
+                    "depends_on": [],
+                    "follow_through": false
+                  }
+                ],
+                "concepts": [],
+                "depends_on_steps": [
+                  1
+                ],
+                "step": 2,
+                "display": {
+                  "working_blocks": [
+                    {
+                      "type": "markdown",
+                      "content": "Its discriminant is"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "D = 1 - 4 k"
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "For at least one stationary point, $D \\ge 0$."
+                    },
+                    {
+                      "type": "markdown",
+                      "content": "Hence"
+                    },
+                    {
+                      "type": "latex",
+                      "content": "k \\le \\frac{1}{4}"
+                    }
+                  ],
+                  "student_mark_note_blocks": [],
+                  "fallback_mark_caption": "[2 marks]",
+                  "concept_blocks": [],
+                  "answer_note_blocks": [],
+                  "alternative_blocks": []
+                }
+              }
+            ],
+            "final_answer": {
+              "stationary_polynomial": {
+                "__type__": "sympy",
+                "expression": "-k - x**2 + x"
+              },
+              "discriminant": {
+                "__type__": "sympy",
+                "expression": "1 - 4*k"
+              },
+              "parameter": {
+                "__type__": "sympy",
+                "expression": "k"
+              },
+              "parameter_range": {
+                "__type__": "sympy",
+                "expression": "Interval(-oo, 1/4)"
+              }
+            }
+          }
+        ],
+        "learning_layer": {
+          "concepts": [
+            {
+              "part": "a",
+              "step": 1,
+              "concept_id": "product_structure",
+              "type": "technique",
+              "level": "intermediate",
+              "explanation": "For a product, differentiate each factor in turn while leaving the other factor unchanged."
+            },
+            {
+              "part": "b",
+              "step": 1,
+              "concept_id": "nonzero_exp_factor",
+              "type": "strategic_reasoning",
+              "level": "intermediate",
+              "explanation": "An exponential factor is always positive, so it cannot make the derivative zero."
+            }
+          ],
+          "display_policy": "Concept notes are optional learning hooks and are not displayed automatically on every reveal."
+        },
+        "validator_source": {
+          "status": "valid",
+          "solution_data_used": true
+        }
+      },
+      "validation_record": {
+        "status": "valid",
+        "checks": {
+          "required_math_contract": {
+            "passed": true,
+            "detail": []
+          },
+          "show_derivative_part_a": {
+            "passed": true,
+            "detail": {
+              "__type__": "sympy",
+              "expression": "-2*(k + x**2 - x)*exp(-2*x)",
+              "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+            }
+          }
+        },
+        "warnings": [],
+        "reasons": []
+      },
+      "engine_data": {
+        "math": {
+          "x": {
+            "__type__": "sympy",
+            "expression": "x",
+            "srepr": "Symbol('x', real=True)"
+          },
+          "expression": {
+            "__type__": "sympy",
+            "expression": "(k + x**2)*exp(-2*x)",
+            "srepr": "Mul(Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+          },
+          "domain": {},
+          "object_kind": "explicit_function",
+          "object_grammar": "parameter_discriminant",
+          "family": "derivative_parameter_reasoning",
+          "architecture": "stationary_point_parameter_range",
+          "required_rules": [
+            "product_rule",
+            "chain_rule"
+          ],
+          "function_families": [
+            "polynomial",
+            "exponential",
+            "parameter"
+          ],
+          "expression_tree": {
+            "kind": "product",
+            "family": null,
+            "detail": null,
+            "children": []
+          },
+          "task_sequence": [
+            "differentiate",
+            "stationary_parameter_range"
+          ],
+          "parts": [
+            {
+              "part": "a",
+              "operation": "differentiate",
+              "prompt": "Show that dy/dx = -2*(k + x^2 - x)*exp(-2*x).",
+              "depends_on": [],
+              "data": {
+                "show_target": {
+                  "__type__": "sympy",
+                  "expression": "-2*(k + x**2 - x)*exp(-2*x)",
+                  "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+                },
+                "output_form": "factorised"
+              }
+            },
+            {
+              "part": "b",
+              "operation": "stationary_parameter_range",
+              "prompt": "Given that the curve has at least one stationary point, find the range of possible values of k.",
+              "depends_on": [
+                "a"
+              ]
+            }
+          ],
+          "parameter": {
+            "__type__": "sympy",
+            "expression": "k",
+            "srepr": "Symbol('k', real=True)"
+          },
+          "parameter_range": {
+            "__type__": "sympy",
+            "expression": "Interval(-oo, 1/4)",
+            "srepr": "Interval(-oo, Rational(1, 4), true, false)"
+          },
+          "range_boundary": {
+            "__type__": "sympy",
+            "expression": "1/4",
+            "srepr": "Rational(1, 4)"
+          }
+        },
+        "full_structure": {
+          "generative": {
+            "family": "derivative_parameter_reasoning",
+            "architecture": "stationary_point_parameter_range",
+            "depth_position": 1,
+            "object_kind": "explicit_function",
+            "object_grammar": "parameter_discriminant",
+            "expression_tree": {
+              "kind": "product",
+              "family": null,
+              "detail": null,
+              "children": []
+            },
+            "task_sequence": [
+              "differentiate",
+              "stationary_parameter_range"
+            ],
+            "parts": [
+              {
+                "part": "a",
+                "operation": "differentiate",
+                "prompt": "Show that dy/dx = -2*(k + x^2 - x)*exp(-2*x).",
+                "depends_on": [],
+                "data": {
+                  "show_target": {
+                    "__type__": "sympy",
+                    "expression": "-2*(k + x**2 - x)*exp(-2*x)",
+                    "srepr": "Mul(Integer(-1), Integer(2), Add(Symbol('k', real=True), Pow(Symbol('x', real=True), Integer(2)), Mul(Integer(-1), Symbol('x', real=True))), exp(Mul(Integer(-1), Integer(2), Symbol('x', real=True))))"
+                  },
+                  "output_form": "factorised"
+                }
+              },
+              {
+                "part": "b",
+                "operation": "stationary_parameter_range",
+                "prompt": "Given that the curve has at least one stationary point, find the range of possible values of k.",
+                "depends_on": [
+                  "a"
+                ]
+              }
+            ],
+            "part_count": 2,
+            "part_dependencies": {
+              "a": [],
+              "b": [
+                "a"
+              ]
+            },
+            "presentation": {
+              "show_that": true
+            },
+            "generation_spec": {
+              "family": "derivative_parameter_reasoning",
+              "depth": 1,
+              "architecture": "stationary_point_parameter_range",
+              "required_rules": null,
+              "function_families": null,
+              "output_form": null,
+              "preferred_x": null,
+              "presentation_mode": null,
+              "pmt_primary_topic": "Product, Quotient and Chain Rules",
+              "pmt_overlaps": [],
+              "tags": {}
+            }
+          },
+          "emergent": {
+            "family": "derivative_parameter_reasoning",
+            "required_rules": [
+              "product_rule",
+              "chain_rule"
+            ],
+            "function_families": [
+              "polynomial",
+              "exponential",
+              "parameter"
+            ],
+            "nesting_depth": 1,
+            "multipart": true,
+            "part_count": 2,
+            "requires_differentiation": true
+          },
+          "topic_metadata": {
+            "primary": "Product, Quotient and Chain Rules",
+            "overlaps": [],
+            "taxonomy_source": "PMT"
+          }
+        }
+      },
+      "display": {
+        "renderer_version": 1,
+        "answer_blocks": {
+          "a": [
+            {
+              "type": "markdown",
+              "content": "**Derivative**"
+            },
+            {
+              "type": "latex",
+              "content": "2 x e^{- 2 x} - 2 \\left(k + x^{2}\\right) e^{- 2 x}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Display Derivative**"
+            },
+            {
+              "type": "latex",
+              "content": "- 2 \\left(k + x^{2} - x\\right) e^{- 2 x}"
+            },
+            {
+              "type": "markdown",
+              "content": "**Output Form**"
+            },
+            {
+              "type": "markdown",
+              "content": "factorised"
+            }
+          ],
+          "b": [
+            {
+              "type": "markdown",
+              "content": "**Stationary Polynomial**"
+            },
+            {
+              "type": "latex",
+              "content": "- k - x^{2} + x"
+            },
+            {
+              "type": "markdown",
+              "content": "**Discriminant**"
+            },
+            {
+              "type": "latex",
+              "content": "1 - 4 k"
+            },
+            {
+              "type": "markdown",
+              "content": "**Parameter**"
+            },
+            {
+              "type": "latex",
+              "content": "k"
+            },
+            {
+              "type": "markdown",
+              "content": "**Parameter Range**"
+            },
+            {
+              "type": "latex",
+              "content": "\\left(-\\infty, \\frac{1}{4}\\right]"
             }
           ]
         }
