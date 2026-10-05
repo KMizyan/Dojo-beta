@@ -20,6 +20,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <div className="shell">
           <nav className="nav">
+              <Link className="navStandaloneIcon" href="/" aria-label="DOJO home">
+                <img
+                  src="/icon.png"
+                  alt=""
+                  className="brandIcon"
+                  aria-hidden="true"
+                />
+              </Link>
             <div className="brandLockup">
               <Link className="brand" href="/">
                 <span className="brandProject">PROJECT</span>
@@ -35,7 +43,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           {children}
         </div>
-      </body>
+      <style>{`
+          .navStandaloneIcon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            line-height: 0;
+            margin-right: 28px;
+          }
+
+          .brandIcon {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 4px;
+            flex: 0 0 auto;
+          }
+        `}</style>
+        </body>
     </html>
   );
 }
