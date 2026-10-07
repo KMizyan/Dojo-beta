@@ -6,9 +6,62 @@ import { supabase } from '../../lib/supabase';
 
 type PaperArea = 'Pure' | 'Statistics' | 'Mechanics';
 type Level = 'A-level' | 'AS';
+type ExamBoard = 'Edexcel' | 'AQA' | 'OCR A' | 'OCR MEI';
 type PastPaper = 'paper1' | 'paper2' | 'paper3';
+
+const examBoardPapers:Record<
+  ExamBoard,
+  Record<Level, {id:PastPaper; label:string}[]>
+>={
+  Edexcel:{
+    'A-level':[
+      {id:'paper1',label:'Paper 1 - Pure Mathematics 1'},
+      {id:'paper2',label:'Paper 2 - Pure Mathematics 2'},
+      {id:'paper3',label:'Paper 3 - Statistics & Mechanics'}
+    ],
+    AS:[
+      {id:'paper1',label:'Paper 1 - Pure Mathematics'},
+      {id:'paper2',label:'Paper 2 - Statistics & Mechanics'}
+    ]
+  },
+  AQA:{
+    'A-level':[
+      {id:'paper1',label:'Paper 1 - Pure'},
+      {id:'paper2',label:'Paper 2 - Pure & Mechanics'},
+      {id:'paper3',label:'Paper 3 - Pure & Statistics'}
+    ],
+    AS:[
+      {id:'paper1',label:'Paper 1'},
+      {id:'paper2',label:'Paper 2'}
+    ]
+  },
+  'OCR A':{
+    'A-level':[
+      {id:'paper1',label:'Component 1 - Pure Mathematics'},
+      {id:'paper2',label:'Component 2 - Pure Mathematics & Statistics'},
+      {id:'paper3',label:'Component 3 - Pure Mathematics & Mechanics'}
+    ],
+    AS:[
+      {id:'paper1',label:'Component 1 - Pure Mathematics & Statistics'},
+      {id:'paper2',label:'Component 2 - Pure Mathematics & Mechanics'}
+    ]
+  },
+  'OCR MEI':{
+    'A-level':[
+      {id:'paper1',label:'Component 1 - Pure Mathematics & Mechanics'},
+      {id:'paper2',label:'Component 2 - Pure Mathematics & Statistics'},
+      {id:'paper3',label:'Component 3 - Pure Mathematics & Comprehension'}
+    ],
+    AS:[
+      {id:'paper1',label:'Component 1 - Pure Mathematics & Mechanics'},
+      {id:'paper2',label:'Component 2 - Pure Mathematics & Statistics'}
+    ]
+  }
+};
+
 type PastPaperLog={
   id:string;
+  board:ExamBoard;
   level:Level;
   paper:PastPaper;
   year:number;
@@ -27,9 +80,54 @@ type LogDraft={
 
 const sampleYears = [2025, 2024, 2023, 2022, 2021, 2020];
 
+const AQA_ALEVEL_RESOURCES =
+  'https://www.aqa.org.uk/subjects/mathematics/a-level/mathematics-7357/assessment-resources';
+
+const AQA_AS_RESOURCES =
+  'https://www.aqa.org.uk/subjects/mathematics/as-level/mathematics-7356/assessment-resources';
+
+function pearsonPastPaperUrl(level:Level,year:number){
+  const qualificationFamily =
+    level === 'A-level'
+      ? 'A-Level'
+      : 'AS-and-A-Level';
+
+  return (
+    'https://qualifications.pearson.com/en/support/support-topics/exams/past-papers.html' +
+    '?Exam-Series=' + encodeURIComponent(`June-${year}`) +
+    '&Qualification-Family=' + encodeURIComponent(qualificationFamily) +
+    '&Qualification-Subject=' + encodeURIComponent('Mathematics (2017)') +
+    '&Specification-Code=' +
+    encodeURIComponent(
+      'Pearson-UK:Specification-Code/maths-2017-as-al'
+    ) +
+    '&Status=' +
+    encodeURIComponent('Pearson-UK:Status/Live')
+  );
+}
+
+function officialPaperResourceUrl(
+  board:ExamBoard,
+  level:Level,
+  year:number
+){
+  if(board === 'AQA'){
+    return level === 'A-level'
+      ? AQA_ALEVEL_RESOURCES
+      : AQA_AS_RESOURCES;
+  }
+
+  if(board === 'Edexcel'){
+    return pearsonPastPaperUrl(level,year);
+  }
+
+  return null;
+}
+
 export default function PapersPage() {
   const [section, setSection] = useState<'past' | 'generate' | null>(null);
   const [level, setLevel] = useState<Level>('A-level');
+  const [examBoard, setExamBoard] = useState<ExamBoard>('Edexcel');
   const [pastPaper, setPastPaper] = useState<PastPaper>('paper1');
   const [area, setArea] = useState<PaperArea>('Pure');
   const [marks, setMarks] = useState('Full paper');
@@ -262,6 +360,7 @@ export default function PapersPage() {
 
           return {
             id:String(row.id),
+            board:(settings.board ?? 'Edexcel') as ExamBoard,
             level:settings.level as Level,
             paper:settings.paper as PastPaper,
             year:Number(settings.year),
@@ -292,24 +391,45 @@ export default function PapersPage() {
   },[]);
 
   function logKey(
+    targetBoard:ExamBoard,
     targetLevel:Level,
     targetPaper:PastPaper,
     year:number
   ){
-    return `${targetLevel}-${targetPaper}-${year}`;
+    return `${targetBoard}-${targetLevel}-${targetPaper}-${year}`;
   }
 
   function findLog(
+    targetBoard:ExamBoard,
     targetLevel:Level,
     targetPaper:PastPaper,
     year:number
   ){
     return pastPaperLogs.find(
       row=>
+        row.board===targetBoard &&
         row.level===targetLevel &&
         row.paper===targetPaper &&
         row.year===year
     );
+  }
+
+  function selectedPaperLabel(){
+    return (
+      examBoardPapers[examBoard][level]
+        .find(item=>item.id===pastPaper)?.label ??
+      'Paper'
+    );
+  }
+
+  function resetPastPaperSelection(
+    nextBoard:ExamBoard,
+    nextLevel:Level
+  ){
+    const first=examBoardPapers[nextBoard][nextLevel][0];
+    setPastPaper(first?.id ?? 'paper1');
+    setEditingLog(null);
+    setLogError('');
   }
 
   function beginLog(year:number){
@@ -320,8 +440,8 @@ export default function PapersPage() {
       return;
     }
 
-    const key=logKey(level,pastPaper,year);
-    const existing=findLog(level,pastPaper,year);
+    const key=logKey(examBoard,level,pastPaper,year);
+    const existing=findLog(examBoard,level,pastPaper,year);
 
     setEditingLog(key);
     setLogError('');
@@ -372,6 +492,7 @@ export default function PapersPage() {
       );
 
     const existing=findLog(
+      examBoard,
       level,
       pastPaper,
       year
@@ -391,6 +512,7 @@ export default function PapersPage() {
 
     try{
       const settings={
+        board:examBoard,
         level,
         paper:pastPaper,
         year,
@@ -459,6 +581,7 @@ export default function PapersPage() {
 
       const next:PastPaperLog={
         id:String(saved.id),
+        board:examBoard,
         level,
         paper:pastPaper,
         year,
@@ -471,6 +594,7 @@ export default function PapersPage() {
       setPastPaperLogs(current=>{
         const without=current.filter(
           row=>!(
+            row.board===examBoard &&
             row.level===level &&
             row.paper===pastPaper &&
             row.year===year
@@ -494,15 +618,19 @@ export default function PapersPage() {
   }
   return (
     <main className="papers-page">
-      <div className="page-kicker">A-level Mathematics</div>
+      {section === null && (
+        <>
+          <div className="page-kicker">A-level Mathematics</div>
 
-      <h1>Papers</h1>
+          <h1>Papers</h1>
 
-      <p className="page-intro">
-        Sit a past paper or generate a fresh exam-style paper.
-      </p>
+          <p className="page-intro">
+            Sit a past paper or generate a fresh exam-style paper.
+          </p>
+        </>
+      )}
 
-      {authNotice && (
+      {authNotice && authNotice!=='generate-paper' && (
         <div
           style={{
             margin:'18px 0',
@@ -584,9 +712,10 @@ export default function PapersPage() {
       {section === 'past' && (
         <section className="paper-section">
           <button
-            className="text-back"
+            className="paperSectionBack"
             onClick={() => setSection(null)}
           >
+            <span className="paperSectionBackArrow" aria-hidden="true" />
             Back to Papers
           </button>
 
@@ -599,34 +728,66 @@ export default function PapersPage() {
             </div>
           </div>
 
-          <div className="choice-row">
-            {(['A-level', 'AS'] as Level[]).map((x) => (
-              <button
-                key={x}
-                className={`choice-pill ${
-                  level === x ? 'active' : ''
-                }`}
-                onClick={() => setLevel(x)}
-              >
-                {x}
-              </button>
-            ))}
+          <div className="pastPaperSelectorBlock">
+            <div className="pastPaperSelectorLabel">Exam board</div>
+            <div className="choice-row">
+              {(['Edexcel','AQA','OCR A','OCR MEI'] as ExamBoard[]).map((board)=>(
+                <button
+                  key={board}
+                  type="button"
+                  className={`choice-pill ${
+                    examBoard===board ? 'active' : ''
+                  }`}
+                  onClick={()=>{
+                    setExamBoard(board);
+                    resetPastPaperSelection(board,level);
+                  }}
+                >
+                  {board}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="choice-row secondary">
-            {([
-              ['paper1', 'Paper 1 - Pure'],
-              ['paper2', 'Paper 2 - Pure'],
-              ['paper3', 'Paper 3 - Statistics & Mechanics'],
-            ] as [PastPaper, string][]).map(([id, label]) => (
-              <button
-                key={id}
-                className={`choice-pill ${pastPaper === id ? 'active' : ''}`}
-                onClick={() => setPastPaper(id)}
-              >
-                {label}
-              </button>
-            ))}
+          <div className="pastPaperSelectorBlock">
+            <div className="pastPaperSelectorLabel">Qualification</div>
+            <div className="choice-row">
+              {(['A-level', 'AS'] as Level[]).map((x) => (
+                <button
+                  key={x}
+                  className={`choice-pill ${
+                    level === x ? 'active' : ''
+                  }`}
+                  onClick={()=>{
+                    setLevel(x);
+                    resetPastPaperSelection(examBoard,x);
+                  }}
+                >
+                  {x}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="pastPaperSelectorBlock">
+            <div className="pastPaperSelectorLabel">
+              {examBoard.startsWith('OCR') ? 'Component' : 'Paper'}
+            </div>
+            <div className="choice-row secondary">
+              {examBoardPapers[examBoard][level].map(({id,label}) => (
+                <button
+                  key={id}
+                  className={`choice-pill ${pastPaper === id ? 'active' : ''}`}
+                  onClick={() => {
+                    setPastPaper(id);
+                    setEditingLog(null);
+                    setLogError('');
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {loggedIn===false && (
@@ -649,10 +810,10 @@ export default function PapersPage() {
           <div className="past-paper-list">
             {sampleYears.map((year)=>{
               const existing=
-                findLog(level,pastPaper,year);
+                findLog(examBoard,level,pastPaper,year);
 
               const key=
-                logKey(level,pastPaper,year);
+                logKey(examBoard,level,pastPaper,year);
 
               const editing=
                 editingLog===key;
@@ -677,13 +838,11 @@ export default function PapersPage() {
                     }}
                   >
                     <strong>
+                      {examBoard}
+                      {' - '}
                       {level}
                       {' - '}
-                      {pastPaper==='paper1'
-                        ? 'Paper 1 - Pure'
-                        : pastPaper==='paper2'
-                          ? 'Paper 2 - Pure'
-                          : 'Paper 3 - Statistics & Mechanics'}
+                      {selectedPaperLabel()}
                     </strong>
 
                     {logsLoading ? (
@@ -749,6 +908,42 @@ export default function PapersPage() {
                       </div>
                     )}
                   </div>
+
+                  {(examBoard==='AQA' || examBoard==='Edexcel') && (
+                    <div className="pastPaperResourceActions">
+                      <a
+                        className="paperResourceLink"
+                        href={
+                          officialPaperResourceUrl(
+                            examBoard,
+                            level,
+                            year
+                          ) ?? '#'
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {examBoard==='AQA'
+                          ? 'Official AQA resources'
+                          : 'Question paper & mark scheme'}
+                        <span
+                          className="paperResourceExternal"
+                          aria-hidden="true"
+                        >
+                          &nearr;
+                        </span>
+                      </a>
+
+                      {examBoard==='Edexcel' &&
+                        level==='A-level' &&
+                        pastPaper==='paper3' && (
+                          <span className="paperResourceHint">
+                            Statistics and Mechanics are separate
+                            Pearson booklets.
+                          </span>
+                      )}
+                    </div>
+                  )}
 
                   <button
                     type="button"
@@ -960,9 +1155,24 @@ export default function PapersPage() {
             })}
           </div>
           <p className="quiet-note">
-            For now these links go to Pearson&apos;s official
-            course-materials page. DOJO can host or display papers
-            here later if appropriate permissions are in place.
+            {examBoard==='AQA' ? (
+              <>
+                Papers and mark schemes open on AQA&apos;s official
+                assessment-resources page in a new tab. Keep DOJO open
+                to record your result afterwards.
+              </>
+            ) : examBoard==='Edexcel' ? (
+              <>
+                Papers and mark schemes open in Pearson&apos;s official
+                past-paper finder in a new tab. Keep DOJO open to record
+                your result afterwards.
+              </>
+            ) : (
+              <>
+                DOJO can still record your score, flagged questions and
+                notes for this paper.
+              </>
+            )}
           </p>
         </section>
       )}
@@ -970,9 +1180,10 @@ export default function PapersPage() {
       {section === 'generate' && (
         <section className="paper-section">
           <button
-            className="text-back"
+            className="paperSectionBack"
             onClick={() => setSection(null)}
           >
+            <span className="paperSectionBackArrow" aria-hidden="true" />
             Back to Papers
           </button>
 
@@ -982,24 +1193,6 @@ export default function PapersPage() {
             Choose the basics and start. More control is available
             only if you want it.
           </p>
-
-          <div className="builder-block">
-            <label>Qualification</label>
-
-            <div className="choice-row compact">
-              {(['A-level', 'AS'] as Level[]).map((x) => (
-                <button
-                  key={x}
-                  className={`choice-pill ${
-                    level === x ? 'active' : ''
-                  }`}
-                  onClick={() => setLevel(x)}
-                >
-                  {x}
-                </button>
-              ))}
-            </div>
-          </div>
 
           <div className="builder-block">
             <label>Content</label>
@@ -1069,17 +1262,36 @@ export default function PapersPage() {
 
           <button
             className="advanced-trigger"
-            onClick={() =>
-              setAdvanced((value) => !value)
-            }
+            onClick={() => {
+              if(loggedIn!==false){
+                setAdvanced((value) => !value);
+              }
+            }}
           >
-            Advanced options{' '}
-            <span>{advanced ? '-' : '+'}</span>
+            <span className="paperAdvancedTitle">
+              Advanced options
+
+              {loggedIn===false && (
+                <span className="paperAccountRequired">
+                  Account required
+                </span>
+              )}
+            </span>
+
+            <span>
+              {loggedIn===false ? '-' : advanced ? '-' : '+'}
+            </span>
           </button>
 
-          {advanced && (
-            <div className="advanced-panel paper-advanced-panel">
-              {!examMode && (
+          {(advanced || loggedIn===false) && (
+            <div
+              className={
+                loggedIn===false
+                  ? 'advanced-panel paper-advanced-panel paperAdvancedLocked'
+                  : 'advanced-panel paper-advanced-panel'
+              }
+            >
+              {(!examMode || loggedIn===false) && (
                 <div className="paper-workspace-options">
                   <div className="paper-workspace-heading">
                     <strong>Workspace</strong>
@@ -1093,7 +1305,7 @@ export default function PapersPage() {
                   <div className="paper-workspace-grid">
                     {[
                       [
-                        'Ask DOJO',
+                        'SENSEI',
                         'AI chat alongside the paper',
                         askDojo,
                         setAskDojo,
@@ -1135,6 +1347,7 @@ export default function PapersPage() {
                           <input
                             type="checkbox"
                             checked={value}
+                            disabled={loggedIn===false}
                             onChange={(event) =>
                               setter(
                                 event.target.checked
@@ -1150,10 +1363,10 @@ export default function PapersPage() {
                 </div>
               )}
 
-              {examMode && (
+              {examMode && loggedIn!==false && (
                 <div className="paper-exam-note">
                   Exam mode uses the exam workspace:
-                  solutions and Ask DOJO stay hidden until the
+                  solutions and SENSEI stay hidden until the
                   paper is finished.
                 </div>
               )}
@@ -1161,17 +1374,54 @@ export default function PapersPage() {
           )}
 
           {loggedIn===false ? (
-            <button
-              type="button"
-              className="primary-paper-action"
-              onClick={()=>
-                requireAccount(
-                  'Create an account to start your DOJO trial, including 3 generated papers.'
-                )
-              }
-            >
-              Generate {level} {area} paper
-            </button>
+            <div className="paperGenerateLoggedOut">
+              <button
+                type="button"
+                className="primary-paper-action"
+                onClick={()=>
+                  requireAccount(
+                    'generate-paper'
+                  )
+                }
+              >
+                Generate {area} paper
+              </button>
+
+              {authNotice==='generate-paper' && (
+                <div className="paperGenerateAccountPrompt">
+                  <div className="paperAccountPromptCopy">
+                    <div className="paperAccountEyebrow">
+                      SAVE AND MARK YOUR PAPER
+                    </div>
+
+                    <strong>
+                      Create a free account to generate this paper
+                    </strong>
+
+                    <p>
+                      Generate your paper, return to unfinished work
+                      and keep your results in DOJO.
+                    </p>
+                  </div>
+
+                  <div className="paperAccountActions">
+                    <Link
+                      href="/signup?next=%2Fpapers"
+                      className="paperAccountCreate"
+                    >
+                      Create free account
+                    </Link>
+
+                    <Link
+                      href="/login?next=%2Fpapers"
+                      className="paperAccountLogin"
+                    >
+                      Log in
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
           ) : (
             <button
               type="button"
@@ -1187,7 +1437,7 @@ export default function PapersPage() {
                         .slice(2)}`;
 
                 const params = new URLSearchParams({
-                  level,
+                  level:'A-level',
                   area,
                   marks:
                     marks === 'Full paper'
@@ -1210,18 +1460,14 @@ export default function PapersPage() {
                 );
               }}
             >
-              Generate {level} {area} paper
+              Generate {area} paper
             </button>
           )}
 
           <div className="paper-history">
             <div className="history-heading">
               <h3>Your papers</h3>
-              {loggedIn===false ? (
-                <Link href="/signup?next=%2Fpapers">
-                  Create account →
-                </Link>
-              ) : (
+              {loggedIn!==false && (
                 <Link href="/papers/history">
                   View all papers
                 </Link>
@@ -1249,26 +1495,37 @@ export default function PapersPage() {
             )}
 
             {loggedIn===false ? (
-              <div
-                style={{
-                  padding:'16px 0',
-                  color:'#666',
-                  fontSize:'14px',
-                  lineHeight:1.5
-                }}
-              >
-                <strong
-                  style={{
-                    display:'block',
-                    color:'#111',
-                    marginBottom:'4px'
-                  }}
-                >
-                  Keep your generated papers and results
-                </strong>
+              <div className="paperHistoryAccountPrompt">
+                <div className="paperAccountPromptCopy">
+                  <div className="paperAccountEyebrow">
+                    YOUR PAPERS
+                  </div>
 
-                Create an account to save generated papers,
-                mark them later and keep your results in DOJO.
+                  <strong>
+                    Keep your generated papers and results
+                  </strong>
+
+                  <p>
+                    Save generated papers, return to unfinished work,
+                    mark them later and keep your results in DOJO.
+                  </p>
+                </div>
+
+                <div className="paperAccountActions">
+                  <Link
+                    href="/signup?next=%2Fpapers"
+                    className="paperAccountCreate"
+                  >
+                    Create free account
+                  </Link>
+
+                  <Link
+                    href="/login?next=%2Fpapers"
+                    className="paperAccountLogin"
+                  >
+                    Log in
+                  </Link>
+                </div>
               </div>
             ) : papersLoading ? (
               <p className="empty-history">Loading papers...</p>

@@ -43,9 +43,26 @@ const textOf = (b:any) => String(b?.content ?? b?.text ?? b?.latex ?? '');
 
 function MathText({text}:{text:string}) {
   const bits = text.split(/(\$\$[\s\S]*?\$\$|\$[^$\n]+?\$)/g).filter(Boolean);
+
   return <>{bits.map((bit,i) => {
-    if (bit.startsWith('$$') && bit.endsWith('$$')) return <BlockMath key={i} math={bit.slice(2,-2)} />;
-    if (bit.startsWith('$') && bit.endsWith('$')) return <InlineMath key={i} math={bit.slice(1,-1)} />;
+    if(bit.startsWith('$$') && bit.endsWith('$$')) {
+      return <BlockMath key={i} math={bit.slice(2,-2).trim()}/>;
+    }
+
+    if(bit.startsWith('$') && bit.endsWith('$')) {
+      const math=bit.slice(1,-1).trim();
+      const tall=/\\(?:int|sum|prod|lim)\b|\\(?:d?frac)\s*\{/.test(math);
+
+      return (
+        <span
+          key={i}
+          className={tall ? 'questionTallInlineMath' : 'questionInlineMath'}
+        >
+          <InlineMath math={tall ? `\\displaystyle ${math}` : math}/>
+        </span>
+      );
+    }
+
     return <span key={i} style={{whiteSpace:'pre-wrap'}}>{bit}</span>;
   })}</>;
 }
@@ -68,6 +85,40 @@ function Blocks({blocks}:{blocks:any[]}) {
   return <>{blocks.map((b:any,i:number) => {
     const type=b?.type || 'markdown', text=textOf(b);
     if (type==='spacer') return <div className="qSpacer" key={i}/>;
+    if (type==='table') {
+      const headers=Array.isArray(b?.row_headers) ? b.row_headers : [];
+      const rows=Array.isArray(b?.rows) ? b.rows : [];
+
+      return (
+        <div className="questionTableWrap" key={i}>
+          <table className="questionTable">
+            <tbody>
+              {rows.map((row:any[],ri:number)=>(
+                <tr key={ri}>
+                  {headers[ri] != null && (
+                    <th scope="row">
+                      <MathText text={String(headers[ri])}/>
+                    </th>
+                  )}
+                  {(Array.isArray(row) ? row : []).map((cell:any,ci:number)=>(
+                    <td key={ci}>
+                      <MathText
+                        text={
+                          typeof cell==='string'
+                            ? `$\\displaystyle ${cell}$`
+                            : String(cell ?? '')
+                        }
+                      />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
     if (type==='latex') return <div className="displayMath" key={i}><BlockMath math={text}/></div>;
     if (type==='caption') return <div className="renderCaption" key={i}><MathText text={text}/></div>;
     return <div className="renderText" key={i}><MathText text={text}/></div>;
@@ -197,7 +248,13 @@ export function FullSolutionView({q}:{q:any}) {
   );
 }
 
-function AskDojo({q}:{q:any}) {
+export function AskDojo({
+  q,
+  onFirstSubmit
+}:{
+  q:any;
+  onFirstSubmit?:()=>void;
+}) {
   const [messages,setMessages]=useState<Message[]>([]);
   const responseStartRef=useRef<HTMLDivElement|null>(null);
   const [input,setInput]=useState('');
@@ -258,6 +315,8 @@ function AskDojo({q}:{q:any}) {
     setBusy(true);
     setError('');
     setMembershipRequired(false);
+
+    onFirstSubmit?.();
 
     let entitlementConsumed=false;
 
@@ -425,7 +484,7 @@ function AskDojo({q}:{q:any}) {
     </div>
   );
 }
-function SolutionTools({
+export function SolutionTools({
   q,
   tab,
   setTab,
@@ -509,6 +568,7 @@ export default function PracticeSession({
   const workCreationRef=useRef<Promise<string>|null>(null);
   const [loggedIn,setLoggedIn]=useState<boolean|null>(null);
   const [authNotice,setAuthNotice]=useState('');
+  const [markingSenseiActive,setMarkingSenseiActive]=useState(false);
 
   useEffect(()=>{
     let cancelled=false;
@@ -526,6 +586,17 @@ export default function PracticeSession({
 
   const requireAccount=(message:string)=>{
     setAuthNotice(message);
+  };
+
+  const authReturnHref=(route:'/login'|'/signup')=>{
+    if(typeof window === 'undefined') return route;
+
+    const next=
+      window.location.pathname +
+      window.location.search +
+      window.location.hash;
+
+    return `${route}?next=${encodeURIComponent(next)}`;
   };
 
   const ensureWorkItem=async():Promise<string|null>=>{
@@ -600,6 +671,10 @@ export default function PracticeSession({
   const q=questions[index];
   const max=Number(q.marks)||0;
 
+  useEffect(()=>{
+    setMarkingSenseiActive(false);
+  },[q.id]);
+
   const totalMarks=useMemo(
     ()=>questions.reduce((n,x)=>n+(Number(x.marks)||0),0),
     [questions]
@@ -641,8 +716,103 @@ export default function PracticeSession({
 
   const storageKey=`dojo-session-${topic}-${startedAt}`;
 
+  /*
+    Restore the active local recovery record after a browser refresh.
+
+    The existing persistence effect below already writes index, stage and
+    marks whenever they change. Previously that data was never reapplied
+    to the new React instance created by a refresh.
+  */
+  const recoveryRestoredRef=useRef(false);
+
+  useEffect(()=>{
+    if(recoveryRestoredRef.current) return;
+    recoveryRestoredRef.current=true;
+
+    try {
+      const activeKey=localStorage.getItem('dojo-continue');
+      if(!activeKey) return;
+
+      const raw=localStorage.getItem(activeKey);
+      if(!raw) return;
+
+      const recovery=JSON.parse(raw);
+
+      const currentQuestionIds=questions.map(x=>x.id);
+      const recoveryQuestionIds=Array.isArray(recovery.questionIds)
+        ? recovery.questionIds
+        : [];
+
+      const sameQuestions=
+        currentQuestionIds.length===recoveryQuestionIds.length &&
+        currentQuestionIds.every(
+          (id,i)=>id===recoveryQuestionIds[i]
+        );
+
+      if(!sameQuestions) return;
+
+      const recoveredIndex=Number(recovery.currentQuestion);
+
+      if(
+        Number.isInteger(recoveredIndex) &&
+        recoveredIndex>=0 &&
+        recoveredIndex<questions.length
+      ){
+        setIndex(recoveredIndex);
+      }
+
+      if(
+        recovery.marks &&
+        typeof recovery.marks==='object' &&
+        !Array.isArray(recovery.marks)
+      ){
+        setMarks(recovery.marks);
+      }
+
+      if(recovery.status==='marking'){
+        setStage('marking');
+        setTab('answer');
+      } else if(recovery.status==='in-progress'){
+        setStage('doing');
+      }
+    } catch(err) {
+      console.error('Could not restore local DOJO session',err);
+    }
+  },[questions]);
+
   useEffect(()=>{
     if(stage==='results'){
+      /*
+       * Anonymous completed work is no longer thrown away here.
+       *
+       * Keep one finished result available to claim if the student
+       * creates an account or logs in from the Finished screen.
+       * This is deliberately separate from dojo-continue: completed
+       * work must not appear as unfinished work.
+       */
+      if(loggedIn===false){
+        const pendingClaim={
+          version:1,
+          source:'practice_session',
+          topic,
+          mode,
+          questionIds:questions.map(x=>x.id),
+          marks,
+          marksAvailable:Object.fromEntries(
+            questions.map(x=>[x.id,Number(x.marks)||0])
+          ),
+          totalMarks,
+          awarded,
+          startedAt,
+          finishedAt:new Date().toISOString()
+        };
+
+        localStorage.setItem(
+          'dojo-pending-claim',
+          JSON.stringify(pendingClaim)
+        );
+      }
+
       const activeRecovery =
         localStorage.getItem('dojo-continue');
 
@@ -697,7 +867,8 @@ export default function PracticeSession({
     questions,
     totalMarks,
     awarded,
-    startedAt
+    startedAt,
+    loggedIn
   ]);
 
   useEffect(()=>{
@@ -738,6 +909,20 @@ export default function PracticeSession({
       if(!id) return;
 
       await saveWorkItem(id,index);
+
+      if(stage==='marking'){
+        await Promise.all(
+          questions.map((question:any)=>
+            saveQuestionMark({
+              workId:id,
+              questionId:question.id,
+              marksAwarded:marks[question.id] ?? 0,
+              marksAvailable:Number(question.marks)||0
+            })
+          )
+        );
+      }
+
       window.history.back();
     } catch(err) {
       console.error('Could not save DOJO work',err);
@@ -835,11 +1020,40 @@ export default function PracticeSession({
           <span>/ {totalMarks} marks</span>
         </div>
 
-        <p>
-          {loggedIn
-            ? 'Your question-by-question marks have been saved.'
-            : 'This result is not saved. Create a Trial account to save future work and build your DOJO history.'}
-        </p>
+        {loggedIn ? (
+          <p>Your question-by-question marks have been saved.</p>
+        ) : (
+          <div className="resultAccountPrompt">
+            <div className="resultAccountCopy">
+              <span className="resultAccountEyebrow">
+                KEEP THIS RESULT
+              </span>
+
+              <strong>Save this result to your DOJO history</strong>
+
+              <p>
+                Create a free account to keep the work you just completed,
+                build your question history and continue tracking your progress.
+              </p>
+            </div>
+
+            <div className="resultAccountActions">
+              <Link
+                href="/signup?next=%2Fclaim-result"
+                className="resultAccountCreate"
+              >
+                Create free account
+              </Link>
+
+              <Link
+                href="/login?next=%2Fclaim-result"
+                className="resultAccountLogin"
+              >
+                Log in
+              </Link>
+            </div>
+          </div>
+        )}
 
         <div className="resultQuestions">
           {questions.map((x,i)=>
@@ -858,13 +1072,26 @@ export default function PracticeSession({
 
         <div className="sessionEndActions">
           <Link
-            className="primarySessionButton"
-            href="/topics"
+            className="secondarySessionButton"
+            href="/"
           >
-            Practise again
+            Home
           </Link>
 
+          <button
+            type="button"
+            className="primarySessionButton"
+            onClick={()=>window.history.back()}
+          >
+            Practise again
+          </button>
 
+          <Link
+            className="secondarySessionButton"
+            href="/review"
+          >
+            Review
+          </Link>
         </div>
       </section>
     );
@@ -887,7 +1114,7 @@ export default function PracticeSession({
             type="button"
             onClick={()=>window.history.back()}
           >
-            ← Back
+            Exit session
           </button>
 
           <button
@@ -941,8 +1168,8 @@ export default function PracticeSession({
         >
           <span>{authNotice}</span>
           <span style={{display:'flex',gap:'12px',flexShrink:0}}>
-            <Link href="/login" style={{fontWeight:700}}>Log in</Link>
-            <Link href="/signup" style={{fontWeight:700}}>Create account →</Link>
+            <Link href={authReturnHref('/login')} style={{fontWeight:700}}>Log in</Link>
+            <Link href={authReturnHref('/signup')} style={{fontWeight:700}}>Create account →</Link>
           </span>
         </div>
       )}
@@ -1093,18 +1320,98 @@ export default function PracticeSession({
                 >
                   +
                 </button>
+
+                <button
+                  type="button"
+                  onClick={()=>setMark(max)}
+                  disabled={max<=0 || (marks[q.id] ?? 0)>=max}
+                  style={{
+                    minHeight:'38px',
+                    padding:'0 14px',
+                    border:'1px solid #124fad',
+                    background:(marks[q.id] ?? 0)>=max ? '#f3f5f8' : '#fff',
+                    color:(marks[q.id] ?? 0)>=max ? '#8a9099' : '#124fad',
+                    borderRadius:'6px',
+                    font:'inherit',
+                    fontSize:'13px',
+                    fontWeight:700,
+                    cursor:(marks[q.id] ?? 0)>=max ? 'default' : 'pointer',
+                    whiteSpace:'nowrap'
+                  }}
+                >
+                  Full marks
+                </button>
               </div>
             </div>
           )}
+
+          {stage==='marking' &&
+            options.solutions &&
+            markingSenseiActive && (
+              <div className="markingInlineSolutions">
+                <SolutionTools
+                  q={q}
+                  tab={tab}
+                  setTab={setTab}
+                />
+              </div>
+            )}
         </div>
 
         {stage==='marking' && options.solutions ? (
           <aside className="markingReferenceColumn">
-            <SolutionTools
-              q={q}
-              tab={tab}
-              setTab={setTab}
-            />
+            <div
+              className={
+                markingSenseiActive
+                  ? 'markingRightSolutions markingRightSolutionsHidden'
+                  : 'markingRightSolutions'
+              }
+            >
+              <SolutionTools
+                q={q}
+                tab={tab}
+                setTab={setTab}
+              />
+            </div>
+
+            {loggedIn===false ? (
+              <div className="senseiLoggedOutPrompt markingSenseiLoggedOutPrompt">
+                <strong>SENSEI can see this question.</strong>
+                <p>
+                  Create a free account or log in to ask SENSEI
+                  while you mark this question.
+                </p>
+
+                <div className="senseiLoggedOutActions">
+                  <Link href={authReturnHref('/signup')}>
+                    Create free account
+                  </Link>
+                  <Link href={authReturnHref('/login')}>
+                    Log in
+                  </Link>
+                </div>
+              </div>
+            ) : options.askDojo ? (
+              <div
+                className={
+                  markingSenseiActive
+                    ? 'dojoColumn'
+                    : 'dojoColumn markingSenseiCompactMode'
+                }
+              >
+                <div className="dojoColumnHeading">
+                  <b>SENSEI</b>
+                  <span>
+                    {markingSenseiActive ? `Question ${index+1}` : ''}
+                  </span>
+                </div>
+
+                <AskDojo
+                  q={q}
+                  onFirstSubmit={()=>setMarkingSenseiActive(true)}
+                />
+              </div>
+            ) : null}
           </aside>
         ) : (
           (options.askDojo || loggedIn===false) &&
@@ -1117,21 +1424,40 @@ export default function PracticeSession({
               </div>
 
               {loggedIn===false ? (
-                <div
-                  style={{
-                    padding:'20px',
-                    border:'1px solid #ddd',
-                    borderRadius:'8px',
-                    background:'#fff'
-                  }}
-                >
-                  <b>Get help with this question</b>
-                  <p style={{margin:'8px 0 14px',color:'#666'}}>
-                    Ask SENSEI for hints, explanations and help with individual steps.
-                  </p>
-                  <Link href="/signup" style={{fontWeight:700}}>
-                    Create free account →
-                  </Link>
+                <div className="dojoChat senseiLoggedOutPreview">
+                  <div className="dojoChatBody">
+                    <div className="dojoMessages">
+                      <div className="senseiLoggedOutPrompt">
+                        <strong>SENSEI can see this question.</strong>
+                        <p>
+                          Ask about the problem, explore the maths behind it,
+                          or take the conversation wherever you need.
+                        </p>
+
+                        <div className="senseiLoggedOutActions">
+                          <Link href={authReturnHref('/signup')}>
+                            Create free account
+                          </Link>
+                          <Link href={authReturnHref('/login')}>
+                            Log in
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+
+                    <form onSubmit={(e)=>e.preventDefault()}>
+                      <textarea
+                        className="senseiComposerInput"
+                        placeholder="Ask SENSEI..."
+                        disabled
+                        rows={1}
+                        aria-label="Ask SENSEI"
+                      />
+                      <button type="submit" disabled>
+                        Send
+                      </button>
+                    </form>
+                  </div>
                 </div>
               ) : options.askDojo ? (
                 <AskDojo q={q}/>
@@ -1231,12 +1557,19 @@ export default function PracticeSession({
                 setStage('results');
 
                 if(workId){
-                  saveQuestionMark({
-                    workId,
-                    questionId:q.id,
-                    marksAwarded:currentMark,
-                    marksAvailable:max
-                  })
+                  Promise.all(
+                    questions.map((question:any)=>
+                      saveQuestionMark({
+                        workId,
+                        questionId:question.id,
+                        marksAwarded:
+                          question.id === q.id
+                            ? currentMark
+                            : marks[question.id] ?? 0,
+                        marksAvailable:Number(question.marks)||0
+                      })
+                    )
+                  )
                     .then(()=>finishMarkingWorkItem(workId))
                     .catch(err=>
                       console.error('Could not finish marking',err)

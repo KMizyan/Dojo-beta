@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { getQuestionsBulk } from '../lib/api';
-import PracticeSession from './PracticeSession';
+import PracticeSession, {
+  AskDojo
+} from './PracticeSession';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 
@@ -48,7 +50,7 @@ function MathText({text}:{text:string}) {
           return (
             <BlockMath
               key={index}
-              math={bit.slice(2,-2)}
+              math={bit.slice(2,-2).trim()}
             />
           );
         }
@@ -57,11 +59,26 @@ function MathText({text}:{text:string}) {
           bit.startsWith('$') &&
           bit.endsWith('$')
         ) {
+          const math=bit.slice(1,-1).trim();
+          const tall=/\\(?:int|sum|prod|lim)\b|\\(?:d?frac)\s*\{/.test(math);
+
           return (
-            <InlineMath
+            <span
               key={index}
-              math={bit.slice(1,-1)}
-            />
+              className={
+                tall
+                  ? 'questionTallInlineMath'
+                  : 'questionInlineMath'
+              }
+            >
+              <InlineMath
+                math={
+                  tall
+                    ? `\\displaystyle ${math}`
+                    : math
+                }
+              />
+            </span>
           );
         }
 
@@ -106,6 +123,51 @@ function Blocks({blocks}:{blocks:any[]}) {
             </div>
           );
         }
+        if(type === 'table') {
+          const headers = Array.isArray(block?.row_headers)
+            ? block.row_headers
+            : [];
+
+          const rows = Array.isArray(block?.rows)
+            ? block.rows
+            : [];
+
+          return (
+            <div className="questionTableWrap" key={index}>
+              <table className="questionTable">
+                <tbody>
+                  {rows.map((row:any[],rowIndex:number) => (
+                    <tr key={rowIndex}>
+                      {headers[rowIndex] != null && (
+                        <th scope="row">
+                          <MathText
+                            text={String(headers[rowIndex])}
+                          />
+                        </th>
+                      )}
+
+                      {(Array.isArray(row) ? row : []).map(
+                        (cell:any,cellIndex:number) => (
+                          <td key={cellIndex}>
+                            <MathText
+                              text={
+                                typeof cell === 'string'
+                                  ? `$\\displaystyle ${cell}$`
+                                  : String(cell ?? '')
+                              }
+                            />
+                          </td>
+                        )
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        }
+
+
 
         if(type === 'caption') {
           return (
@@ -337,16 +399,19 @@ function practiseSimilarHref(q:any) {
 function ReviewWork({
   work,
   questions,
-  refs
+  refs,
+  flaggedIds
 }:{
   work:any;
   questions:any[];
   refs:SavedQuestion[];
+  flaggedIds:Set<string>;
 }) {
   const [index,setIndex] = useState(0);
   const [shown,setShown] = useState<
     'answer' | 'markscheme' | 'solution' | null
   >(null);
+  const [senseiActive,setSenseiActive] = useState(false);
 
   const q = questions[index];
   const ref = refs[index];
@@ -378,6 +443,7 @@ const questionFamily =
   function move(next:number) {
     setIndex(next);
     setShown(null);
+    setSenseiActive(false);
   }
 
   return (
@@ -415,8 +481,112 @@ const questionFamily =
 
       <div
         style={{
+          marginBottom:'16px',
+          padding:'14px 16px',
+          border:'1px solid #ddd',
+          background:'#fff'
+        }}
+      >
+        <div
+          style={{
+            fontSize:'11px',
+            color:'#777',
+            marginBottom:'10px'
+          }}
+        >
+          QUESTIONS
+        </div>
+
+        <div
+          style={{
+            display:'flex',
+            gap:'7px',
+            overflowX:'auto',
+            paddingBottom:'2px'
+          }}
+        >
+          {refs.map((item,i) => {
+            const isFlagged =
+              flaggedIds.has(String(item.question_id));
+
+            return (
+              <button
+                type="button"
+                key={item.question_id}
+                onClick={() => move(i)}
+                title={
+                  isFlagged
+                    ? `Question ${i + 1} - flagged`
+                    : `Question ${i + 1}`
+                }
+                style={{
+                  position:'relative',
+                  flex:'0 0 auto',
+                  minWidth:'54px',
+                  minHeight:'46px',
+                  padding:'6px 8px',
+                  border:
+                    i === index
+                      ? '2px solid #111'
+                      : isFlagged
+                      ? '1px solid #e2bd55'
+                      : '1px solid #ddd',
+                  borderRadius:'5px',
+                  background:
+                    isFlagged
+                      ? '#fff8df'
+                      : '#fff',
+                  cursor:'pointer',
+                  font:'inherit',
+                  display:'grid',
+                  placeItems:'center',
+                  gap:'2px'
+                }}
+              >
+                <strong
+                  style={{
+                    fontSize:'12px',
+                    lineHeight:1
+                  }}
+                >
+                  Q{i + 1}
+                </strong>
+
+                <span
+                  style={{
+                    fontSize:'10px',
+                    color:'#666',
+                    lineHeight:1
+                  }}
+                >
+                  {item.marks_awarded ?? 0}/
+                  {item.marks_available ?? 0}
+                </span>
+
+                {isFlagged && (
+                  <span
+                    aria-label="Flagged"
+                    style={{
+                      position:'absolute',
+                      top:'3px',
+                      right:'4px',
+                      width:'6px',
+                      height:'6px',
+                      borderRadius:'50%',
+                      background:'#d39a00'
+                    }}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div
+        style={{
           display:'grid',
-          gridTemplateColumns:'minmax(0,1fr) 230px',
+          gridTemplateColumns:'minmax(0,1.35fr) minmax(520px,1fr)',
           gap:'24px',
           alignItems:'start'
         }}
@@ -592,58 +762,37 @@ const questionFamily =
 
         <aside
           style={{
-            border:'1px solid #ddd',
-            background:'#fff',
-            padding:'16px'
+            display:'grid',
+            gap:'14px',
+            alignSelf:'start',
+            position:'sticky',
+            top:'84px'
           }}
         >
           <div
-            style={{
-              fontSize:'11px',
-              color:'#777',
-              marginBottom:'12px'
-            }}
+            className={
+              senseiActive
+                ? 'dojoColumn'
+                : 'dojoColumn markingSenseiCompactMode'
+            }
           >
-            QUESTIONS
+            <div className="dojoColumnHeading">
+              <b>SENSEI</b>
+              <span>
+                {senseiActive
+                  ? `Question ${index + 1}`
+                  : ''}
+              </span>
+            </div>
+
+            <AskDojo
+              q={q}
+              onFirstSubmit={() => {
+                setSenseiActive(true);
+              }}
+            />
           </div>
 
-          <div
-            style={{
-              display:'grid',
-              gap:'6px'
-            }}
-          >
-            {refs.map((item,i) => (
-              <button
-                type="button"
-                key={item.question_id}
-                onClick={() => move(i)}
-                style={{
-                  display:'flex',
-                  justifyContent:'space-between',
-                  alignItems:'center',
-                  padding:'10px 12px',
-                  border:
-                    i === index
-                      ? '1px solid #222'
-                      : '1px solid #ddd',
-                  background:
-                    i === index
-                      ? '#f5f5f5'
-                      : '#fff',
-                  cursor:'pointer',
-                  font:'inherit'
-                }}
-              >
-                <span>Question {i + 1}</span>
-
-                <strong>
-                  {item.marks_awarded ?? 0}/
-                  {item.marks_available ?? 0}
-                </strong>
-              </button>
-            ))}
-          </div>
         </aside>
       </div>
 
@@ -685,9 +834,9 @@ const questionFamily =
         ) : (
           <Link
             className="primarySessionButton"
-            href="/my-work"
+            href="/"
           >
-            Back to My Work
+            Back to Home
           </Link>
         )}
       </footer>
@@ -697,6 +846,8 @@ const questionFamily =
 
 export default function ResumeWork({workId,startMarking=false}:Props) {
   const [loading,setLoading] = useState(true);
+  const [flaggedIds,setFlaggedIds] =
+    useState<Set<string>>(new Set());
   const [error,setError] = useState('');
   const [work,setWork] = useState<any>(null);
   const [questions,setQuestions] = useState<any[]>([]);
@@ -718,6 +869,34 @@ export default function ResumeWork({workId,startMarking=false}:Props) {
         if(authError || !auth.user) {
           throw new Error(
             'You must be logged in to resume this work.'
+          );
+        }
+
+        const { data:flagRows, error:flagError } =
+          await supabase
+            .from('question_flags')
+            .select('question_id')
+            .eq('user_id',auth.user.id);
+
+        if(flagError) {
+          console.warn(
+            'Could not load question flags:',
+            flagError
+          );
+        } else {
+          setFlaggedIds(
+            new Set(
+              (flagRows ?? []).map(
+                (row:any) => String(row.question_id)
+              )
+            )
+          );
+
+          console.log(
+            '[FLAG DEBUG] question_flags IDs:',
+            (flagRows ?? []).map(
+              (row:any) => String(row.question_id)
+            )
           );
         }
 
@@ -890,7 +1069,7 @@ export default function ResumeWork({workId,startMarking=false}:Props) {
               'Return to My Work and try again.'}
           </p>
 
-          <Link href="/my-work">
+          <Link href="/">
             Return to My Work
           </Link>
         </div>
@@ -914,8 +1093,8 @@ export default function ResumeWork({workId,startMarking=false}:Props) {
   return (
     <main className="main practiceShell">
       <div className="crumb">
-        <Link href="/my-work">
-          My Work
+        <Link href="/">
+          Home
         </Link>
 
         <span>/</span>
@@ -928,7 +1107,8 @@ export default function ResumeWork({workId,startMarking=false}:Props) {
           work={work}
           questions={questions}
           refs={refs}
-        />
+        flaggedIds={flaggedIds}
+      />
       ) : (
         <PracticeSession
             initialStage={shouldStartMarking ? 'marking' : 'doing'}

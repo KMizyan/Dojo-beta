@@ -1588,7 +1588,7 @@
 }
 
 
-/* DOJO HOMEPAGE PRIMARY CARDS — GLOBAL */
+/* DOJO HOMEPAGE PRIMARY CARDS â€” GLOBAL */
 
 body .dojoHome .homeStartGrid {
   display: grid !important;
@@ -1710,10 +1710,10 @@ body .dojoHome .homeStartGrid .homeStartArrow {
   }
 }
 
-/* END DOJO HOMEPAGE PRIMARY CARDS — GLOBAL */
+/* END DOJO HOMEPAGE PRIMARY CARDS â€” GLOBAL */
 
 
-/* DOJO COVERAGE READABILITY — GLOBAL */
+/* DOJO COVERAGE READABILITY â€” GLOBAL */
 
 /*
  * The Coverage panel itself remains dark.
@@ -1748,7 +1748,7 @@ body .dojoHome .coveragePanel > div:not(.dashboardPanelHeading) [class*="track"]
   color: #111412 !important;
 }
 
-/* END DOJO COVERAGE READABILITY — GLOBAL */
+/* END DOJO COVERAGE READABILITY â€” GLOBAL */
 
 
 
@@ -2020,7 +2020,7 @@ body .dojoHome .dojoHomeMark {
 
 
 /* =========================================================
-   PROJECT DOJO — BRAND HIERARCHY
+   PROJECT DOJO â€” BRAND HIERARCHY
    ========================================================= */
 
 .nav .brandLockup {
@@ -2086,33 +2086,10 @@ body .dojoHome .dojoHomeMark {
   }
 }
 
-/* END PROJECT DOJO — BRAND HIERARCHY */
+/* END PROJECT DOJO â€” BRAND HIERARCHY */
 
 
-/* PROJECT DOJO — SUBJECT IDENTIFIER REFINEMENT */
-
-.nav .brandSubject {
-  margin-left: 28px !important;
-  padding-left: 28px !important;
-
-  color: rgba(255,255,255,.78) !important;
-
-  font-size: 10px !important;
-  font-weight: 750 !important;
-  letter-spacing: 0.13em !important;
-}
-
-.nav .brandSubject::before {
-  left: 0 !important;
-  top: -5px !important;
-  height: 19px !important;
-  background: rgba(255,255,255,.24) !important;
-}
-
-/* END PROJECT DOJO — SUBJECT IDENTIFIER REFINEMENT */
-
-
-/* PROJECT DOJO — SUBJECT IDENTIFIER REFINEMENT */
+/* PROJECT DOJO â€” SUBJECT IDENTIFIER REFINEMENT */
 
 .nav .brandSubject {
   margin-left: 28px !important;
@@ -2132,10 +2109,33 @@ body .dojoHome .dojoHomeMark {
   background: rgba(255,255,255,.24) !important;
 }
 
-/* END PROJECT DOJO — SUBJECT IDENTIFIER REFINEMENT */
+/* END PROJECT DOJO â€” SUBJECT IDENTIFIER REFINEMENT */
 
 
-/* A-LEVEL MATHEMATICS NAV LABEL — FINAL POSITION */
+/* PROJECT DOJO â€” SUBJECT IDENTIFIER REFINEMENT */
+
+.nav .brandSubject {
+  margin-left: 28px !important;
+  padding-left: 28px !important;
+
+  color: rgba(255,255,255,.78) !important;
+
+  font-size: 10px !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.13em !important;
+}
+
+.nav .brandSubject::before {
+  left: 0 !important;
+  top: -5px !important;
+  height: 19px !important;
+  background: rgba(255,255,255,.24) !important;
+}
+
+/* END PROJECT DOJO â€” SUBJECT IDENTIFIER REFINEMENT */
+
+
+/* A-LEVEL MATHEMATICS NAV LABEL â€” FINAL POSITION */
 body .nav .brandSubject {
   margin-left: 42px !important;
   padding-left: 32px !important;
@@ -2153,21 +2153,21 @@ body .nav .brandSubject::before {
 /* END A-LEVEL MATHEMATICS NAV LABEL */
 
 
-/* DOJO HERO — SIZE REFINEMENT */
+/* DOJO HERO â€” SIZE REFINEMENT */
 body .dojoHome .dojoDefinition h1 {
   font-size: clamp(3rem, 4vw, 3.8rem) !important;
 }
-/* END DOJO HERO — SIZE REFINEMENT */
+/* END DOJO HERO â€” SIZE REFINEMENT */
 
 
-/* DOJO HERO — SIZE REFINEMENT */
+/* DOJO HERO â€” SIZE REFINEMENT */
 body .dojoHome .dojoDefinition h1 {
   font-size: clamp(3rem, 4vw, 3.8rem) !important;
 }
-/* END DOJO HERO — SIZE REFINEMENT */
+/* END DOJO HERO â€” SIZE REFINEMENT */
 
 
-/* DOJO DEFINITION — COMPACT BRAND MESSAGE */
+/* DOJO DEFINITION â€” COMPACT BRAND MESSAGE */
 body .dojoHome .dojoDefinition h1 {
   font-size: 42px !important;
   line-height: 1 !important;
@@ -2183,10 +2183,10 @@ body .dojoHome .dojoDefinition > p {
   font-size: 18px !important;
   line-height: 1.45 !important;
 }
-/* END DOJO DEFINITION — COMPACT BRAND MESSAGE */
+/* END DOJO DEFINITION â€” COMPACT BRAND MESSAGE */
 
 
-/* DOJO DEFINITION — COMPACT BRAND MESSAGE */
+/* DOJO DEFINITION â€” COMPACT BRAND MESSAGE */
 body .dojoHome .dojoDefinition h1 {
   font-size: 42px !important;
   line-height: 1 !important;
@@ -2202,7 +2202,7 @@ body .dojoHome .dojoDefinition > p {
   font-size: 18px !important;
   line-height: 1.45 !important;
 }
-/* END DOJO DEFINITION — COMPACT BRAND MESSAGE */
+/* END DOJO DEFINITION â€” COMPACT BRAND MESSAGE */
 
 /* =========================================================
    DOJO TOPICS DESIGN
@@ -2582,7 +2582,7 @@ body .dojoTopics .areaCard::before {
 
 /* END DOJO GLOBAL NAV + TOPICS CARD REFINEMENT */
 
-/* DOJO PRACTICE WORKSPACE — CANONICAL */
+/* DOJO PRACTICE WORKSPACE â€” CANONICAL */
 
 /*
   Practice intentionally uses a wider canvas than the ordinary site.
@@ -2954,7 +2954,7 @@ form button:disabled {
   }
 }
 
-/* END DOJO PRACTICE WORKSPACE — CANONICAL */
+/* END DOJO PRACTICE WORKSPACE â€” CANONICAL */
 
 
 
@@ -3108,7 +3108,7 @@ body .main.practiceShell .dojoChat.collapsed form {
 /* END DOJO PRACTICE QUESTION / SENSEI HIERARCHY */
 
 
-/* DOJO GENERATED PAPER — FIXED FINISH CONTROL */
+/* DOJO GENERATED PAPER â€” FIXED FINISH CONTROL */
 .examFinishedFixed {
   position: fixed;
   top: 72px;
@@ -3209,10 +3209,10 @@ body .main.practiceShell .dojoChat.collapsed form {
     flex: 1;
   }
 }
-/* END DOJO GENERATED PAPER — FIXED FINISH CONTROL */
+/* END DOJO GENERATED PAPER â€” FIXED FINISH CONTROL */
 
 
-/* DOJO MARKING REFERENCE — PLAIN PAPER STYLE */
+/* DOJO MARKING REFERENCE â€” PLAIN PAPER STYLE */
 .markingReferenceColumn {
   min-width: 0 !important;
   align-self: start !important;
@@ -3255,7 +3255,7 @@ body .main.practiceShell .dojoChat.collapsed form {
 .markingReferenceColumn .solutionReveal * {
   color: inherit;
 }
-/* END DOJO MARKING REFERENCE — PLAIN PAPER STYLE */
+/* END DOJO MARKING REFERENCE â€” PLAIN PAPER STYLE */
 
 
 /* SENSEI AUTO-GROWING COMPOSER */
@@ -3330,7 +3330,7 @@ body .main.practiceShell .dojoChat.collapsed form {
 
 
 /* =========================================================
-   DOJO REVIEW — HOMEPAGE VISUAL SYSTEM
+   DOJO REVIEW â€” HOMEPAGE VISUAL SYSTEM
    ========================================================= */
 
 .reviewPage {
@@ -3393,7 +3393,7 @@ body .main.practiceShell .dojoChat.collapsed form {
   line-height: 1.5;
 }
 
-/* Flag count — compact, deliberate, not dashboard-y */
+/* Flag count â€” compact, deliberate, not dashboard-y */
 .reviewPage .flagCount {
   min-width: 76px;
   background: #111412;
@@ -3520,10 +3520,10 @@ body .main.practiceShell .dojoChat.collapsed form {
   }
 }
 
-/* END DOJO REVIEW — HOMEPAGE VISUAL SYSTEM */
+/* END DOJO REVIEW â€” HOMEPAGE VISUAL SYSTEM */
 
 
-/* DOJO REVIEW — PAPER RECORD ROWS */
+/* DOJO REVIEW â€” PAPER RECORD ROWS */
 .reviewPage .paperRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 130px 130px 24px;
@@ -3637,7 +3637,7 @@ body .main.practiceShell .dojoChat.collapsed form {
     align-self: center;
   }
 }
-/* END DOJO REVIEW — PAPER RECORD ROWS */
+/* END DOJO REVIEW â€” PAPER RECORD ROWS */
 
 /* DOJO REVIEW COLOUR LANGUAGE */
 
@@ -3662,7 +3662,7 @@ body .main.practiceShell .dojoChat.collapsed form {
 }
 
 
-/* IN PROGRESS — neutral */
+/* IN PROGRESS â€” neutral */
 .reviewPage .paperStatusProgress {
   display: inline-flex !important;
   align-items: center;
@@ -3680,7 +3680,7 @@ body .main.practiceShell .dojoChat.collapsed form {
 }
 
 
-/* READY TO MARK / MARKING — yellow */
+/* READY TO MARK / MARKING â€” yellow */
 .reviewPage .paperStatusPending {
   display: inline-flex !important;
   align-items: center;
@@ -3698,7 +3698,7 @@ body .main.practiceShell .dojoChat.collapsed form {
 }
 
 
-/* MARKED — green score block */
+/* MARKED â€” green score block */
 .reviewPage .paperScore:has(> strong) {
   display: inline-flex !important;
   flex-direction: column;
@@ -3728,36 +3728,36 @@ body .main.practiceShell .dojoChat.collapsed form {
 
 /* END DOJO REVIEW COLOUR LANGUAGE */
 
-/* Review questions link — neutral */
+/* Review questions link â€” neutral */
 .reviewPage .flaggedSummary a {
   color: #303532 !important;
 }
 
-/* DOJO QUESTION SETS — BLUE INTERACTION STATES */
+/* DOJO QUESTION SETS â€” BLUE INTERACTION STATES */
 
 .questionSetsV2Page .questionSetCourseGrid button.active,
 .questionSetsV2Page .questionSetTopicGrid button.active,
 .questionSetsV2Page .questionSetCountRow button.active {
-  background: #2948B8 !important;
-  border-color: #2948B8 !important;
+  background: #124fad !important;
+  border-color: #124fad !important;
   color: #fff !important;
 }
 
 .questionSetsV2Page .questionSetTopicGrid button.active .questionSetCheckbox {
-  background: #2948B8 !important;
-  border-color: #2948B8 !important;
+  background: #124fad !important;
+  border-color: #124fad !important;
   color: #fff !important;
 }
 
 .questionSetsV2Page .questionSetModeButton.active,
 .questionSetsV2Page .questionSetOptionButton.active,
 .questionSetsV2Page button[aria-pressed="true"] {
-  background: #2948B8 !important;
-  border-color: #2948B8 !important;
+  background: #124fad !important;
+  border-color: #124fad !important;
   color: #fff !important;
 }
 
-/* END DOJO QUESTION SETS — BLUE INTERACTION STATES */
+/* END DOJO QUESTION SETS â€” BLUE INTERACTION STATES */
 
 
 
@@ -3772,14 +3772,14 @@ body .main.practiceShell .dojoChat.collapsed form {
 }
 /* END DOJO EXAM MODE TEXT */
 \n
-/* DOJO TOPIC AREA — REMOVE CATEGORY LABELS */
+/* DOJO TOPIC AREA â€” REMOVE CATEGORY LABELS */
 .topicAreaPage .topicCard .topicLabel,
 .topicAreaPage .topicCard .topicCategory,
 .topicAreaPage .topicCard .topicEyebrow,
 .topicAreaPage .topicCard .sectionLabel {
   display: none !important;
 }
-/* END DOJO TOPIC AREA — REMOVE CATEGORY LABELS */
+/* END DOJO TOPIC AREA â€” REMOVE CATEGORY LABELS */
 
 /* DOJO ACCOUNT + AUTH DESIGN */
 
@@ -4148,3 +4148,1347 @@ body .main.practiceShell .dojoChat.collapsed form {
 }
 
 /* END DOJO ACCOUNT + AUTH DESIGN */
+
+
+/* Topics hierarchy navigation */
+.topicNavRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:28px;
+}
+
+.topicNavRow .crumb{
+  margin-bottom:0;
+}
+
+.topicBackButton{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  flex-shrink:0;
+  padding:10px 15px;
+  border:1px solid #d8d8d2;
+  border-radius:10px;
+  background:#fff;
+  color:#161616;
+  font-size:14px;
+  font-weight:700;
+  line-height:1;
+  text-decoration:none;
+  box-shadow:0 1px 2px rgba(0,0,0,.03);
+  transition:background .15s,border-color .15s,transform .15s;
+}
+
+.topicBackButton:hover{
+  background:#f5f5f1;
+  border-color:#bdbdb7;
+}
+
+.topicBackArrow::before{
+  content:"\2190";
+  font-size:16px;
+  line-height:1;
+}
+
+@media (max-width:640px){
+  .topicNavRow{
+    gap:12px;
+  }
+
+  .topicBackButton{
+    padding:9px 12px;
+    font-size:13px;
+  }
+}
+
+/* Topics multiple-topic route */
+.multiTopicPrompt{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  width:100%;
+  max-width:580px;
+  margin:18px 0 28px;
+  padding:14px 17px;
+  border:1px solid #d7d8d2;
+  border-radius:8px;
+  background:#fafaf7;
+  color:#171917;
+  text-decoration:none;
+  transition:border-color .15s ease, background .15s ease;
+}
+
+.multiTopicPrompt > span{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+
+.multiTopicPrompt strong{
+  font-size:14px;
+  font-weight:650;
+  color:#171917;
+}
+
+.multiTopicPrompt small{
+  font-size:13px;
+  color:#124fad;
+  font-weight:650;
+}
+
+.multiTopicPrompt > b{
+  flex:0 0 auto;
+  color:#124fad;
+  font-size:17px;
+  font-weight:500;
+}
+
+.multiTopicPrompt:hover{
+  border-color:#b7bdc7;
+  background:#f6f7f5;
+}
+
+.multiTopicPrompt:hover small{
+  text-decoration:underline;
+}
+
+@media (max-width:640px){
+  .multiTopicPrompt{
+    max-width:none;
+    margin-top:14px;
+  }
+}
+
+
+/* Multiple-topic prompt - distinct from topic cards */
+.multiTopicPrompt{
+  background:#111412 !important;
+  border-color:#111412 !important;
+  color:#ffffff !important;
+}
+
+.multiTopicPrompt strong{
+  color:#ffffff !important;
+}
+
+.multiTopicPrompt small{
+  color:#8fa8ff !important;
+}
+
+.multiTopicPrompt > b{
+  color:#ffffff !important;
+}
+
+.multiTopicPrompt:hover{
+  background:#202420 !important;
+  border-color:#202420 !important;
+}
+
+.multiTopicPrompt:hover small{
+  color:#ffffff !important;
+}
+
+
+
+/* Logged-out topic history */
+.topicHistoryLoggedOut{
+  display:block;
+}
+
+.topicHistoryLoggedOutIntro{
+  margin-bottom:18px;
+}
+
+.topicHistoryLoggedOutIntro > b{
+  display:block;
+  margin-bottom:5px;
+}
+
+.topicHistoryLoggedOutIntro p{
+  margin:0;
+  color:#69706b;
+}
+
+.topicHistoryAccountPrompt{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:28px;
+  padding-top:17px;
+  border-top:1px solid #d3d5d0;
+}
+
+.topicHistoryAccountPrompt > div:first-child{
+  max-width:650px;
+}
+
+.topicHistoryAccountPrompt strong{
+  display:block;
+  margin-bottom:5px;
+  font-size:15px;
+}
+
+.topicHistoryAccountPrompt p{
+  margin:0;
+  color:#69706b;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.topicHistoryAccountActions{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex:0 0 auto;
+}
+
+.topicHistoryAccountActions a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:38px;
+  padding:0 15px;
+  border-radius:6px;
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.topicHistoryCreate{
+  border:1px solid #124fad;
+  background:#124fad;
+  color:#fff !important;
+}
+
+.topicHistoryCreate:hover{
+  background:#0e4191;
+  border-color:#0e4191;
+}
+
+.topicHistoryLogin{
+  border:1px solid #bfc3bf;
+  background:#fff;
+  color:#171917 !important;
+}
+
+.topicHistoryLogin:hover{
+  border-color:#969c97;
+}
+
+@media (max-width:700px){
+  .topicHistoryAccountPrompt{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:15px;
+  }
+}
+
+
+/* Topic practice primary colour */
+.practiceBox .quickControls .primary{
+  background:#124fad;
+  border-color:#124fad;
+}
+
+.practiceBox .quickControls .primary:hover:not(:disabled){
+  background:#0e4191;
+  border-color:#0e4191;
+}
+
+
+/* Logged-out SENSEI preview */
+body .main.practiceShell .dojoColumn .senseiLoggedOutPreview{
+  flex:1 1 auto;
+  min-height:0;
+  height:100%;
+  background:transparent;
+}
+
+body .main.practiceShell .dojoColumn .senseiLoggedOutPreview .dojoChatBody{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+
+body .main.practiceShell .dojoColumn .senseiLoggedOutPreview .dojoMessages{
+  display:flex;
+  align-items:flex-start;
+  flex:1 1 auto;
+  min-height:0;
+  padding:22px 20px;
+  background:#0c110e;
+}
+
+.senseiLoggedOutPrompt{
+  width:100%;
+  padding:18px;
+  border:1px solid #29312c;
+  border-radius:10px;
+  background:#141a16;
+}
+
+.senseiLoggedOutPrompt strong{
+  display:block;
+  margin-bottom:7px;
+  color:#fff;
+  font-size:14px;
+}
+
+.senseiLoggedOutPrompt p{
+  margin:0;
+  max-width:430px;
+  color:#a8b0aa !important;
+  font-size:13px !important;
+  line-height:1.55;
+}
+
+.senseiLoggedOutActions{
+  display:flex;
+  gap:10px;
+  margin-top:16px;
+}
+
+.senseiLoggedOutActions a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:36px;
+  padding:0 13px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.senseiLoggedOutActions a:first-child{
+  background:#124fad;
+  border:1px solid #124fad;
+  color:#fff;
+}
+
+.senseiLoggedOutActions a:first-child:hover{
+  background:#0e4191;
+  border-color:#0e4191;
+}
+
+.senseiLoggedOutActions a:last-child{
+  background:transparent;
+  border:1px solid #4b554f;
+  color:#fff;
+}
+
+.senseiLoggedOutActions a:last-child:hover{
+  border-color:#727d76;
+}
+
+body .main.practiceShell .dojoColumn
+.senseiLoggedOutPreview .senseiComposerInput:disabled{
+  opacity:1;
+  cursor:not-allowed;
+  color:#818983;
+  background:#111713;
+  border-color:#343c37;
+  -webkit-text-fill-color:#818983;
+}
+
+
+/* Marking SENSEI behaviour only */
+
+/*
+  This wrapper only arranges Solutions + SENSEI.
+  It does not restyle the normal expanded SENSEI.
+*/
+.markingReferenceColumn{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.markingRightSolutionsHidden{
+  display:none;
+}
+
+/*
+  PRE-SEND MARKING STATE
+
+  This is still the EXISTING dojoColumn / AskDojo design.
+  The only differences are:
+    - remove its fixed full-chat height
+    - hide the empty introductory message region
+
+  Therefore only the existing SENSEI heading and existing
+  composer remain visible.
+*/
+body .main.practiceShell
+.markingReferenceColumn
+.dojoColumn.markingSenseiCompactMode,
+body .main.practiceShell
+.markingReferenceColumn
+.dojoColumn.markingSenseiCompactMode:has(.dojoChat.collapsed){
+  position:static !important;
+  top:auto !important;
+
+  height:auto !important;
+  min-height:0 !important;
+
+  align-self:stretch !important;
+}
+
+/* Do not reserve any empty chat space before the first message. */
+body .main.practiceShell
+.markingReferenceColumn
+.markingSenseiCompactMode
+.dojoMessages{
+  display:none !important;
+}
+
+/*
+  Remove the flex growth which normally fills the full SENSEI
+  workspace. Keep all existing composer styling untouched.
+*/
+body .main.practiceShell
+.markingReferenceColumn
+.markingSenseiCompactMode
+.dojoChat,
+body .main.practiceShell
+.markingReferenceColumn
+.markingSenseiCompactMode
+.dojoChat.collapsed{
+  height:auto !important;
+  min-height:0 !important;
+  flex:0 0 auto !important;
+}
+
+body .main.practiceShell
+.markingReferenceColumn
+.markingSenseiCompactMode
+.dojoChatBody{
+  height:auto !important;
+  min-height:0 !important;
+  flex:0 0 auto !important;
+}
+
+/*
+  Once markingSenseiCompactMode disappears, NONE of these rules
+  apply. The expanded panel is therefore the original dojoColumn
+  design, unchanged.
+*/
+
+
+/* Solutions move under the question once SENSEI is in use. */
+.markingInlineSolutions{
+  margin-top:14px;
+}
+
+.markingInlineSolutions .solutionTools{
+  margin-top:0 !important;
+}
+
+
+/*
+  Logged-out marking reuses the existing styled logged-out
+  SENSEI prompt rather than exposing a fake chat.
+*/
+.markingSenseiLoggedOutPrompt{
+  box-sizing:border-box;
+}
+
+
+/* Finished result account claim */
+
+.resultAccountPrompt{
+  max-width:736px;
+  margin:24px 0 28px;
+  padding:22px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:28px;
+  border:1px solid #d8d8d8;
+  border-radius:8px;
+  background:#fff;
+}
+
+.resultAccountCopy{
+  min-width:0;
+}
+
+.resultAccountEyebrow,
+.claimResultEyebrow{
+  display:block;
+  margin-bottom:7px;
+  font-size:11px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:.08em;
+  color:#124fad;
+}
+
+.resultAccountCopy strong{
+  display:block;
+  margin-bottom:6px;
+  font-size:17px;
+  line-height:1.3;
+  color:#111;
+}
+
+.resultAccountCopy p{
+  max-width:480px;
+  margin:0;
+  color:#555;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.resultAccountActions{
+  flex:0 0 auto;
+  display:flex;
+  gap:9px;
+}
+
+.resultAccountActions a{
+  min-height:40px;
+  padding:0 15px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:6px;
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+.resultAccountCreate{
+  border:1px solid #124fad;
+  background:#124fad;
+  color:#fff;
+}
+
+.resultAccountCreate:hover{
+  border-color:#0e4191;
+  background:#0e4191;
+}
+
+.resultAccountLogin{
+  border:1px solid #c9c9c9;
+  background:#fff;
+  color:#111;
+}
+
+.resultAccountLogin:hover{
+  border-color:#888;
+}
+
+.claimResultPage{
+  min-height:calc(100vh - 64px);
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:90px;
+}
+
+.claimResultCard{
+  width:min(560px,100%);
+  padding:30px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  background:#fff;
+}
+
+.claimResultCard h1{
+  margin:0 0 10px;
+}
+
+.claimResultCard p{
+  margin:0;
+  line-height:1.55;
+  color:#555;
+}
+
+.claimResultCard button,
+.claimResultCard a{
+  display:inline-flex;
+  min-height:40px;
+  margin-top:20px;
+  padding:0 15px;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #124fad;
+  border-radius:6px;
+  background:#124fad;
+  color:#fff;
+  font:inherit;
+  font-weight:700;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+@media (max-width:700px){
+  .resultAccountPrompt{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:16px;
+  }
+
+  .resultAccountActions{
+    width:100%;
+  }
+
+  .resultAccountActions a{
+    flex:1 1 0;
+  }
+}
+
+
+/* Question tables and mathematical typography */
+
+/*
+ * Content tables should look like mathematical/exam-paper
+ * material, not like an application data grid.
+ */
+.questionTableWrap{
+  width:100%;
+  margin:20px 0 26px;
+  overflow-x:auto;
+}
+
+.questionTable{
+  width:auto;
+  min-width:520px;
+  border-collapse:collapse;
+  table-layout:fixed;
+  background:#fff;
+  color:#111;
+  font-family:Georgia, "Times New Roman", serif;
+  font-size:18px;
+}
+
+.questionTable th,
+.questionTable td{
+  min-width:74px;
+  height:48px;
+  padding:8px 14px;
+  border:1px solid #222;
+  text-align:center;
+  vertical-align:middle;
+  font-weight:400;
+  line-height:1.5;
+  overflow:visible;
+}
+
+.questionTable th{
+  min-width:48px;
+  font-style:italic;
+  font-weight:600;
+}
+
+/*
+ * Tall inline maths needs a taller line box. This is what stops
+ * fractions, radicals and limits from visually colliding with
+ * the lines above and below them.
+ */
+.questionPaper .renderText{
+  line-height:1.9 !important;
+}
+
+.questionPaper .renderText .katex{
+  line-height:1.35;
+}
+
+.questionPaper .renderText .katex-html{
+  padding-top:.08em;
+  padding-bottom:.08em;
+}
+
+/*
+ * Large operators such as integrals should have a little more
+ * visual presence in question prose.
+ */
+.questionPaper .renderText .katex .mop{
+  font-size:1.08em;
+}
+
+/* Proper display maths gets additional scale and clearance. */
+.questionPaper .displayMath{
+  margin:20px 0 24px !important;
+  font-size:1.12em !important;
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+
+.questionPaper .displayMath .katex-display{
+  margin:.55em 0 !important;
+}
+
+/* Same clearance for fractions inside table cells. */
+.questionTable .katex{
+  line-height:1.45;
+}
+
+
+/*
+ * Generated papers already identify tall inline maths and render
+ * it in displaystyle. Give those expressions enough physical
+ * line height as well.
+ */
+.examTallInlineMath{
+  display:inline-block;
+  margin:.12em .04em;
+  vertical-align:middle;
+  line-height:1.55;
+}
+
+.examTallInlineMath .katex{
+  font-size:1.04em;
+}
+
+
+@media (max-width:700px){
+  .questionTable{
+    min-width:460px;
+    font-size:16px;
+  }
+
+  .questionTable th,
+  .questionTable td{
+    min-width:62px;
+    padding:7px 10px;
+  }
+}
+
+
+/* Tall question inline mathematics */
+
+/*
+ * Ordinary inline symbols stay on the text baseline.
+ */
+.questionInlineMath{
+  display:inline;
+}
+
+/*
+ * Fractions and large operators are rendered in displaystyle by
+ * MathText. Treat the result as a genuinely tall inline object
+ * rather than forcing it into the normal prose line box.
+ */
+.questionTallInlineMath{
+  display:inline-block;
+  vertical-align:middle;
+  margin:.18em .08em;
+  line-height:2.15;
+}
+
+.questionTallInlineMath .katex{
+  font-size:1.06em;
+  line-height:1.2;
+}
+
+/*
+ * Do not artificially enlarge only the operator glyph now that
+ * KaTeX itself is using displaystyle.
+ */
+.questionPaper .renderText .katex .mop{
+  font-size:1em;
+}
+
+/*
+ * Table fractions are also displaystyle. Give them enough room
+ * above and below the fraction bar.
+ */
+.questionTable td .katex,
+.questionTable th .katex{
+  font-size:1.04em;
+  line-height:1.2;
+}
+
+.questionTable td,
+.questionTable th{
+  padding-top:12px;
+  padding-bottom:12px;
+}
+
+
+/* Question Sets account prompts */
+.questionSetsV2Page .questionSetAccountPrompt{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:28px;
+  margin:0 0 18px;
+  padding:20px 22px;
+  border:1px solid #d8ddd9;
+  border-radius:11px;
+  background:#f3f5f3;
+}
+
+.questionSetsV2Page .questionSetAccountCopy{
+  max-width:680px;
+}
+
+.questionSetsV2Page .questionSetAccountEyebrow{
+  margin-bottom:6px;
+  color:#68736c;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.12em;
+}
+
+.questionSetsV2Page .questionSetAccountCopy > strong{
+  display:block;
+  margin-bottom:5px;
+  color:#171917;
+  font-size:15px;
+  line-height:1.35;
+}
+
+.questionSetsV2Page .questionSetAccountCopy > p{
+  margin:0;
+  color:#69716c;
+  font-size:13px;
+  line-height:1.55;
+}
+
+.questionSetsV2Page .questionSetAccountActions{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex:0 0 auto;
+}
+
+.questionSetsV2Page .questionSetAccountActions a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:38px;
+  padding:0 15px;
+  border-radius:6px;
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+.questionSetsV2Page .questionSetAccountCreate{
+  border:1px solid #124fad;
+  background:#124fad;
+  color:#fff !important;
+}
+
+.questionSetsV2Page .questionSetAccountCreate:hover{
+  border-color:#0e4191;
+  background:#0e4191;
+}
+
+.questionSetsV2Page .questionSetAccountLogin{
+  border:1px solid #bfc3bf;
+  background:#fff;
+  color:#171917 !important;
+}
+
+.questionSetsV2Page .questionSetAccountLogin:hover{
+  border-color:#969c97;
+}
+
+@media(max-width:700px){
+  .questionSetsV2Page .questionSetAccountPrompt{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:15px;
+  }
+
+  .questionSetsV2Page .questionSetAccountActions{
+    width:100%;
+  }
+}
+
+
+/* Question Sets locked advanced options */
+.questionSetsV2Page .questionSetAdvancedHeading{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+  font-weight:600;
+}
+
+.questionSetsV2Page .questionSetLockedLabel{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:4px 8px;
+  border:1px solid #d3d8d4;
+  border-radius:999px;
+  background:#f3f5f3;
+  color:#68736c;
+  font-size:11px;
+  font-weight:700;
+  line-height:1;
+}
+
+.questionSetsV2Page .questionSetLockIcon{
+  font-size:10px;
+  line-height:1;
+}
+
+.questionSetsV2Page .questionSetLockedControls button:disabled{
+  opacity:1;
+  border-color:#d7dad7 !important;
+  background:#f1f2f1 !important;
+  color:#8a918c !important;
+  cursor:not-allowed;
+  box-shadow:none !important;
+}
+
+.questionSetsV2Page .questionSetLockedControls button.active:disabled{
+  border-color:#ccd2cd !important;
+  background:#e8ebe8 !important;
+  color:#737b75 !important;
+}
+
+@media(max-width:700px){
+  .questionSetsV2Page .questionSetAdvancedHeading{
+    flex-wrap:wrap;
+  }
+}
+
+
+/* Question Sets locked history controls */
+
+/* Simple monochrome lock ? no emoji/platform-specific rendering. */
+.questionSetsV2Page .questionSetLockIcon{
+  position:relative;
+  display:inline-block;
+  width:9px;
+  height:7px;
+  margin-left:1px;
+  border-radius:1px;
+  background:#8b928d;
+  font-size:0;
+}
+
+.questionSetsV2Page .questionSetLockIcon::before{
+  content:"";
+  position:absolute;
+  left:2px;
+  top:-5px;
+  width:5px;
+  height:6px;
+  border:1.5px solid #8b928d;
+  border-bottom:0;
+  border-radius:5px 5px 0 0;
+  box-sizing:border-box;
+}
+
+/*
+ * "Any" remains available to logged-out users.
+ * The history-dependent choices read unmistakably as locked.
+ */
+.questionSetsV2Page .questionSetLockedExposure button:disabled{
+  opacity:1;
+  border-color:#d9dcda !important;
+  background:#f2f3f2 !important;
+  color:#8b918d !important;
+  cursor:not-allowed;
+  box-shadow:none !important;
+}
+
+.questionSetsV2Page .questionSetLockedExposure button:disabled strong,
+.questionSetsV2Page .questionSetLockedExposure button:disabled span,
+.questionSetsV2Page .questionSetLockedExposure button:disabled small{
+  color:#8b918d !important;
+}
+
+/* Preserve the usable "Any" option. */
+.questionSetsV2Page .questionSetLockedExposure button:not(:disabled){
+  opacity:1;
+}
+
+
+/* Question Sets topic selection polish */
+
+.questionSetsV2Page .questionSetAreaCard{
+  border-color:#dfe3e0 !important;
+  box-shadow:0 1px 2px rgba(20,32,24,.025);
+}
+
+.questionSetsV2Page .questionSetAreaCard > button{
+  transition:background .15s ease;
+}
+
+.questionSetsV2Page .questionSetAreaCard > button:hover{
+  background:#f8faf8 !important;
+}
+
+.questionSetsV2Page .questionSetTopicCard{
+  border-color:#e3e6e4 !important;
+  background:#fff;
+}
+
+.questionSetsV2Page .questionSetTopicCard > button{
+  transition:background .15s ease;
+}
+
+.questionSetsV2Page .questionSetTopicCard > button:hover{
+  background:#f7f9f7 !important;
+}
+
+.questionSetsV2Page .questionSetFocusList{
+  padding:8px !important;
+  gap:5px !important;
+  background:#f6f8f6 !important;
+  border-top:1px solid #e8ebe9;
+}
+
+/* Focus-area choices become rows rather than boxes within boxes. */
+.questionSetsV2Page .questionSetFocusList > button{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  width:100%;
+  min-height:48px;
+  padding:10px 11px !important;
+  border:1px solid transparent !important;
+  border-radius:7px;
+  background:transparent;
+  color:#151815;
+  transition:
+    background .15s ease,
+    border-color .15s ease;
+}
+
+.questionSetsV2Page .questionSetFocusList > button:hover{
+  background:#fff;
+  border-color:#dfe4e0 !important;
+}
+
+.questionSetsV2Page .questionSetFocusList > button strong{
+  font-size:14px;
+  line-height:1.25;
+}
+
+.questionSetsV2Page .questionSetFocusList > button small{
+  color:#747d77;
+  line-height:1.35;
+}
+
+/* Whole-topic selection is deliberately distinct from individual areas. */
+.questionSetsV2Page .questionSetFocusList > .questionSetSelectAll{
+  margin-bottom:3px;
+  background:#fff;
+  border-color:#d9dfda !important;
+}
+
+.questionSetsV2Page .questionSetFocusList > .questionSetSelectAll:hover{
+  border-color:#bcc8c0 !important;
+}
+
+/* Cleaner custom selection indicator. */
+.questionSetsV2Page .questionSetFocusList .questionSetCheckbox{
+  flex:0 0 18px;
+  width:18px;
+  height:18px;
+  border:1.5px solid #b7c0ba;
+  border-radius:5px;
+  background:#fff;
+}
+
+/* Keep DOJO's established blue selected state. */
+.questionSetsV2Page .questionSetFocusList > button.active{
+  background:#124fad !important;
+  border-color:#124fad !important;
+  color:#fff !important;
+}
+
+.questionSetsV2Page .questionSetFocusList > button.active small{
+  color:rgba(255,255,255,.78) !important;
+}
+
+.questionSetsV2Page .questionSetFocusList > button.active .questionSetCheckbox{
+  background:#fff !important;
+  border-color:#fff !important;
+  color:#124fad !important;
+}
+
+@media(max-width:700px){
+  .questionSetsV2Page .questionSetFocusList > button{
+    min-height:46px;
+  }
+}
+
+
+/* Papers logged-out account experience */
+
+.paperAdvancedTitle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.paperAccountRequired{
+  display:inline-flex;
+  align-items:center;
+  min-height:22px;
+  padding:3px 8px;
+  border:1px solid #d3d8d4;
+  border-radius:999px;
+  background:#f3f5f3;
+  color:#68736c;
+  font-size:11px;
+  font-weight:700;
+  line-height:1;
+}
+
+.paperAdvancedLocked .paper-workspace-switch{
+  cursor:not-allowed;
+}
+
+.paperAdvancedLocked .paper-workspace-switch > span{
+  opacity:.62;
+}
+
+.paperAdvancedLocked .paper-workspace-switch input:disabled + i{
+  opacity:.48;
+  cursor:not-allowed;
+}
+
+.paperGenerateLoggedOut{
+  margin-top:24px;
+}
+
+.paperGenerateLoggedOut > .primary-paper-action{
+  margin-top:0;
+}
+
+.paperGenerateAccountPrompt,
+.paperHistoryAccountPrompt{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:28px;
+  margin-top:14px;
+  padding:20px 22px;
+  border:1px solid #d8ddd9;
+  border-radius:11px;
+  background:#f3f5f3;
+}
+
+.paperHistoryAccountPrompt{
+  margin-top:8px;
+}
+
+.paperAccountPromptCopy{
+  max-width:680px;
+}
+
+.paperAccountEyebrow{
+  margin-bottom:6px;
+  color:#68736c;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.12em;
+}
+
+.paperAccountPromptCopy > strong{
+  display:block;
+  margin-bottom:5px;
+  color:#171917;
+  font-size:15px;
+  line-height:1.35;
+}
+
+.paperAccountPromptCopy > p{
+  margin:0;
+  color:#69716c;
+  font-size:13px;
+  line-height:1.55;
+}
+
+.paperAccountActions{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex:0 0 auto;
+}
+
+.paperAccountActions a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:38px;
+  padding:0 15px;
+  border-radius:6px;
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+.paperAccountCreate{
+  border:1px solid #124fad;
+  background:#124fad;
+  color:#fff !important;
+}
+
+.paperAccountCreate:hover{
+  border-color:#0e4191;
+  background:#0e4191;
+}
+
+.paperAccountLogin{
+  border:1px solid #bfc3bf;
+  background:#fff;
+  color:#171917 !important;
+}
+
+.paperAccountLogin:hover{
+  border-color:#969c97;
+}
+
+@media(max-width:700px){
+  .paperAdvancedTitle{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:6px;
+  }
+
+  .paperGenerateAccountPrompt,
+  .paperHistoryAccountPrompt{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:15px;
+  }
+
+  .paperAccountActions{
+    width:100%;
+  }
+}
+
+
+/* Papers section back navigation */
+.papers-page .paperSectionBack{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:36px;
+  margin:0 0 24px;
+  padding:7px 12px;
+  border:1px solid #d8ddd9;
+  border-radius:999px;
+  background:#fff;
+  color:#353a36;
+  font:inherit;
+  font-size:13px;
+  font-weight:650;
+  line-height:1;
+  cursor:pointer;
+  transition:
+    border-color .15s ease,
+    background .15s ease,
+    color .15s ease;
+}
+
+.papers-page .paperSectionBack:hover{
+  border-color:#b9c1bb;
+  background:#f5f7f5;
+  color:#111;
+}
+
+.papers-page .paperSectionBackArrow::before{
+  content:"\2190";
+  display:block;
+  font-size:15px;
+  line-height:1;
+}
+
+
+/* Past Papers exam-board selectors */
+.pastPaperSelectorBlock{
+  margin:18px 0 0;
+}
+
+.pastPaperSelectorLabel{
+  margin-bottom:8px;
+  color:#626662;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+}
+
+@media (max-width:640px){
+  .pastPaperSelectorBlock .choice-row{
+    gap:8px;
+  }
+
+  .pastPaperSelectorBlock .choice-pill{
+    white-space:normal;
+    text-align:left;
+  }
+}
+
+
+/* Past Papers official resource actions */
+.pastPaperResourceActions{
+  display:flex;
+  flex:0 1 auto;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.paperResourceLink{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:38px;
+  padding:8px 12px;
+  border:1px solid #d8dcd8;
+  border-radius:8px;
+  background:#fff;
+  color:#202420;
+  font-size:13px;
+  font-weight:750;
+  line-height:1.2;
+  text-decoration:none;
+  transition:
+    border-color .15s ease,
+    background .15s ease,
+    transform .15s ease;
+}
+
+.paperResourceLink:hover{
+  border-color:#aeb6ae;
+  background:#f7f8f7;
+  transform:translateY(-1px);
+}
+
+.paperResourceExternal{
+  font-size:14px;
+  line-height:1;
+  opacity:.58;
+}
+
+.paperResourceHint{
+  max-width:180px;
+  color:#777d77;
+  font-size:11px;
+  line-height:1.35;
+}
+
+@media (max-width:720px){
+  .pastPaperResourceActions{
+    flex-basis:100%;
+    justify-content:flex-start;
+  }
+
+  .paperResourceHint{
+    max-width:none;
+  }
+}

@@ -14,9 +14,15 @@ export default async function TopicPage({params}:{params:Promise<{area:string,to
   const bankName=matchBankTopic(info.label,banks);
   const groups=focusGroups(topic);
   return <main className="main dojoTopics topicDetail">
-    <div className="crumb"><Link href="/topics">Topics</Link><span>›</span><Link href={`/topics/${area}`}>{info.areaLabel}</Link><span>›</span>{info.label}</div>
+    <div className="topicNavRow">
+      <div className="crumb"><Link href="/topics">Topics</Link><span>&rsaquo;</span><Link href={`/topics/${area}`}>{info.areaLabel}</Link><span>&rsaquo;</span>{info.label}</div>
+      <Link href={`/topics/${area}`} className="topicBackButton"><span className="topicBackArrow" aria-hidden="true"></span>Back to {info.areaLabel}</Link>
+    </div>
     <h1 className="pageTitle">{info.label}</h1>
-    <TopicHistory topic={info.label}/>
+    <TopicHistory
+      topic={info.label}
+      returnTo={`/topics/${area}/${topic}`}
+    />
     <PracticeBuilder topic={info.label} available={!!bankName}/>
     <section className="subSection">
       <div className="eyebrow">Focus your practice</div>

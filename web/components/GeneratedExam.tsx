@@ -53,7 +53,40 @@ function ExamQuestion({q,index}:{q:any;index:number}){
     const mark=isPart&&partMarks[part]>0?partMarks[part]:null;
 
     let content;
-    if(type==='spacer') content=<div className="examSpacer"/>;
+    if(type==='table'){
+      const headers=Array.isArray(b?.row_headers) ? b.row_headers : [];
+      const rows=Array.isArray(b?.rows) ? b.rows : [];
+
+      content=(
+        <div className="questionTableWrap">
+          <table className="questionTable">
+            <tbody>
+              {rows.map((row:any[],ri:number)=>(
+                <tr key={ri}>
+                  {headers[ri] != null && (
+                    <th scope="row">
+                      <MathText text={String(headers[ri])}/>
+                    </th>
+                  )}
+                  {(Array.isArray(row) ? row : []).map((cell:any,ci:number)=>(
+                    <td key={ci}>
+                      <MathText
+                        text={
+                          typeof cell==='string'
+                            ? `$\\displaystyle ${cell}$`
+                            : String(cell ?? '')
+                        }
+                      />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+    else if(type==='spacer') content=<div className="examSpacer"/>;
     else if(type==='latex') content=<div className="examDisplayMath"><BlockMath math={text.replace(/^\$+|\$+$/g,'').trim()}/></div>;
     else if(type==='caption') content=<div className="examCaption"><MathText text={text}/></div>;
     else content=<div className={isPart?'examText examPartText':'examText'}><MathText text={text}/></div>;

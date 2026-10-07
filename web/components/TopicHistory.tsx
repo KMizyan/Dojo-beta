@@ -99,9 +99,11 @@ function sameIds(a:string[],b:string[]){
 }
 
 export default function TopicHistory({
-  topic
+  topic,
+  returnTo
 }:{
   topic:string;
+  returnTo:string;
 }){
   const [view,setView]=
     useState<View>('in_progress');
@@ -121,6 +123,9 @@ export default function TopicHistory({
   const [loading,setLoading]=
     useState(true);
 
+  const [loggedIn,setLoggedIn]=
+    useState<boolean|null>(null);
+
   useEffect(()=>{
     let cancelled=false;
 
@@ -128,6 +133,10 @@ export default function TopicHistory({
       try{
         const {data:auth}=
           await supabase.auth.getUser();
+
+        if(!cancelled){
+          setLoggedIn(Boolean(auth.user));
+        }
 
         let loadedWork:WorkItem[]=[];
 
@@ -501,6 +510,45 @@ export default function TopicHistory({
 
   const hiddenCount=
     Math.max(0,visible.length-2);
+
+  if(!loading && loggedIn === false){
+    const next=encodeURIComponent(returnTo);
+
+    return (
+      <section className="historyStrip topicHistoryLoggedOut">
+        <div className="topicHistoryLoggedOutIntro">
+          <b>Your {topic} history</b>
+          <p>Work containing {topic} questions appears here.</p>
+        </div>
+
+        <div className="topicHistoryAccountPrompt">
+          <div>
+            <strong>Save your {topic} practice</strong>
+            <p>
+              Create a free account to keep your attempts, return to unfinished
+              practice and see your results for this topic.
+            </p>
+          </div>
+
+          <div className="topicHistoryAccountActions">
+            <Link
+              href={`/signup?next=${next}`}
+              className="topicHistoryCreate"
+            >
+              Create free account
+            </Link>
+
+            <Link
+              href={`/login?next=${next}`}
+              className="topicHistoryLogin"
+            >
+              Log in
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="historyStrip">

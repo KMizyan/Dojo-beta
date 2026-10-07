@@ -4,11 +4,7 @@ import Link from 'next/link';
 import { supabase } from '../../../lib/supabase';
 import {useEffect, useMemo, useState,Suspense} from 'react';
 import { useSearchParams } from 'next/navigation';
-import {
-  QuestionDisplay,
-  MarkSchemeView,
-  FullSolutionView
-} from '../../../components/PracticeSession';
+import ReviewMarkingWorkspace from '../../../components/ReviewMarkingWorkspace';
 
 import {
   getQuestionFlags,
@@ -21,7 +17,7 @@ import {
   selectAllocatedSimilarQuestions
 } from '../../../lib/api';
 
-type Stage = 'review' | 'similar';
+type Stage = 'review' | 'similar' | 'finished';
 
 function questionId(q:any) {
   return String(
@@ -78,6 +74,13 @@ function ReviewQuestionsContent() {
 
   const [selected,setSelected] =
     useState<Set<string>>(new Set());
+
+
+  const [keepFlagged,setKeepFlagged] =
+    useState<Set<string>>(new Set());
+
+  const [finishBusy,setFinishBusy] =
+    useState(false);
 
   const [stage,setStage] =
     useState<Stage>('review');
@@ -227,6 +230,50 @@ function ReviewQuestionsContent() {
 
       return next;
     });
+  }
+
+  function toggleKeepFlagged(id:string){
+    setKeepFlagged(current=>{
+      const next=new Set(current);
+
+      if(next.has(id)){
+        next.delete(id);
+      }else{
+        next.add(id);
+      }
+
+      return next;
+    });
+  }
+
+  async function finishAndRemoveFlags(){
+    if(finishBusy) return;
+
+    const removeIds=questions
+      .map(questionId)
+      .filter(
+        id=>id && !keepFlagged.has(id)
+      );
+
+    setFinishBusy(true);
+    setError('');
+
+    try{
+      await Promise.all(
+        removeIds.map(
+          id=>unflagQuestion(id)
+        )
+      );
+
+      window.location.href='/review';
+    }catch(err:any){
+      setError(
+        err?.message ||
+        'Could not update your flags.'
+      );
+
+      setFinishBusy(false);
+    }
   }
 
   async function removeFlag(){
@@ -495,7 +542,7 @@ function ReviewQuestionsContent() {
   }
   if(loading){
     return (
-      <main className="reviewQuestions">
+      <main className="main practiceShell reviewQuestions reviewQuestionSession">
         <p>Loading flagged questions...</p>
       </main>
     );
@@ -527,7 +574,8 @@ function ReviewQuestionsContent() {
           </p>
         </header>
 
-        {error && (
+
+      {error && (
           <div className="errorBox">
             {error}
           </div>
@@ -854,10 +902,159 @@ function ReviewQuestionsContent() {
     );
   }
 
+  if(stage==='finished'){
+    const removeCount=
+      questions.length-keepFlagged.size;
+    return (
+      <main className="reviewQuestions reviewFinished">
+        <div className="topbar">
+          <Link href="/review">
+            &larr; Review
+          </Link>
+
+          <span>Review complete</span>
+        </div>
+
+        <section className="reviewFinishedCard">
+          <span className="smallLabel">
+            FLAGGED REVIEW COMPLETE
+          </span>
+
+          <h1>You've reached the end.</h1>
+
+          <p>
+            You reviewed {questions.length}{' '}
+            {questions.length===1
+              ? 'flagged question'
+              : 'flagged questions'}.
+          </p>
+
+          <div className="reviewFinishedStats">
+            <div>
+              <strong>{questions.length}</strong>
+              <span>reviewed</span>
+            </div>
+
+            <div>
+              <strong>{selected.size}</strong>
+              <span>selected for similar practice</span>
+            </div>
+
+            <div>
+              <strong>{keepFlagged.size}</strong>
+              <span>will stay flagged</span>
+            </div>
+          </div>
+
+          <details className="reviewFinishedKeep">
+            <summary>
+              Keep some questions flagged
+              {keepFlagged.size>0
+                ? ` (${keepFlagged.size})`
+                : ''}
+            </summary>
+
+            <p>
+              Tick any questions you still want
+              to keep in Review.
+            </p>
+
+            <div className="reviewFinishedQuestionList">
+              {questions.map((item,i)=>{
+                const itemId=questionId(item);
+
+                return (
+                  <label
+                    key={itemId}
+                    className="reviewFinishedQuestion"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={
+                        keepFlagged.has(itemId)
+                      }
+                      onChange={()=>
+                        toggleKeepFlagged(itemId)
+                      }
+                    />
+
+                    <span>
+                      <strong>
+                        {questionLabel(item,i)}
+                      </strong>
+
+                      <small>
+                        {metadata(item)
+                          .slice(0,4)
+                          .join(' ? ') ||
+                         'Flagged question'}
+                      </small>
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </details>
+
+          {error && (
+            <div className="errorBox">
+              {error}
+            </div>
+          )}
+
+          <div className="reviewFinishedActions">
+            <Link
+              href="/review"
+              className="reviewFinishedSecondary"
+            >
+              Back to Review
+            </Link>
+
+            {selected.size>0 && (
+              <button
+                type="button"
+                className="primaryAction"
+                onClick={openSimilarBuilder}
+              >
+                Practise similar &rarr;
+              </button>
+            )}
+
+            <button
+              type="button"
+              className="primaryAction"
+              disabled={finishBusy}
+              onClick={finishAndRemoveFlags}
+            >
+              {finishBusy
+                ? 'Updating Review...'
+                : removeCount===questions.length
+                  ? 'Remove all flags'
+                  : removeCount===0
+                    ? 'Keep all flags'
+                    : `Remove ${removeCount} ${
+                        removeCount===1
+                          ? 'flag'
+                          : 'flags'
+                      }`
+              }
+            </button>
+          </div>
+
+          <p className="reviewFinishedNote">
+            Choose what to keep flagged, or clear the set.
+          </p>
+        </section>
+
+        <style jsx>{styles}</style>
+      </main>
+    );
+  }
+
   const id=questionId(q);
 
   return (
-    <main className="reviewQuestions">
+    <main className="reviewQuestions reviewQuestionSession">
       <div className="topbar">
         <Link href="/review">
           ← Review
@@ -900,25 +1097,10 @@ function ReviewQuestionsContent() {
         </div>
       )}
 
-      <section className="questionPanel">
-        <QuestionDisplay q={q} />
-      </section>
-
-      <section className="reviewMaterial">
-        <details>
-          <summary>Mark scheme</summary>
-          <div className="dojoRenderedMaterial">
-            <MarkSchemeView q={q} />
-          </div>
-        </details>
-
-        <details>
-          <summary>Worked solution</summary>
-          <div className="dojoRenderedMaterial">
-            <FullSolutionView q={q} />
-          </div>
-        </details>
-      </section>
+      <ReviewMarkingWorkspace
+        q={q}
+        index={index}
+      />
 
       <div className="questionActions">
         <button
@@ -947,19 +1129,28 @@ function ReviewQuestionsContent() {
 
         <button
           type="button"
-          disabled={
+          className={
             index>=questions.length-1
+              ? 'finishQuestionsButton'
+              : ''
           }
-          onClick={()=>
+          onClick={()=>{
+            if(index>=questions.length-1){
+              setStage('finished');
+              return;
+            }
+
             setIndex(value=>
               Math.min(
                 questions.length-1,
                 value+1
               )
-            )
-          }
+            );
+          }}
         >
-          Next →
+          {index>=questions.length-1
+            ? 'Finish flagged questions'
+            : 'Next \u2192'}
         </button>
       </div>
 
@@ -991,6 +1182,79 @@ function ReviewQuestionsContent() {
 }
 
 const styles=`
+
+  /* Review marking workspace alignment */
+  .reviewQuestions.reviewQuestionSession{
+    max-width:1440px;
+    padding-left:24px;
+    padding-right:24px;
+  }
+
+  .reviewQuestionSession :global(.questionWorkspace){
+    display:grid;
+    grid-template-columns:minmax(0, 2fr) minmax(360px, 1fr);
+    gap:46px;
+    align-items:start;
+    width:100%;
+  }
+
+  .reviewQuestionSession :global(.questionColumn){
+    min-width:0;
+  }
+
+  .reviewQuestionSession :global(.questionPaper){
+    min-height:410px;
+  }
+
+  .reviewQuestionSession :global(.markingReferenceColumn){
+    min-width:0;
+  }
+
+  .reviewQuestionSession :global(.markingSenseiCompactMode){
+    min-height:0;
+    height:auto;
+    overflow:hidden;
+    border:1px solid #1d2721;
+    border-radius:12px;
+    background:#09100c;
+    color:#fff;
+  }
+
+  .reviewQuestionSession :global(.markingSenseiCompactMode .dojoColumnHeading){
+    border-bottom:1px solid rgba(255,255,255,.14);
+    color:#fff;
+  }
+
+  .reviewQuestionSession :global(.markingSenseiCompactMode .askDojo){
+    background:#09100c;
+    color:#fff;
+  }
+
+  .reviewQuestionSession :global(.markingSenseiCompactMode input),
+  .reviewQuestionSession :global(.markingSenseiCompactMode textarea){
+    border-color:#35423b;
+    background:#111a15;
+    color:#fff;
+  }
+
+  .reviewQuestionSession :global(.markingSenseiCompactMode input::placeholder),
+  .reviewQuestionSession :global(.markingSenseiCompactMode textarea::placeholder){
+    color:#89948d;
+  }
+
+  @media(max-width:900px){
+    .reviewQuestionSession :global(.questionWorkspace){
+      grid-template-columns:1fr;
+      gap:20px;
+    }
+  }
+
+
+  .reviewQuestionSession{
+    max-width:1500px;
+  }
+
+
   .reviewQuestions{
     max-width:1000px;
     margin:0 auto;
@@ -1179,6 +1443,139 @@ const styles=`
     font:inherit;
     font-size:12px;
     font-weight:800;
+  }
+
+  .questionActions .finishQuestionsButton{
+    border-color:#124fad;
+    background:#124fad;
+    color:#fff;
+  }
+
+  .reviewFinished{
+    max-width:900px;
+  }
+
+  .reviewFinishedCard{
+    margin-top:46px;
+    padding:38px;
+    border:1px solid rgba(22,33,26,.12);
+    border-radius:16px;
+    background:#fff;
+  }
+
+  .reviewFinishedCard h1{
+    margin:8px 0;
+    font-size:34px;
+    letter-spacing:-.035em;
+  }
+
+  .reviewFinishedCard > p{
+    color:#69736c;
+    line-height:1.6;
+  }
+
+  .reviewFinishedStats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin:28px 0;
+  }
+
+  .reviewFinishedStats > div{
+    padding:18px;
+    border:1px solid rgba(22,33,26,.1);
+    border-radius:10px;
+    background:#f6f8f6;
+  }
+
+  .reviewFinishedStats strong,
+  .reviewFinishedStats span{
+    display:block;
+  }
+
+  .reviewFinishedStats strong{
+    font-size:24px;
+  }
+
+  .reviewFinishedStats span{
+    margin-top:4px;
+    color:#707a73;
+    font-size:11px;
+    font-weight:700;
+  }
+
+  .reviewFinishedKeep{
+    margin:4px 0 24px;
+    border-top:1px solid rgba(22,33,26,.1);
+    border-bottom:1px solid rgba(22,33,26,.1);
+  }
+
+  .reviewFinishedKeep summary{
+    padding:16px 2px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:800;
+  }
+
+  .reviewFinishedKeep > p{
+    margin:0 0 12px;
+    color:#707a73;
+    font-size:11px;
+  }
+
+  .reviewFinishedQuestionList{
+    display:grid;
+    gap:7px;
+    padding-bottom:16px;
+  }
+
+  .reviewFinishedQuestion{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:11px 12px;
+    border:1px solid rgba(22,33,26,.09);
+    border-radius:8px;
+    background:#f8faf8;
+    cursor:pointer;
+  }
+
+  .reviewFinishedQuestion span,
+  .reviewFinishedQuestion strong,
+  .reviewFinishedQuestion small{
+    display:block;
+  }
+
+  .reviewFinishedQuestion strong{
+    font-size:12px;
+  }
+
+  .reviewFinishedQuestion small{
+    margin-top:3px;
+    color:#747e77;
+    font-size:10px;
+  }
+
+  .reviewFinishedActions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .reviewFinishedSecondary{
+    border:1px solid rgba(22,33,26,.14);
+    border-radius:9px;
+    padding:10px 14px;
+    color:#18221b;
+    text-decoration:none;
+    font-size:12px;
+    font-weight:800;
+  }
+
+  .reviewFinishedNote{
+    margin-top:18px;
+    font-size:11px;
   }
 
   .seedPanel{

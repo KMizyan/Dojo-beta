@@ -518,6 +518,7 @@ function QuestionSetsContent(){
                 return (
                   <section
                     key={areaKey}
+                    className="questionSetAreaCard"
                     style={{
                       border:'1px solid #ddd',
                       borderRadius:'10px',
@@ -606,6 +607,7 @@ function QuestionSetsContent(){
                             return (
                               <div
                                 key={slug}
+                                className="questionSetTopicCard"
                                 style={{
                                   border:
                                     '1px solid #e5e5e5',
@@ -649,6 +651,7 @@ function QuestionSetsContent(){
 
                                 {isExpanded && (
                                   <div
+                                    className="questionSetFocusList"
                                     style={{
                                       padding:'8px',
                                       display:'grid',
@@ -660,8 +663,8 @@ function QuestionSetsContent(){
                                       type="button"
                                       className={
                                         topicSelected
-                                          ? 'active'
-                                          : ''
+                                          ? 'questionSetSelectAll active'
+                                          : 'questionSetSelectAll'
                                       }
                                       onClick={()=>
                                         toggleSelection(
@@ -779,38 +782,48 @@ function QuestionSetsContent(){
           </div>
 
           {loggedIn===false && (
-            <div
-              style={{
-                margin:'0 0 14px',
-                padding:'13px 14px',
-                border:'1px solid #dfe5e1',
-                borderRadius:'9px',
-                background:'#f7f9f7',
-                fontSize:'12px',
-                lineHeight:1.5
-              }}
-            >
-              <strong style={{display:'block',marginBottom:'3px'}}>
-                Personalise sets using your history
-              </strong>
+            <div className="questionSetAccountPrompt">
+              <div className="questionSetAccountCopy">
+                <div className="questionSetAccountEyebrow">
+                  PERSONALISE YOUR SETS
+                </div>
 
-              <span style={{color:'#69716c'}}>
-                A Trial account lets DOJO build sets from questions
-                you have not seen, seen once, or already explored.
-              </span>
+                <strong>
+                  Build sets around your question history
+                </strong>
 
-              <div style={{marginTop:'8px'}}>
+                <p>
+                  Target questions you have not seen, revisit ones
+                  you have met before, or practise areas you have
+                  already explored.
+                </p>
+              </div>
+
+              <div className="questionSetAccountActions">
                 <Link
                   href="/signup?next=%2Fquestion-sets"
-                  style={{fontWeight:700,color:'inherit'}}
+                  className="questionSetAccountCreate"
                 >
-                  Create Trial account →
+                  Create free account
+                </Link>
+
+                <Link
+                  href="/login?next=%2Fquestion-sets"
+                  className="questionSetAccountLogin"
+                >
+                  Log in
                 </Link>
               </div>
             </div>
           )}
 
-          <div className="questionSetExposureGrid">
+          <div
+            className={
+              loggedIn===false
+                ? 'questionSetExposureGrid questionSetLockedExposure'
+                : 'questionSetExposureGrid'
+            }
+          >
             {exposureChoices.map(choice=>{
               const active=
                 exposures.includes(choice.id);
@@ -893,32 +906,35 @@ function QuestionSetsContent(){
           </div>
 
           {loggedIn===false && (
-            <div
-              style={{
-                margin:'0 0 16px',
-                padding:'13px 14px',
-                border:'1px solid #dfe5e1',
-                borderRadius:'9px',
-                background:'#f7f9f7',
-                fontSize:'12px',
-                lineHeight:1.5
-              }}
-            >
-              <strong style={{display:'block',marginBottom:'3px'}}>
-                More ways to work
-              </strong>
+            <div className="questionSetAccountPrompt">
+              <div className="questionSetAccountCopy">
+                <div className="questionSetAccountEyebrow">
+                  CUSTOMISE YOUR WORKSPACE
+                </div>
 
-              <span style={{color:'#69716c'}}>
-                Create a Trial account to use Exam mode, Ask DOJO
-                and the personalised workspace options.
-              </span>
+                <strong>
+                  Choose how you want to practise
+                </strong>
 
-              <div style={{marginTop:'8px'}}>
+                <p>
+                  Unlock Exam mode and tailor your workspace with
+                  SENSEI, solutions, a timer and free navigation.
+                </p>
+              </div>
+
+              <div className="questionSetAccountActions">
                 <Link
                   href="/signup?next=%2Fquestion-sets"
-                  style={{fontWeight:700,color:'inherit'}}
+                  className="questionSetAccountCreate"
                 >
-                  Create Trial account →
+                  Create free account
+                </Link>
+
+                <Link
+                  href="/login?next=%2Fquestion-sets"
+                  className="questionSetAccountLogin"
+                >
+                  Log in
                 </Link>
               </div>
             </div>
@@ -960,23 +976,30 @@ function QuestionSetsContent(){
 
           {workspaceMode==='practice' ? (
             <>
-              <div
-                style={{
-                  fontWeight:600,
-                  marginBottom:'10px'
-                }}
-              >
-                Advanced options
+              <div className="questionSetAdvancedHeading">
+                <span>Advanced options</span>
+
+                {loggedIn===false && (
+                  <span className="questionSetLockedLabel">
+                    Account required
+                  </span>
+                )}
               </div>
 
-              <div className="questionSetCountRow">
+              <div
+                className={
+                  loggedIn===false
+                    ? 'questionSetCountRow questionSetLockedControls'
+                    : 'questionSetCountRow'
+                }
+              >
                 <button
                   type="button"
                   className={askDojo ? 'active' : ''}
                   disabled={loggedIn===false}
                   onClick={()=>setAskDojo(v=>!v)}
                 >
-                  Ask DOJO: {askDojo ? 'On' : 'Off'}
+                  SENSEI: {askDojo ? 'On' : 'Off'}
                 </button>
 
                 <button

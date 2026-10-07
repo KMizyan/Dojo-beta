@@ -448,7 +448,7 @@ export default function AccountPage(){
 
               <p>
                 Keep full access to generated papers,
-                personalised question sets, Ask DOJO and
+                personalised question sets, SENSEI and
                 the rest of your DOJO practice workspace.
               </p>
 

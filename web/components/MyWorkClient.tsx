@@ -148,7 +148,7 @@ export default function MyWorkPage({ home = false }: Props) {
     useState<RecentView>('latest');
 
   useEffect(() => {
-    
+
     try{
       const key =
         localStorage.getItem('dojo-continue');
@@ -374,15 +374,12 @@ async function loadWork() {
       <div className="homeHeader">
         {home ? (
           <>
-            <div className="dojoDefinition">
-              <div className="dojoDefinitionHeading">
-                <h1>DOJO</h1>
-                <span className="dojoPronunciation">/ˈdəʊ.dʒəʊ/</span>
-                <span className="dojoWordClass">noun</span>
-              </div>
-
+            <div className="dojoDefinition dojoDefinitionInline">
+              <h1>DOJO</h1>
+              <span className="dojoDefinitionSlash">/</span><span className="dojoWordClass">noun</span>
+              <span className="dojoDefinitionDash" aria-hidden="true">-</span>
               <p>
-                A place devoted to developing a skill through repeated practise, experimentation and feedback
+                &quot;A place devoted to developing a skill through repeated practise, experimentation and feedback&quot;
               </p>
             </div>
           </>
@@ -473,7 +470,7 @@ async function loadWork() {
 
         </Link>
       </section>
-      
+
 
       {!loading && recovery && (
         <section className="myWorkPanel continuePanel">
@@ -549,9 +546,17 @@ async function loadWork() {
           <section className="myWorkPanel dashboardRecent">
             <div className="dashboardPanelHeading compact">
               <div>
-                <span className="dashboardLabel">
+                <a
+                  href="/review"
+                  className="dashboardLabel"
+                  style={{
+                    color:'inherit',
+                    textDecoration:'none',
+                    cursor:'pointer'
+                  }}
+                >
                   Recent work
-                </span>
+                </a>
 
                 <div style={{display:'flex',alignItems:'center',gap:'14px'}}>
                   <button
@@ -670,22 +675,33 @@ async function loadWork() {
                     </div>
                   </div>
 
-                  <div className="previewMessage">
-                    <strong>Your work, saved in one place</strong>
+                  <div className="homeAccountPrompt">
+                    <div className="homeAccountEyebrow">
+                      KEEP YOUR WORK
+                    </div>
+
+                    <strong>Save your progress as you practise</strong>
 
                     <p>
-                      Create a free account to save your work,
-                      pick up where you left off and review your results.
+                      Keep your results, continue unfinished work
+                      and build a review history as you use DOJO.
                     </p>
 
-                    <Link href="/signup?next=%2F">
-                      Create free account →
-                    </Link>
+                    <div className="homeAccountActions">
+                      <Link
+                        href="/signup?next=%2F"
+                        className="homeAccountButton homeAccountButtonPrimary"
+                      >
+                        <span className="homeAccountPrimaryLabel">Create free account</span>
+                      </Link>
 
-                    <span>
-                      Already have an account?{' '}
-                      <Link href="/login?next=%2F">Log in</Link>
-                    </span>
+                      <Link
+                        href="/login?next=%2F"
+                        className="homeAccountButton homeAccountButtonSecondary"
+                      >
+                        Log in
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -853,19 +869,33 @@ async function loadWork() {
                     </div>
                   </div>
 
-                  <div className="previewMessage coveragePreviewMessage">
-                    <strong>
-                      See where your practice is taking you
-                    </strong>
+                  <div className="homeAccountPrompt homeCoveragePrompt">
+                    <div className="homeAccountEyebrow">
+                      YOUR COVERAGE
+                    </div>
+
+                    <strong>Map your coverage of A-level question types</strong>
 
                     <p>
-                      DOJO tracks the question types you've encountered
-                      and shows the gaps in your coverage as you work.
+                      Every question is classified by its underlying architecture.
+                      DOJO tracks which architectures you've encountered and which are still unseen.
                     </p>
 
-                    <Link href="/signup?next=%2Fcoverage">
-                      Create free account →
-                    </Link>
+                    <div className="homeAccountActions">
+                      <Link
+                        href="/signup?next=%2Fcoverage"
+                        className="homeAccountButton homeAccountButtonPrimary"
+                      >
+                        <span className="homeAccountPrimaryLabel">Create free account</span>
+                      </Link>
+
+                      <Link
+                        href="/login?next=%2Fcoverage"
+                        className="homeAccountButton homeAccountButtonSecondary"
+                      >
+                        Log in
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -3019,6 +3049,286 @@ async function loadWork() {
           }
         }
 
+
+
+
+        /* Homepage account CTA v1 */
+        .dojoHome .homeAccountPrompt{
+          margin-top:18px;
+          padding:22px 24px;
+          border:1px solid rgba(25,25,22,.12);
+          border-radius:14px;
+          background:#f7f7f3;
+        }
+
+        .dojoHome .homeAccountEyebrow{
+          margin-bottom:8px;
+          color:#77776f;
+          font-size:11px;
+          font-weight:800;
+          letter-spacing:.12em;
+          line-height:1.2;
+        }
+
+        .dojoHome .homeAccountPrompt > strong{
+          display:block;
+          margin:0 0 7px;
+          color:#171715;
+          font-size:18px;
+          font-weight:800;
+          line-height:1.3;
+        }
+
+        .dojoHome .homeAccountPrompt > p{
+          max-width:590px;
+          margin:0 0 17px;
+          color:#696963;
+          font-size:14px;
+          line-height:1.55;
+        }
+
+        .dojoHome .homeAccountActions{
+          display:flex;
+          align-items:center;
+          gap:10px;
+          flex-wrap:wrap;
+        }
+
+        .dojoHome .homeAccountPrimary,
+        .dojoHome .homeAccountSecondary{
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          min-height:40px;
+          padding:0 16px;
+          border-radius:9px;
+          font-size:14px;
+          font-weight:750;
+          line-height:1;
+          text-decoration:none;
+          transition:
+            background .15s,
+            border-color .15s,
+            transform .15s;
+        }
+
+        .dojoHome .homeAccountPrimary{
+          border:1px solid #1769e0;
+          background:#1769e0;
+          color:#fff;
+          box-shadow:0 1px 2px rgba(0,0,0,.08);
+        }
+
+        .dojoHome .homeAccountPrimary:hover{
+          background:#125bc5;
+          border-color:#125bc5;
+        }
+
+        .dojoHome .homeAccountSecondary{
+          border:1px solid #d2d2cc;
+          background:#fff;
+          color:#282825;
+        }
+
+        .dojoHome .homeAccountSecondary:hover{
+          background:#efefeb;
+          border-color:#bdbdb6;
+        }
+
+        @media (max-width:640px){
+          .dojoHome .homeAccountPrompt{
+            padding:19px;
+          }
+
+          .dojoHome .homeAccountActions{
+            align-items:stretch;
+          }
+
+          .dojoHome .homeAccountPrimary,
+          .dojoHome .homeAccountSecondary{
+            flex:1 1 auto;
+          }
+        }
+
+
+        /* Homepage account CTA button fix v2 */
+        .dojoHome :global(.homeAccountButton){
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          min-height:40px;
+          padding:0 16px;
+          border-radius:9px;
+          font-size:14px;
+          font-weight:750;
+          line-height:1;
+          text-decoration:none;
+          transition:background .15s,border-color .15s;
+        }
+
+        .dojoHome :global(.homeAccountButtonPrimary){
+          border:1px solid #1769e0;
+          background:#1769e0;
+          color:#fff;
+        }
+
+        .dojoHome :global(.homeAccountButtonPrimary:hover){
+          border-color:#125bc5;
+          background:#125bc5;
+          color:#fff;
+        }
+
+        .dojoHome :global(.homeAccountButtonSecondary){
+          border:1px solid #1769e0;
+          background:#fff;
+          color:#1769e0;
+        }
+
+        .dojoHome :global(.homeAccountButtonSecondary:hover){
+          background:#eef5ff;
+          border-color:#125bc5;
+          color:#125bc5;
+        }
+
+        @media (max-width:640px){
+          .dojoHome :global(.homeAccountButton){
+            flex:1 1 auto;
+          }
+        }
+
+
+
+        /* Homepage CTA colour refinement v3 */
+        .dojoHome :global(a.homeAccountButtonPrimary){
+          background:#1457c8;
+          border-color:#1457c8;
+          color:#fff !important;
+        }
+
+        .dojoHome :global(a.homeAccountButtonPrimary:visited){
+          color:#fff !important;
+        }
+
+        .dojoHome :global(a.homeAccountButtonPrimary:hover){
+          background:#1049aa;
+          border-color:#1049aa;
+          color:#fff !important;
+        }
+
+        .dojoHome :global(a.homeAccountButtonSecondary){
+          border-color:#1457c8;
+          color:#1457c8;
+        }
+
+        .dojoHome :global(a.homeAccountButtonSecondary:visited){
+          color:#1457c8;
+        }
+
+        .dojoHome :global(a.homeAccountButtonSecondary:hover){
+          background:#f1f5fc;
+          border-color:#1049aa;
+          color:#1049aa;
+        }
+
+
+
+        /* Homepage CTA final colour fix v4 */
+        .dojoHome :global(a.homeAccountButtonPrimary){
+          background:#124fad;
+          border-color:#124fad;
+        }
+
+        .dojoHome :global(a.homeAccountButtonPrimary:hover){
+          background:#0e4191;
+          border-color:#0e4191;
+        }
+
+        .dojoHome :global(.homeAccountPrimaryLabel){
+          color:#fff !important;
+          -webkit-text-fill-color:#fff;
+        }
+
+        .dojoHome :global(a.homeAccountButtonSecondary){
+          border-color:#124fad;
+          color:#124fad;
+        }
+
+
+
+        /* Homepage inline dictionary header v1 */
+        .dojoHome .homeHeader{
+          max-width:none;
+          margin:0 0 22px;
+          padding-left:0;
+        }
+
+        .dojoHome .dojoDefinitionInline{
+          display:flex;
+          align-items:baseline;
+          gap:12px;
+          width:100%;
+          white-space:nowrap;
+        }
+
+        .dojoHome .dojoDefinitionInline h1{
+          flex:0 0 auto;
+          margin:0 !important;
+          max-width:none;
+          font-size:42px !important;
+          font-weight:650;
+          line-height:1;
+          letter-spacing:-.045em;
+        }
+
+        .dojoHome .dojoDefinitionInline .dojoPronunciation{
+          flex:0 0 auto;
+          font-size:14px;
+        }
+
+        .dojoHome .dojoDefinitionInline .dojoWordClass{
+          flex:0 0 auto;
+          font-size:13px;
+          font-style:italic;
+        }
+
+        .dojoHome .dojoDefinitionDash{
+          flex:0 0 auto;
+          color:var(--dojo-muted);
+          font-size:15px;
+        }
+
+        .dojoHome .dojoDefinitionInline p{
+          flex:1 1 auto;
+          max-width:none;
+          margin:0 !important;
+          font-size:16px;
+          line-height:1.4;
+          white-space:normal;
+        }
+
+        @media (max-width:900px){
+          .dojoHome .dojoDefinitionInline{
+            flex-wrap:wrap;
+            gap:8px 11px;
+            white-space:normal;
+          }
+
+          .dojoHome .dojoDefinitionInline h1{
+            font-size:36px !important;
+          }
+
+          .dojoHome .dojoDefinitionInline p{
+            flex-basis:100%;
+          }
+
+          .dojoHome .dojoDefinitionDash{
+            display:none;
+          }
+
+          .dojoHome .homeHeader{
+            margin-bottom:20px;
+          }
+        }
 
       `}</style>
     </main>
